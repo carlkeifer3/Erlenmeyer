@@ -51,6 +51,8 @@ def main():
         optionParser.print_help()
         return
         
+    options.coreDataFilePath += '/' + os.path.basename(options.coreDataFilePath[:-1]) + '/contents'
+        
     if args[0] == "new":
         newProject(options.projectName, options.coreDataFilePath, options.primaryKey)
     

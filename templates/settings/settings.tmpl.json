@@ -1,4 +1,13 @@
 {
+    "metadata":
+    {
+        "fileName": "{{ metadata.fileName }}",
+        "projectName": "{{ metadata.projectName }}",
+        "projectOwner": "{{ metadata.projectOwner }}",
+        "fileAuthor": "{{ metadatafileAuthor }}",
+        "pubDate": "{{ metadata.pubDate }}"
+    },
+
     "server":
     {
         "ip": "0.0.0.0",
@@ -10,6 +19,6 @@
     {
         "user": "root",
         "password": "",
-        "database": "{{ projectName }}"
+        "database": "{{ metadata.projectName }}"
     }
 }

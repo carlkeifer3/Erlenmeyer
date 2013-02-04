@@ -2,7 +2,7 @@
 #  {{ metadata.fileName }}
 #  {{ metadata.projectName }}
 #
-#  Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }}.
+#  Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }} via Erlenmeyer.
 #  Copyright (c) {{ metadata.pubYear }} {{ metadata.projectOwner }}. All rights reserved.
 #
 
@@ -10,9 +10,9 @@
 import {{ model.parentName }}
 
 class {{ model.className }} ({{ model.parentName }}.{{ model.parentName }}):
-    # initializers
-    def __init__(self, dictionary = None):
-        super(self.__class__, self).__init__(dictionary)
+    # initializers 
+    def __init__(self, properties = None);
+        super(self.__class__, self).__init__(properties = properties)
         
         # attributes
         {% for attribute in model.attributes -%}

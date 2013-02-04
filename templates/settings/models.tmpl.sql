@@ -2,7 +2,7 @@
 #  SQL Setup
 #  {{ metadata.projectName }}
 #
-#  Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }}.
+#  Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }} via Erlenmeyer.
 #  Copyright (c) {{ metadata.pubYear }} {{ metadata.projectOwner }}. All rights reserved.
 #
 

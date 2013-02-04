@@ -2,7 +2,7 @@
 #  {{ metadata.fileName }}
 #  {{ metadata.projectName }}
 #
-#  Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }}.
+#  Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }} via Erlenmeyer.
 #  Copyright (c) {{ metadata.pubYear }} {{ metadata.projectOwner }}. All rights reserved.
 #
 
@@ -15,107 +15,117 @@ import MySQLdb
 {{ model.primaryKey }}Header = "{{ model.primaryKey|upper }}"
 
 # globals
-__sqlSettings = {}
+settings = json.load('../settings/settings.json')
 
 # functions
 _defaultPropertyGetter = lambda name: lambda self: getattr(self, '___%s' % (name))
 _defaultPropertySetter = lambda name: lambda self, value: setattr(self, '___%s' % (name), value)
 
-_{{ model.primaryKey }} = lambda: '%s%s' % ({{ model.primaryKey }}Header, str(uuid.uuid4()).replace('-', ''))
+_{{ model.primarKey }} = lambda: '%s%s' % ({{ modle.primaryKey }}Header, str(uuid.uuid4()).replace('-', ''))
 
-def _databaseConnection(settingsFile = "../settings/settings.json"):
-    if not __sqlSettings:
-        settings = json.load(open(settingsFile))
-        __sqlSettings = settings["sql"]
-    
-    database = MySQLdb.connect(
-        user = __sqlSettings["user"],
-        passwd = __sqlSettings["password"],
-        db = __sqlSettings["database"]
-    )
-    
-    return database.cursor()
+_databaseConnection = lambda: MySQLdb.connect(
+    user = settings['sql']['user'],
+    passwd = settings['sql']['password'],
+    db = settings['sql']['database']
+).cursor()
 
 class Model (object):
-
+    
     # class accessors
     @classmethod
     def all(self, **criteria):
+        """
+        DOCME
+        """
         
         emptyModel = self()
-        properties = emptyModel.__properties()
+        properties = emptyModel._properties()
         
         sqlCriteria = []
         sqlTables = ["%ss" % (self.__name__)]
         for criterionName in criteria:
             criterionValue = criteria[criterionName]
+            
             if type(criterionValue) == str:
                 criterionValue = criterionValue.encode('string_escape')
             
             elif type(criterionValue) == list:
                 for {{ model.primaryKey }} in criterionValue:
-                    sqlCriteria.append("%s = '%s'" % (
-                        criterionName,
-                        model.primaryKey
-                    ))
-                
-                sqlTables.append("%(model)ss%(relationship)s" % {
-                    self.__name__,
-                    criterionName.capitalize()
-                })
-                
-                continue
-                
-            sqlCriteria.append("%s = '%s'" % (
-                criterionName,
-                criterionValue
-            ))
+                    tableName = "%(model)ss%(relationship)s" % {
+                        "model": self.__name__,
+                        "relationship": criterionName.capitalize()
+                    }
+                    
+                    sqlTables.append(tableName)
+                    sqlCriteria.append("%(tableName)s.%(columName)s = '%(columnValue)s'" % ({
+                        "tableName": tableName,
+                        "columnName": criterionName,
+                        "columnValue": {{ model.primaryKey }}
+                    }))
+                    
+                    continue
+                    
+            sqlCriteria.append("%(tableName)s.%(columName)s = '%(columnValue)s'" % ({
+                "tableName": sqlTables[0],
+                "columnName": criterionName,
+                "columnValue": criterionValue
+            }))
             
         connection = _databaseConnection()
         connection.execute("BEGIN")
         connection.execute("SELECT %(properties)s FROM %(tables)s %(criteria)s LOCK IN SHARE MODE" % {
             "properties": ",".join(properties.keys()),
             "tables": " JOIN ".join(sqlTables),
-            "criteria": "WHERE " + ",".join(sqlCriteria) if sqlCriteria else ""
+            "criteria" ("WHERE " + (",".join(sqlCriteria))) if sqlCriteria else ""
         })
         
         rows = connection.fetchall()
-        models = {}
-        
         connection.execute("COMMIT")
         connection.close()
         
+        models = {}
         for row in rows:
-            model = models[row[0]] if row[0] in models else self(row[0])
-            model.__applyProperties(properties, row[1:])
-            
-            models[row[0]] = model
-            
+            {{ model.primaryKey }} = row[0]
+            model = models[{{ model.primaryKey }}] if {{ model.primaryKey }} in models else self({{ model.primaryKey }})
+            for propertyName in properties:
+                properties[propertyName] = row[properties.keys().index(propertyName)]
+                
+                models[{{ model.primaryKey }}] = model
+                
         return models.values()
         
     @classmethod
-    def objectFor{{ model.primaryKey|capitalize }}(self, {{ model.primaryKey }}):
+    def modelFor{{ model.primaryKey|capitalize }}(self, {{ model.primaryKey }}):
+        """
+        DOCME
+        """
+        
         models = self.all({{ model.primaryKey }} = {{ model.primaryKey }})
-        return models[0] if len(models) > 0 else None
+        return models[0] if models else None
         
     # initializers
-    def __init__(self, dictionary = None):
-        if dictionary:
-            if "{{ model.primaryKey }}" in dictionary:
-                existantModel = self.__class__.objectFor{{ model.primaryKey|capitalize }}(dictionary["{{ model.primaryKey }}"])
+    def __init__(self, properties = None):
+        """
+        DOCME
+        """
+        
+        if properties:
+            if "{{ model.primaryKey }}" in properties:
+                existantModel = self.__class__model{{ model.primaryKey|capitalize }}(properties["{{ model.primaryKey }}"])
                 
                 if existantModel:
-                    self.__applyProperties(self.__properties(), existantModel.__properties().values())
-                    return
-                
-            columns = [dictionary[propertyName] for propertyName in self.__properties()]
-            self.__applyProperties(self.__properties(), columns)
+                    self._applyProperties(existantModel._properties())
+                    
+            self._applyProperties(properties)
             
-        {{ model.primaryKey }} = getattr(self, "___{{ model.primaryKey }}", None)
-        self.__class__.{{ model.primaryKey }} = self.property("{{ model.primaryKey }}", {{ model.primaryKey }}, setter = None)        
+        {{ model.primaryKey }} = self.{{ model.primaryKey }} if hasattr(self, "{{ model.primaryKey }}") else _{{ model.primaryKey }}()
+        self.__class__.{{ model.primaryKey }} = self.property("{{ model.primaryKey }}", {{ model.primaryKey }}, setter = None)
         
     # accessors
-    def property(self, name, initialValue = None, getter = _defaultPropertyGetter, setter = _defaultPropertySetter):
+    def property(self, name, initialValue = None, getter = _defaultPropertyGetter, setter = _defaultPropertySetter)
+        """
+        DOCME
+        """
         
         if getter == _defaultPropertyGetter:
             getter = _defaultPropertyGetter(name)
@@ -126,19 +136,21 @@ class Model (object):
         setattr(self, '___%s' % (name), initialValue)
         
         return property(getter, setter, None)
-    
+        
     def __iter__(self):
-        properties = self.__properties()
-        for propertyName in properties:
-            yield (propertyName, properties[propertyName])
-            
+        return self._properties().iteritems()
+        
     def __str__(self):
         return str(dict(self))
         
     def __repr__(self):
         return str(self)
         
-    def __properties(self):
+    def _properties(self):
+        """
+        DOCME
+        """
+        
         properties = {}
         
         for attributeName in sorted(dir(self)):
@@ -146,10 +158,7 @@ class Model (object):
                 continue
                 
             propertyName = attributeName[3:]
-            
             propertyValue = getattr(self, attributeName)
-            if type(propertyValue) == str:
-                propertyValue = propertyValue.encode('string_escape')
                 
             properties[propertyName] = propertyValue
             
@@ -157,22 +166,153 @@ class Model (object):
         
     # mutators
     def save(self):
-        pass
+        """
+        DOCME
+        """
+        
+        properties = self._properties()
+        
+        connection = _databaseConnection()
+        connection.execute("BEGIN")
+        connection.execute("SELECT %(properties)s FROM %(tables)s WHERE {{ model.primaryKey }} = '%({{ model.primaryKey }})s' FOR UPDATE" % {
+            "properties": ",".join(properties.keys()),
+            "tables": " JOIN ".join(FIXME),
+            "{{ model.primaryKey }}": self.{{ model.primaryKey }}
+        })
+        
+        rows = connection.fetchall()
+        if rows: # update
+            # attributes
+            sqlColumns = []
+            for propertyName in properties:
+                propertyValue = properties[propertyName]
+                if type(propertyValue) == list:
+                    continue
+                elif type(propertyValue) == str:
+                    propertyValue = propertyValue.encode('string_encode')
+                    
+                sqlColumn.append("%(columnName)s = '%(columnValue)s'" % {
+                    "columnName": propertyName,
+                    "columnValue": propertyValue
+                })
+                
+            connection.execute("UPDATE %(tableName)s SET %(columns)s WHERE {{ model.primaryKey }} = '%({{ model.primaryKey }})s'" % {
+                "tableName": self.__class__.__name__,
+                "columnNames": ",".join(sqlColumns),
+                "{{ model.primaryKey }}": self.{{ model.primaryKey }}
+            })
+            
+            # relationships
+            for propertyName in properties:
+                propertyValue = properties[propertyName]
+                if type(propertyValue) != list:
+                    continue
+                    
+                tableName = "%(model)ss%(relationship)s" % {
+                    "model": self.__name__,
+                    "relationship": propertyName.capitalize()
+                }
+                    
+                for {{ model.primaryKey }} in propertyValue:
+                    sqlColumns = []
+                    sqlColumns.append("{{ model.primaryKey }} = '%(columnValue)s'" % {
+                        "columnValue": self.{{ model.primaryKey }}
+                    })
+                    sqlColumns.append("%(columnName)s = '%(columnValue)s'" % {
+                        "columnName": propertyName
+                        "columnValue": {{ model.primaryKey }}
+                    })
+                
+                    connection.execute("UPDATE %(tableName)s SET %(columns)s WHERE {{ model.primaryKey }} = '%({{ model.primaryKey }})s'" % {
+                        "tableName": tableName,
+                        "columns": ",".join(sqlColumns),
+                        "{{ model.primaryKey }}": self.{{ model.primaryKey }}
+                    })
+            
+        else: # insert
+            # attributes
+            sqlColumnNames = []
+            sqlColumnValues = []
+            for propertyName in properties:
+                propertyValue = properties[propertyName]
+                if type(propertyValue) == list:
+                    continue
+                elif type(propertyValue) == str:
+                    propertyValue = propertyValue.encode('string_encode')
+                    
+                sqlColumnNames.append(propertyName)
+                sqlColumnValues.append(str(propertyValue))
+                
+            connection.execute("INSERT INTO %(tableName)s (%(columnNames)s) VALUES (%(columnValues)s)" % {
+                "tableName": self.__class__.__name__,
+                "columnNames": ",".join(sqlColumnNames),
+                "columnValues": ",".join(sqlColumnValues)
+            })
+            
+            # relationships
+            for propertyName in properties:
+                propertyValue = properties[propertyName]
+                if type(propertyValue) != list:
+                    continue
+                    
+                tableName = "%(model)ss%(relationship)s" % {
+                    "model": self.__name__,
+                    "relationship": propertyName.capitalize()
+                }
+                    
+                sqlColumnValues = [self.{{ model.primaryKey }}, {{ model.primaryKey }}]
+                for {{ model.primaryKey }} in propertyValue:
+                    connection.execute("INSERT INTO %(tableName)s ({{ model.primaryKey }}, %(relationship)s) VALUES (%(columnValues)s)" % {
+                        "tableName": tableName,
+                        "relationship": propertyName,
+                        "columnValues": ",".join(sqlColumnValues)
+                    })
+                
+            
+        connection.execute("COMMIT")
+        connection.close()
         
     def delete(self):
-        pass
+        """
+        DOCME
+        """
         
-    def __applyProperties(self, properties, columns):
-        propertyNames = ['___%s' % (propertyName) for propertyName in properties]
+        properties = self._properties()
+        sqlTableNames = []
         
-        for propertyIndex in range(len(columns)):
-            propertyName = propertyNames[propertyIndex]
+        for propertyName in properties:
+            propertyValue = properties[propertyName]
             
-            propertyValue = columns[propertyIndex]
-            if type(propertyValue) == str:
-                propertyValue = propertyValue.decode('string_escape')
-                
-            if type(properties[propretyIndex]) == list:
-                getattr(self, propertyName).append(propertyValue)
-            else:
-                setattr(self, propertyName, propertyValue)
+            if type(propertyValue) == list:
+                for {{ model.primaryKey }} in propertyValue:
+                    tableName = "%(model)ss%(relationship)s" % {
+                        "model": self.__class__.__name__,
+                        "relationship": propertyName.capitalize()
+                    }
+                    
+                    sqlTableNames.append(tableName)
+        
+        connection = _databaseConnection()
+        connection.execute("BEGIN")
+        connection.execute("SELECT %(properties)s FROM %(tables)s WHERE {{ model.primaryKey }} = '%({{ model.primaryKey }})s' FOR UPDATE" % {
+            "properties": ",".join(properties.keys()),
+            "tables": " JOIN ".join(sqlTableNames),
+            "{{ model.primaryKey }}": self.{{ model.primaryKey }}
+        })
+        
+        connection.execute("DELETE FROM %(tables)s WHERE {{ model.primaryKey }} = '%({{ model.primaryKey }})s'" % {
+            "tables": " JOIN ".join(sqlTableNames),
+            "{{ model.primaryKey }}": self.{{ model.primaryKey }}
+        })
+        
+        connection.execute("COMMIT")
+        connection.close()
+        
+    def _applyProperties(self, properties):
+        """
+        DOCME
+        """
+        
+        for propertyName in properties:
+            propertyValue = properties[propertyName]
+            setattr(self, '___%s' % (propertyName), propertyValue)

@@ -1,40 +1,54 @@
 #!/usr/bin/python
 
+#
+#  erlenmeyer
+#  Erlenmeyer
+#
+#  Created by Patrick Perini on February 3, 2013.
+#  See readme.md for licensing information.
+#
+
 # imports
-import os
 import jinja2
 import optparse
-from xml.dom import minidom
 
 # constants
 projectFiles = {
-    "flaskFile": "%(directory)s/%(projectName)s.py",
-    "wsgiFile": "%(directory)s/%(projectName)s.wsgi",
+    "flaskProject": "%(directory)s/%(projectName)s.py",
     
-    "modelsInitFile": "%(directory)s/models/__init__.py",
-    "modelsSQLFile": "%(directory)s/models/__models__.sql",
-    "modelsModelFile": "%(directory)s/models/Model.py",
-    "modelsModelSubclassFile": "%(directory)s/models/%(modelName)s.py",
+    "modelsInit": "%(directory)s/models/__init__.py",
+    "modelsModel": "%(directory)s/models/Model.py",
+    "modelsModelObject": "%(directory)s/models/%(modelName)s.py",
     
-    "settingsFile": "%(directory)s/settings/settings.json",
+    "handlersInit": "%(directory)s/handlers/__init__.py",
+    "handlersModelObjectHandler": "%(directory)s/handlers/%(modelName)Handler.py",
+    
+    "docsProjectDocs": "%(directory)s/docs/%(projectName)s.html",
+    
+    "settings": "%(directory)s/settings/settings.json",
+    "sqlSettings": "%(directory)s/settings/models.sql"
 }
 
 templateFiles = {
-    "flaskFile": "flask.tmpl.py",
+    "flaskProject": "project.tmpl.py",
     
-    "modelsSQLFile": "models/models.tmpl.sql",
-    "modelsModelFile": "models/Model.tmpl.py",
-    "modelsModelSubclassFile": "models/ModelObject.tmpl.py",
+    "modelsModel": "models/model.tmpl.py",
+    "modelsModelObject": "models/ModelObject.tmpl.py",
     
-    "settingsFile": "settings/settings.tmpl.json"
+    "handlersObject": "handlers/ModelObjectHandler.tmpl.py",
+    
+    "docsProjectDocs": "docs/project.tmpl.html",
+    
+    "settings": "settings/settings.tmpl.json",
+    "sqlSettings": "settings/models.tmpl.sql"
 }
 
 # globals
 optionParser = optparse.OptionParser(
-    usage = "usage: %prog subcommand [options]\n\nSubcommands:\n  new\n  update"
+    user = "usage %prog subcommand [options]\n\nSubcommands:\n  new\n  update"
 )
 
-templateEnvironment = jinja2.Environment(
+templateEnvironment = jinja2.Environmen(
     loader = jinja2.PackageLoader(__name__, 'templates')
 )
 
@@ -44,241 +58,45 @@ def main():
     
     commandIsMalformed = False
     commandIsMalformed |= (len(args) < 1)
-    commandIsMalformed |= (not options.projectName)
-    commandIsMalformed |= (not options.coreDataFilePath)
+    commandIsMalformed |= (not options.project)
+    commandIsMalformed |= (not options.coreDataFile)
     
     if commandIsMalformed:
         optionParser.print_help()
         return
-        
-    options.coreDataFilePath += '/' + os.path.basename(options.coreDataFilePath[:-1]) + '/contents'
-        
+    
     if args[0] == "new":
-        newProject(options.projectName, options.coreDataFilePath, options.primaryKey)
-    
+        newProject(options.project, options.coreDataFile, options.primaryKey)
+        
     elif args[0] == "update":
-        updateProject(options.projectName, options.coreDataFilePath)
+        updateProject(options.project, options.coreDataFile, options.primaryKey)
         
-def newProject(projectName, coreDataFilePath, primaryKey = "uuid"):
-    if os.path.isdir(projectName):
-        print "Error: %(projectName)s already exists." % ({
-            "projectName": projectName
-        })
-        return
-        
-    if not os.path.isfile(coreDataFilePath):
-        print "Error: %(coreDataFilePath)s does not exist." % ({
-            "coreDataFilePath": coreDataFilePath
-        })
-        return
+def newProject(project, coreDataFile, primaryKey = "uuid"):
+    """
+    DOCME
+    """
+    pass
     
-    entities = entitiesForCoreDataFile(coreDataFilePath)
-    for entity in entities:
-        entity["primaryKey"] = primaryKey
-    
-    # flask file
-    flaskTemplate = templateEnvironment.get_template(templateFiles['flaskFile'])
-    renderedFlaskTemplate = flaskTemplate.render({
-        "metadata": {},
-        "models": entities
-    })
-    
-    flaskFilePath = projectFiles['flaskFile'] % ({
-        "directory": projectName,
-        "projectName": os.path.basename(projectName)
-    })
-    
-    if not os.path.isdir(os.path.dirname(flaskFilePath)):
-        os.makedirs(os.path.dirname(flaskFilePath))
-        
-    flaskFile = open(flaskFilePath, 'w')
-    flaskFile.write(renderedFlaskTemplate)
-    flaskFile.close()
-    
-    # models
-    #  init file
-    modelsInitFilePath = projectFiles['modelsInitFile'] % ({
-        "directory": projectName
-    })
-    
-    if not os.path.isdir(os.path.dirname(modelsInitFilePath)):
-        os.makedirs(os.path.dirname(modelsInitFilePath))
-        
-    modelsInitFile = open(modelsInitFilePath, 'w')
-    modelsInitFile.close()
-    
-    #  sql file
-    modelsSQLTemplate = templateEnvironment.get_template(templateFiles['modelsSQLFile'])
-    renderedModelsSQLTemplate = modelsSQLTemplate.render({
-        "metadata": {},
-        "models": entities
-    })
-    
-    modelsSQLFilePath = projectFiles['modelsSQLFile'] % ({
-        "directory": projectName
-    })
-    
-    modelsSQLFile = open(modelsSQLFilePath, 'w')
-    modelsSQLFile.write(renderedModelsSQLTemplate)
-    modelsSQLFile.close()
-    
-    #  Model
-    modelsModelTemplate = templateEnvironment.get_template(templateFiles['modelsModelFile'])
-    renderedModelsModelTemplate = modelsModelTemplate.render({
-        "metadata": {},
-        "model": {
-            "primaryKey": primaryKey
-        }
-    })
-    
-    modelsModelFilePath = projectFiles['modelsModelFile'] % ({
-        "directory": projectName
-    })
-    
-    modelsModelFile = open(modelsModelFilePath, 'w')
-    modelsModelFile.write(renderedModelsModelTemplate)
-    modelsModelFile.close()
-    
-    #  Model subclasses
-    for entity in entities:
-        modelsModelSubclassTemplate = templateEnvironment.get_template(templateFiles['modelsModelSubclassFile'])
-        renderedModelsModelSubclassTemplate = modelsModelSubclassTemplate.render({
-            "metadata": {},
-            "model": entity
-        })
-        
-        modelsModelSubclassFilePath = projectFiles['modelsModelSubclassFile'] % ({
-            "directory": projectName,
-            "modelName": entity['className']
-        })
-        
-        modelsModelSubclassFile = open(modelsModelSubclassFilePath, 'w')
-        modelsModelSubclassFile.write(renderedModelsModelSubclassTemplate)
-        modelsModelSubclassFile.close()
-    
-    #  settings
-    settingsTemplate = templateEnvironment.get_template(templateFiles['settingsFile'])
-    renderedSettingsTemplate = settingsTemplate.render({
-        "projectName": os.path.basename(projectName)
-    })
-    
-    settingsFilePath = projectFiles['settingsFile'] % ({
-        "directory": projectName
-    })
-    
-    if not os.path.isdir(os.path.dirname(settingsFilePath)):
-        os.makedirs(os.path.dirname(settingsFilePath))
-    
-    settingsFile = open(settingsFilePath, 'w')
-    settingsFile.write(renderedSettingsTemplate)
-    settingsFile.close()
-    
-def updateProject(projectName, coreDataFilePath):
-    print (projectName, coreDataFilePath)
-    
-def entitiesForCoreDataFile(coreDataFilePath):
-    coreDataDOM = minidom.parse(coreDataFilePath)
-    
-    entities = []
-    domEntities = coreDataDOM.getElementsByTagName('entity')
-    for domEntity in domEntities:
-        className = str(domEntity.getAttributeNode('name').nodeValue)
-        
-        parentName = 'Model'
-        if domEntity.getAttributeNode('parentEntity'):
-            parentName = str(domEntity.getAttributeNode('parentEntity').nodeValue)
-        
-        attributes = []
-        domAttributes = domEntity.getElementsByTagName('attribute')
-        for domAttribute in domAttributes:
-            attributeName = str(domAttribute.getAttributeNode('name').nodeValue)
-            
-            attributeType = "Undefined"
-            sqlType = "VARCHAR"
-            if domAttribute.getAttributeNode('attributeType'):
-                attributeType = str(domAttribute.getAttributeNode('attributeType').nodeValue)
-                
-            attributeIsOptional = True
-            if domAttribute.getAttributeNode('optional'):
-                attributeIsOptional = str(domAttribute.getAttributeNode('optional').nodeValue) == "YES"
-                
-            attributeDefaultValue = None
-            if domAttribute.getAttributeNode('defaultValueString'):
-                attributeDefaultValue = str(domAttribute.getAttributeNode('defaultValueString').nodeValue)
-                
-            if "Integer" in attributeType:
-                attributeDefaultValue = int(attributeDefaultValue) if (attributeDefaultValue != None) else 0
-                sqlType = "INT"
-            elif attributeType in ["Decimal", "Double", "Float"]:
-                attributeDefaultValue = float(attributeDefaultValue) if (attributeDefaultValue != None) else 0.0
-                sqlType = "DOUBLE"
-            elif "Boolean" == attributeType:
-                attributeDefaultValue = (attributeDefaultValue == "YES") if (attributeDefaultValue != None) else False
-                sqlType = "BOOL"
-            elif "String" == attributeType:
-                attributeDefaultValue = str(attributeDefaultValue) if (attributeDefaultValue != None) else "''"
-                
-            attributes.append({
-                "name": attributeName,
-                "defaultValue": attributeDefaultValue,
-                "sqlType": sqlType,
-                "canBeNull": attributeIsOptional
-            })
-            
-        
-        relationships = []
-        domRelationships = domEntity.getElementsByTagName('relationship')
-        for domRelationship in domRelationships:
-            relationshipName = str(domRelationship.getAttributeNode('name').nodeValue)
-            relationshipCapsName = relationshipName.capitalize()
-            
-            relationshipInverseName = str(domRelationship.getAttributeNode('inverseName').nodeValue)
-            relationshipType = str(domRelationship.getAttributeNode('destinationEntity').nodeValue)
-            
-            relationshipIsOptional = True
-            if domRelationship.getAttributeNode('optional'):
-                relationshipIsOptional = str(domRelationship.getAttributeNode('optional').nodeValue) == "YES"
-            
-            if domRelationship.getAttributeNode('toMany'):
-                relationshipToMany = (domRelationship.getAttributeNode('toMany').nodeValue == "YES")
-            else:
-                relationshipToMany = False
-                
-            relationships.append({
-                "name": relationshipName,
-                "capsName": relationshipCapsName,
-                "toMany": relationshipToMany,
-                "inverseName": relationshipInverseName,
-                "type": relationshipType,
-                "sqlType": "VARCHAR",
-                "canBeNull": relationshipIsOptional
-            })
-            
-        entities.append({
-            "className": className,
-            "parentName": parentName,
-            "attributes": attributes,
-            "relationships": relationships
-        })
-        
-    return entities
+def updateProject(project, coreDataFile, primaryKey = "uuid"):
+    """
+    DOCME
+    """
+    pass
 
+# main
 if __name__ == "__main__":
     # add options
     optionParser.add_option(
-        "-p", "--project", dest = "projectName",
-        help = "Name of the project to manipulate."
+        "-p", "--project", dest = "project",
+        help = "Location of the project to manipulate."
     )
     
     optionParser.add_option(
-        "-c", "--coredata", dest = "coreDataFilePath",
-        help = "Path to a Core Data XML file."
+        "-c", "--coredata", dest = "coreDataFile",
+        help = "Location of the Core Data xcdatamodeld file."
     )
     
     optionParser.add_option(
         "--primaryKey", dest = "primaryKey",
-        default = "uuid", help = "The primary key of all Models. Defaults to UUID."
+        default = "uuid", help = "The primary key of all Models. Default to UUID."
     )
-    
-    # run main
-    main()

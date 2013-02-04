@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <!-- metadata
+            {{ metadata.fileName }}
+            {{ metadata.projectName }}
+            
+            Created by {{ metadata.fileAuthor }} on {{ metadata.pubDate }} via Erlenmeyer.
+            Copyright (c) {{ metadata.pubYear }} {{ metadata.projectOwner }}. All rights reserved.
+        /-->
+    
+        <!-- stylesheets -->
+        <link rel="stylesheet" href="https://stablebootstrap.googlecode.com/git/css/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css" type="text/css" />
+        <!-- /stylesheets -->
+        
+        <!-- scripts -->
+        <script src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js" type="text/javascript"></script>
+        <!-- /scripts -->
+        
+        <title>{{ metadata.projectName }} REST API Documentation</title>
+    </head>
+    
+    <body onload="prettyPrint()">
+        <h1>{{ metadata.projectName }}</h1>
+        
+        <ul class="models">
+            {% for model in models %}
+            <li id="{{ model.className }}">
+                <a name="{{ model.className|escape }}">
+                    <h2>{{ model.className }}</h2>
+                </a>
+                
+                <ul class="endpoints">
+                    {% for endpoint in method.endpoints %}
+                    <li id="{{ endpoint.url }}">
+                        <a name="{{ endpoint.url|escape }}">
+                            <h3>
+                                <code>{{ endpoint.url }}</code>
+                            </h3>
+                        </a>
+                        
+                        <ul class="methods">
+                            {% for method in endpoint.methods %}
+                            <li id="{{ method.httpMethod }}">
+                                <span>
+                                    <b>{{ method.httpMethod }}</b>
+                                </span>
+                                
+                                <table class="parameters">
+                                    {% for parameter in method.parameters %}
+                                    <tr id="{{ parameter.name }}">
+                                        <td>
+                                            <code>{{ parameter.name }}</code>
+                                        </td>
+                                        <td>
+                                            {{ parameter.description }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                                
+                                <ul class="responses">
+                                    {% for reponse in method.responses %}
+                                    <table id="{{ response.code }}">
+                                        <tr>
+                                            <td class="header">
+                                                <b>{{ response.description }}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <i>code:</i> <code>{{ response.code }}</code>
+                                            </td>
+                                        </tr>
+                                        {% if response.body %}
+                                        <tr>
+                                            <td>
+                                                <pre class="prettyprint linenums">{{ response.body }}</pre>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </table>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

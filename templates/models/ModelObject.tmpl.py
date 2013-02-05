@@ -7,19 +7,30 @@
 #
 
 # imports
-import {{ model.parentName }}
+import Model
+import {{ model.parentClassName }}
 
-class {{ model.className }} ({{ model.parentName }}.{{ model.parentName }}):
-    # initializers 
-    def __init__(self, properties = None);
-        super(self.__class__, self).__init__(properties = properties)
-        
-        # attributes
-        {% for attribute in model.attributes -%}
-        self.__class__.{{ attribute.name }} = self.property("{{ attribute.name }}", {{ attribute.defaultValue }})
-        {% endfor %}
-        
-        # relationships
-        {% for relationship in model.relationships -%}
-        self.__class__.{{ relationship.name }} = self.property("{{ relationship.name }}", {{ [] if relationship.toMany else None }})
-        {% endfor %}
+class {{ model.className }} ({{ model.parentClassName }}):
+    """
+    DOCME
+    """
+    
+    # properties
+    {% for attribute in model.attributes %}
+    {{ attribute.name }} = Model.database.Column({{ attribute.sqlAlchemyType }})
+    {% endfor %}
+    
+    {% for relationship in model.relationships %}
+    {% if relationship.isToMany %}
+    {{ relationship.name }} = Model.database.relationship(
+        '{{ relationship.className }}',
+        Model.database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}')
+    )
+    {% else %}
+    {{ relationship.name }} = Model.database.relationship(
+        '{{ relationship.className }}',
+        Model.database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}'),
+        uselist = False
+    )
+    {% endif %}
+    {% endfor %}

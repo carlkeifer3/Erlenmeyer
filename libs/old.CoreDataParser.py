@@ -11,31 +11,16 @@ import os
 from xml.dom import minidom
 
 #functions
-def dictionary(coreDataFile):
+def dictionary(coreDataFile, primaryKey = "uuid"):
     """
     DOCME
     """
-    return __dictionary(coreDataFile, "base")
     
-    
-def sqlDictionary(coreDataFile):
-    """
-    DOCME
-    """
-    return __dictionary(coreDataFile, "sql")
-    
-def docDictionary(coreDataFile, primaryKey):
-    """
-    DOCME
-    """
-    return __dictionary(coreDataFile, "doc", primaryKey)
-    
-def __dictionary(coreDataFile, dictKind, primaryKey = "uuid"):
-    coreDataFile = '/%s/contents' % (os.path.basename(coreDataFile[:-1]))
+    coreDataFile = '%s/%s/contents' % (coreDataFile, os.path.basename(coreDataFile[:-1]))
     coreDataDOM = minidom.parse(coreDataFile)
     
-    models = []
-    domEntities = coreDataDOM.getElmentsByTagName('entity')
+    entities = []
+    domEntities = coreDataDOM.getElementsByTagName('entity')
     for domEntity in domEntities:
         className = str(domEntity.getAttributeNode('name').nodeValue)
         
@@ -44,16 +29,17 @@ def __dictionary(coreDataFile, dictKind, primaryKey = "uuid"):
         
         domAttributes = domEntity.getElementsByTagName('attribute')
         for domAttribute in domAttributes:
-            attributes.append(__attributeDictionary(domAttribute, dictKind)
-            
-        domRelationships = domEntity.getElementsbyTagName('relationship')
+            attributes.append(__attributeDictionary(domAttribute))
+        
+        domRelationships = domEntity.getElementsByTagName('relationship')
         for domRelationship in domRelationships:
-            relationships.append(__relationshipDictionary(domRelationship, dictKind)
+            relationships.append(__relationshipDictionary(domRelationship))
             
         parentName = 'Model'
-        if domEntity.hasAttribute('parentEntity')
-            parentName = str(domEntity.getAttributeNode('parentEntity').nodeValue
+        if domEntity.hasAttribute('parentEntity'):
+            parentName = str(domEntity.getAttributeNode('parentEntity').nodeValue)
             
+        currentEntity = domEntity
         while parentName != 'Model':
             parentEntity = None
             for possibleParentEntity in domEntities:
@@ -61,37 +47,38 @@ def __dictionary(coreDataFile, dictKind, primaryKey = "uuid"):
                     parentEntity = possibleParentEntity
                     break
                     
-            parentDOMAttributes = parentEntity.getElementsbyTagName('attribute')
+            parentDOMAttributes = parentEntity.getElementsByTagName('attribute')
             for parentDOMAttribute in parentDOMAttributes:
-                attributes.append(__attributeDictionary(parentDOMAttribute, dictKind)
+                attributes.append(__attributeDictionary(parentDOMAttribute))
                 
-            parentDOMRelationships = parentEntity.getElmentsByTagName('relationship')
+            parentDOMRelationships = parentEntity.getElementsByTagName('relationship')
             for parentDOMRelatinoship in parentDOMRelationships:
-                relationships.append(__relationshipDictionary(parentDOMRelationship, dictKind)
+                relationships.append(__relationshipDictionary(parentDOMRelationship))
             
-            parentEntity = 'Model'
-            if domEntity.hasAttribute('parentEntity')
-                parentName = str(domEntity.getAttributeNode('parentEntity').nodeValue
+            currentEntity = parentEntity
+            parentName = 'Model'
+            if currentEntity.hasAttribute('parentEntity'):
+                parentName = str(currentEntity.getAttributeNode('parentEntity').nodeValue)
                 
         entity = {
             "className": className,
             "parentName": parentName,
             "attributes": attributes,
-            "relationships": relationships
+            "relationships": relationships,
+            "primaryKey": primaryKey
         }
         
-        if dictKind = "doc":
-            endpoints = __endpointsList(className, attributes + relationships, primaryKey)
-        
-            entity.update({
-                "endpoints": endpoints
-            })
+        endpoints = __endpointsList(className, attributes, relationships, primaryKey)
+    
+        entity.update({
+            "endpoints": endpoints
+        })
         
         entities.append(entity)
         
     return entities
         
-def __attributeDictionary(domAttribute, dictKind):
+def __attributeDictionary(domAttribute):
     attributeName = str(domAttribute.getAttributeNode('name').nodeValue)
                
     attributeType = "Undefined"
@@ -125,42 +112,40 @@ def __attributeDictionary(domAttribute, dictKind):
        "canBeNull": attributeIsOptional
     }
        
-    if kind == "sql":
-       attribute.update({
-           "sqlType": sqlType
-       })
+    attribute.update({
+        "sqlType": sqlType
+    })
        
-   return attribute
+    return attribute
    
-def __relationshipDictionary(domRelationship, dictKind):
-    relationshipName = str(domRelationship.getAttributeName('name').nodeValue)
+def __relationshipDictionary(domRelationship):
+    relationshipName = str(domRelationship.getAttributeNode('name').nodeValue)
     
-    relationshipInverseName = str(domRelationship.getAttributeName('inverseName').nodeValue)
-    relationshipType = str(domRelationship.getAttributeName('destinationEntity').nodeValue)
+    relationshipInverseName = str(domRelationship.getAttributeNode('inverseName').nodeValue)
+    relationshipType = str(domRelationship.getAttributeNode('destinationEntity').nodeValue)
     
     relationshipIsOptional = True
     if domRelationship.hasAttribute('optional'):
         relationshipIsOptional = str(domRelationship.getAttributeNode('optional').nodeValue) == 'YES'
         
     relationshipToMany = False
-    if domRelationship.hasNode('toMany'):
+    if domRelationship.getAttributeNode('toMany'):
         relationshipToMany = str(domRelationship.getAttributeNode('toMany').nodeValue) == 'YES'
         
     relationship = {
-        "name": relationshipName
+        "name": relationshipName,
         "inverseName": relationshipInverseName,
         "toMany": relationshipToMany,
         "canBeNull": relationshipIsOptional
     }
     
-    if dictKind == "sql":
-        relationship.update({
-            "sqlType": "VARCHAR" if not relationshipToMany else ""
-        })
+    relationship.update({
+        "sqlType": "VARCHAR" if not relationshipToMany else ""
+    })
     
     return relationship
     
-def __endpointsList(className, properties, primaryKey):
+def __endpointsList(className, attributes, relationships, primaryKey):
     endpoints = []
     endpoints.append({
         "url": "/%ss/" % (className),
@@ -189,7 +174,7 @@ def __endpointsList(className, properties, primaryKey):
                         })
                     }
                     
-                    for property in properties
+                    for property in (attributes + relationships)
                 ],
                 "responses":
                 [
@@ -204,7 +189,7 @@ def __endpointsList(className, properties, primaryKey):
         ]
     })
     
-    endpoint.append({
+    endpoints.append({
         "url": "/%ss/<%s>/" % (className, primaryKey),
         "methods":
         [
@@ -255,7 +240,7 @@ def __endpointsList(className, properties, primaryKey):
                         })
                     }
                     
-                    for property in properties
+                    for property in (attributes + relationships)
                 ],
                 "responses":
                 [
@@ -442,7 +427,7 @@ def __endpointsList(className, properties, primaryKey):
                            "code": 200,
                            "description": "The query was successful. The %(propertyName)s was added to the desired %(className)s." % ({
                                "className": className,
-                               "propertyName": propertyName
+                               "propertyName": relationship['name']
                            })
                        }
                    ]
@@ -452,40 +437,38 @@ def __endpointsList(className, properties, primaryKey):
        
        if relationship['toMany']:
            endpoints[-1]['methods'].append({
-               {
-                   "httpMethod": "DELETE",
-                   "parameters":
-                   [
-                       {
-                           "name": primaryKey,
-                           "description": "The %(primaryKey)s identifying the desired %(className)s." % ({
-                               "primaryKey": primaryKey,
-                               "className": className
-                           })
-                       },
-                       {
-                           'name': relationship['name'],
-                           "description": "The %(className)s's %(propertyName)s to delete." % ({
-                               "className": className,
-                               "propertyName": relationship['name']
-                           })
-                       }
-                   ],
-                   "responses":
-                   [
-                       {
-                           "code": 404,
-                           "description": "The desired %(className)s was not found." % ({
-                               "className": className
-                           })
-                       },
-                       {
-                           "code": 200,
-                           "description": "The query was successful. The %(className)s's %(propertyName) was deleted." % ({
-                               "className": className,
-                               "propertyName": relationship['name']
-                           })
-                       }
-                   ]
-               }
+               "httpMethod": "DELETE",
+               "parameters":
+               [
+                   {
+                       "name": primaryKey,
+                       "description": "The %(primaryKey)s identifying the desired %(className)s." % ({
+                           "primaryKey": primaryKey,
+                           "className": className
+                       })
+                   },
+                   {
+                       'name': relationship['name'],
+                       "description": "The %(className)s's %(propertyName)s to delete." % ({
+                           "className": className,
+                           "propertyName": relationship['name']
+                       })
+                   }
+               ],
+               "responses":
+               [
+                   {
+                       "code": 404,
+                       "description": "The desired %(className)s was not found." % ({
+                           "className": className
+                       })
+                   },
+                   {
+                       "code": 200,
+                       "description": "The query was successful. The %(className)s's %(propertyName)s was deleted." % ({
+                           "className": className,
+                           "propertyName": relationship['name']
+                       })
+                   }
+               ]
            })

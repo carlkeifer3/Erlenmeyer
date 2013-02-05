@@ -1,0 +1,254 @@
+#!/usr/bin/python
+
+#
+#  erlenmeyer
+#  Erlenmeyer
+#
+#  Created by Patrick Perini on February 3, 2013.
+#  See readme.md for licensing information.
+#
+
+# TO FIX:
+#     inherited attributes should only apply to sql table.
+#     models should inherit
+#     sql model is broken
+#     fix whitespace
+
+# imports
+import os
+import shutil
+import jinja2
+import optparse
+from libs import CoreDataParser
+
+# constants
+projectFiles = {
+    "flaskProject": "%(directory)s/%(projectName)s.py",
+    
+    "modelsInit": "%(directory)s/models/__init__.py",
+    "modelsModel": "%(directory)s/models/Model.py",
+    "modelsModelObject": "%(directory)s/models/%(modelName)s.py",
+    
+    "handlersInit": "%(directory)s/handlers/__init__.py",
+    "handlersModelObjectHandler": "%(directory)s/handlers/%(modelName)Handler.py",
+    
+    "docsProjectDocs": "%(directory)s/docs/%(projectName)s.html",
+    
+    "settings": "%(directory)s/settings/settings.json",
+    "sqlSettings": "%(directory)s/settings/models.sql"
+}
+
+templateFiles = {
+    "flaskProject": "project.tmpl.py",
+    
+    "modelsModel": "models/model.tmpl.py",
+    "modelsModelObject": "models/ModelObject.tmpl.py",
+    
+    "handlersObject": "handlers/ModelObjectHandler.tmpl.py",
+    
+    "docsProjectDocs": "docs/project.tmpl.html",
+    
+    "settings": "settings/settings.tmpl.json",
+    "sqlSettings": "settings/models.tmpl.sql"
+}
+
+# globals
+optionParser = optparse.OptionParser(
+    usage = "%prog subcommand [options]\n\nSubcommands:\n  new\n  update"
+)
+
+templateEnvironment = jinja2.Environment(
+    loader = jinja2.PackageLoader(__name__, 'templates')
+)
+
+# functions
+def main():
+    (options, args) = optionParser.parse_args()
+    
+    commandIsMalformed = False
+    commandIsMalformed |= (len(args) < 1)
+    commandIsMalformed |= (not options.project)
+    commandIsMalformed |= (not options.coreDataFile)
+    
+    if commandIsMalformed:
+        optionParser.print_help()
+        return
+    
+    if args[0] == "new":
+        newProject(options.project, options.forceProjectCreation, options.coreDataFile, options.primaryKey)
+        
+    elif args[0] == "update":
+        updateProject(options.project, options.coreDataFile, options.primaryKey)
+        
+def newProject(project, forceProjectCreation, coreDataFile, primaryKey = "uuid"):
+    """
+    DOCME
+    """
+    
+    # trap errors
+    if not forceProjectCreation and os.path.isdir(project):
+        print "Error: %(project)s already exists." % ({
+            "project": project
+        })
+        
+        return
+        
+    if not os.path.isdir(coreDataFile):
+        print "Error: %(coreDataFile)s does not exist." % ({
+            "coreDataFile": coreDataFile
+        })
+        
+        return
+        
+    # setup variables
+    if forceProjectCreation and os.path.isdir(project):
+        shutil.rmtree(project)
+    
+    projectName = os.path.basename(project)
+        
+    # retrieve models
+    print "Parsing Core Data file..."
+    models = CoreDataParser.dictionary(coreDataFile, primaryKey)
+    
+    # create flask file
+    print "Creating Flask file..."
+    
+    flaskProjectTemplateDict = {
+        "metadata": {},
+        "models": models
+    }
+    
+    flaskProjectFileNameDict = {
+        "directory": project,
+        "projectName": projectName
+    }
+    
+    renderTemplate('flaskProject', flaskProjectTemplateDict, flaskProjectFileNameDict)
+    
+    # create models files
+    # - create init file
+    print "Creating models module..."
+    
+    modelsInitFileNameDict = {
+        "directory": project
+    }
+    
+    renderTemplate('modelsInit', {}, modelsInitFileNameDict)
+    
+    # - create Model file
+    print "Creating Model object..."
+    
+    modelsModelTemplateDict = {
+        "metadata": {},
+        "model":
+        {
+            "primaryKey": primaryKey
+        }
+    }
+    
+    modelsModelFileNameDict = {
+        "directory": project
+    }
+    
+    renderTemplate('modelsModel', modelsModelTemplateDict, modelsModelFileNameDict)
+    
+    # - create Model subclass files
+    for model in models:
+        print "Creating %(model)s object..." % ({
+            "model": model["className"]
+        })
+        
+        modelsModelObjectTemplateDict = {
+            "metadata": {},
+            "model": model
+        }
+        
+        modelsModelFileNameDict = {
+            "directory": project,
+            "modelName": model["className"]
+        }
+        
+        renderTemplate('modelsModelObject', modelsModelObjectTemplateDict, modelsModelFileNameDict)
+        
+    # create settings files
+    # - create settings file
+    print "Creating settings file..."
+    
+    settingsTemplateDict = {
+        "metadata": {},
+        "projectName": projectName
+    }
+    
+    settingsFileNameDict = {
+        "directory": project
+    }
+    
+    renderTemplate('settings', settingsTemplateDict, settingsFileNameDict)
+    
+    # - create sql file
+    print "Creating SQL file..."
+    
+    sqlTemplateDict = {
+        "metadata": {},
+        "models": models
+    }
+    
+    sqlFileNameDict = {
+        "directory": project
+    }
+    
+    renderTemplate('sqlSettings', sqlTemplateDict, sqlFileNameDict)
+    
+def updateProject(project, coreDataFile, primaryKey = "uuid"):
+    """
+    DOCME
+    """
+    pass
+    
+def renderTemplate(fileName, templateDict, projectFileNameDict):
+    """
+    DOCME
+    """
+    
+    template = None
+    if fileName in templateFiles:
+        template = templateEnvironment.get_template(templateFiles[fileName])
+        
+    renderedTemplate = template.render(templateDict) if template else ""
+    
+    templateFilePath = projectFiles[fileName] % (projectFileNameDict)
+    templatePath = os.path.dirname(templateFilePath)
+    
+    if not os.path.isdir(templatePath):
+        os.makedirs(templatePath)
+        
+    templateFile = open(templateFilePath, 'w')
+    templateFile.write(renderedTemplate)
+    templateFile.close()
+
+# main
+if __name__ == "__main__":
+    # add options
+    optionParser.add_option(
+        "-p", "--project", dest = "project",
+        help = "Location of the project to manipulate."
+    )
+    
+    # FIXME: This should be in group "new"
+    optionParser.add_option(
+        "--force", dest = "forceProjectCreation",
+        help = "If the project already exists, delete it.",
+        default = False, action = "store_true"
+    )
+    
+    optionParser.add_option(
+        "-c", "--coredata", dest = "coreDataFile",
+        help = "Location of the Core Data xcdatamodeld file."
+    )
+    
+    optionParser.add_option(
+        "--primaryKey", dest = "primaryKey",
+        default = "uuid", help = "The primary key of all Models. Default to UUID."
+    )
+    
+    main()

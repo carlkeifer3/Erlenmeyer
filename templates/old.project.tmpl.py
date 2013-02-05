@@ -66,12 +66,12 @@ def handle{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ 
         
 {%- else -%}
 @flaskApp.route("/{{ model.className|lower }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "POST"])
-def handle{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ modle.primaryKey }}):
+def handle{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ model.primaryKey }}):
     if flask.request.method == "GET":
-        return {{ model.className }}Handler.get{{ model.className|capitalize }}{{ relationship.name|catpialize }}({{ model.primaryKey }})
+        return {{ model.className }}Handler.get{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ model.primaryKey }})
         
     elif flask.request.method == "POST":
-        return {{ model.className }}Handler.delete{{ model.className|capitalize }}{{ relationship.name|catpialize }}({{ model.primaryKey }}, flask.request.form["{{ relationship.name }}{{ model.primaryKey|capitalize }}"])
+        return {{ model.className }}Handler.delete{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ model.primaryKey }}, flask.request.form["{{ relationship.name }}{{ model.primaryKey|capitalize }}"])
         
 {%- endif %}
 {%- endfor %}

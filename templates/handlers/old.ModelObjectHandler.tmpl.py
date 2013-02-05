@@ -271,7 +271,7 @@ def delete{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ 
     )
     
 {%- else -%}
-def get{{ model.className|capitalize }}{{ relationship.name|catpialize }}({{ model.primaryKey }}):
+def get{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ model.primaryKey }}):
     """
     Returns the {{ relationship.name }} of the {{ model.className }} with the given {{ model.primaryKey }}.
     
@@ -305,7 +305,7 @@ def get{{ model.className|capitalize }}{{ relationship.name|catpialize }}({{ mod
         content_type = 'application/json'
     )
 
-def post{{ model.className|capitalize }}{{ relationship.name|catpialize }}({{ model.primaryKey }}, {{ relationship.name }}{{ model.primaryKey|capitalize }}):
+def post{{ model.className|capitalize }}{{ relationship.name|capitalize }}({{ model.primaryKey }}, {{ relationship.name }}{{ model.primaryKey|capitalize }}):
     """
     Sets the {{ relationship.name }} of the {{ model.className }} with the given {{ model.primaryKey }} to the given value.
     

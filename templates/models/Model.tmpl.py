@@ -9,12 +9,18 @@
 # imports
 from flask.ext.sqlalchemy import SQLAlchemy
 
+# constants
+{{ model.primaryKey }}Header = "{{ model.primaryKey|upper }}"
+
 # globals
 database = None
 
+# functions
+_{{ model.primaryKey }} = lambda: '%s%s' % ({{ model.primaryKey }}Header, str(uuid.uuid4()).replace('-', ''))
+
 class Model (database.Model):
     """
-    DOCME
+    Baseclass for custom user models.
     """
     
     # properties
@@ -22,12 +28,24 @@ class Model (database.Model):
     
     # class accessors
     @classmethod
-    def modelFor{{ model.primaryKey }}(self, {{ model.primaryKey }}):
+    def modelFor{{ model.primaryKey|camelcase }}(self, {{ model.primaryKey }}):
         """
-        DOCME
+        Return an instance of the object based on the given identifier, or None if not found.
+        
+        @param {{ model.primaryKey }}: The identifier of the desired object.
+        
+        @returns: An instance of the object based no the given identifier, or None if not found.
         """
         
         return User.query.get({{ model.primaryKey }})
+        
+    # initializers
+    def __init__(self):
+        """
+        Initializes a new object with a unique {{ model.primaryKey }}.
+        """
+        
+        self.{{ model.primaryKey }} = _{{ model.primaryKey }}()
         
     # accessors
     def __iter__(self):
@@ -40,7 +58,7 @@ class Model (database.Model):
     # mutators
     def save(self):
         """
-        DOCME
+        Saves this object to the database.
         """
         
         database.session.add(self)
@@ -48,7 +66,7 @@ class Model (database.Model):
         
     def delete(self):
         """
-        DOCME
+        Deletes this object from the database.
         """
         
         database.session.delete(self)

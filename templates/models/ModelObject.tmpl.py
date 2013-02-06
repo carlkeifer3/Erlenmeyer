@@ -11,26 +11,28 @@ import Model
 import {{ model.parentClassName }}
 
 class {{ model.className }} ({{ model.parentClassName }}):
-    """
-    DOCME
-    """
-    
+
     # properties
-    {% for attribute in model.attributes %}
-    {{ attribute.name }} = Model.database.Column({{ attribute.type }})
+    {% for attribute in model.attributes -%}
+    {{ attribute.name }} = Model.database.Column(Model.database.{{ attribute.type }})
+    {% else %}
+    # - no attributes...
     {% endfor %}
     
-    {% for relationship in model.relationships %}
-    {% if relationship.isToMany %}
+    # - relationships
+    {% for relationship in model.relationships -%}
+    {% if relationship.isToMany -%}
     {{ relationship.name }} = Model.database.relationship(
         '{{ relationship.className }}',
         Model.database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}')
     )
-    {% else %}
+    {% else -%}
     {{ relationship.name }} = Model.database.relationship(
         '{{ relationship.className }}',
         Model.database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}'),
         uselist = False
     )
-    {% endif %}
+    {% endif -%}
+    {% else %}
+    # - no relationships...
     {% endfor %}

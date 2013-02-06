@@ -8,42 +8,239 @@
 #  See readme.md for licensing information.
 #
 
-## FIXME
-from libs import CoreData
+# imports
+import os
+import shutil
 import jinja2
+import optparse
+from libs import CoreData
 from libs import jinja2_filters
 
-cd = CoreData.CoreData('/Users/pcperini/Documents/Code/MegaBits/MegaBits Kit/MegaBits Kit/Models/MBModels.xcdatamodeld')
-tE = jinja2.Environment(loader = jinja2.PackageLoader(__name__, 'templates'))
+# constants
+projectFiles = {
+    "flaskProject": "%(directory)s/%(projectName)s.py",
+    
+    "modelsInit": "%(directory)s/models/__init__.py",
+    "modelsModel": "%(directory)s/models/Model.py",
+    "modelsModelObject": "%(directory)s/models/%(modelName)s.py",
+    
+    "handlersInit": "%(directory)s/handlers/__init__.py",
+    "handlersModelObjectHandler": "%(directory)s/handlers/%(modelName)sHandler.py",
+    
+    "settings": "%(directory)s/settings/settings.json"
+}
+
+templateFiles = {
+    "flaskProject": "project.tmpl.py",
+    
+    "modelsModel": "models/model.tmpl.py",
+    "modelsModelObject": "models/ModelObject.tmpl.py",
+    
+    "handlersModelObjectHandler": "handlers/ModelObjectHandler.tmpl.py",
+    
+    "settings": "settings/settings.tmpl.json"
+}
+
+# globals
+optionParser = optparse.OptionParser()
+
+templateEnvironment = jinja2.Environment(
+    loader = jinja2.PackageLoader(__name__, 'templates')
+)
 
 for filter in dir(jinja2_filters):
-    if not filter.startswith('__'):
-        tE.filters[filter] = getattr(jinja2_filters, filter)
+    templateEnvironment.filters[filter] = getattr(jinja2_filters, filter)
 
-template = tE.get_template('models/Model.tmpl.py')
-file = open('/Users/pcperini/Desktop/Model.py', 'w')
-file.write(template.render({
-    "metadata": {},
-    "model": {
-        "primaryKey": "uuid"
-    }
-}))
-file.close()
-
-for model in cd['models']:
-    template = tE.get_template('models/ModelObject.tmpl.py')
-    file = open('/Users/pcperini/Desktop/models/%s.py' % (model['className']), 'w')
-    file.write(template.render({
-        "metadata": {},
-        "model": model
-    }))
-    file.close()
+# functions
+def main():
+    (options, args) = optionParser.parse_args()
     
-    template = tE.get_template('handlers/ModelObjectHandler.tmpl.py')
-    file = open('/Users/pcperini/Desktop/handlers/%sHandler.py' % (model['className']), 'w')
-    file.write(template.render({
+    commandIsMalformed = False
+    commandIsMalformed |= (not options.project)
+    commandIsMalformed |= (not options.coreDataFile)
+    
+    if commandIsMalformed:
+        optionParser.print_help()
+        return
+        
+    # trap errors
+    if not options.forceProjectCreation and os.path.isdir(options.project):
+        print "Error: %(project)s already exists." % ({
+            "project": options.project
+        })
+        
+        return
+        
+    if not os.path.isdir(options.coreDataFile):
+        print "Error: %(coreDataFile)s does not exist." % ({
+            "coreDataFile": options.coreDataFile
+        })
+        
+        return
+        
+    # setup variables
+    if options.forceProjectCreation and os.path.isdir(options.project):
+        shutil.rmtree(options.project)
+        
+    projectName = os.path.basename(options.project)
+    
+    # retrieve models
+    print "Parsing Core Data file..."
+    coreData = CoreData.CoreData(options.coreDataFile, options.primaryKey)
+    
+    # create flask file
+    print "Creating Flask file..."
+    
+    flaskProjectTemplateDict = {
         "metadata": {},
-        "model": model
-    }))
-    file.close()
-## /////
+        "models": coreData['models']
+    }
+    
+    flaskProjectFileNameDict = {
+        "directory": options.project,
+        "projectName": projectName
+    }
+    
+    renderTemplate('flaskProject', flaskProjectTemplateDict, flaskProjectFileNameDict)
+    
+    # create models files
+    # - create init file
+    print "Creating models module..."
+    
+    modelsInitFileNameDict = {
+        "directory": options.project
+    }
+    
+    renderTemplate('modelsInit', {}, modelsInitFileNameDict)
+    
+    # - create Model file
+    print "Creating Model object..."
+    
+    modelsModelTemplateDict = {
+        "metadata": {},
+        "model":
+        {
+            "primaryKey": options.primaryKey
+        }
+    }
+    
+    modelsModelFileNameDict = {
+        "directory": options.project
+    }
+    
+    renderTemplate('modelsModel', modelsModelTemplateDict, modelsModelFileNameDict)
+    
+    # - create Model subclass files
+    for model in coreData['models']:
+        print "Creating %(model)s object..." % ({
+            "model": model["className"]
+        })
+        
+        modelsModelObjectTemplateDict = {
+            "metadata": {},
+            "model": model
+        }
+        
+        modelsModelFileNameDict = {
+            "directory": options.project,
+            "modelName": model["className"]
+        }
+        
+        renderTemplate('modelsModelObject', modelsModelObjectTemplateDict, modelsModelFileNameDict)
+
+    # create handlers files
+    # - create init file
+    print "Creating handlers module..."
+    
+    handlersInitFileNameDict = {
+        "directory": options.project
+    }
+    
+    renderTemplate('handlersInit', {}, modelsInitFileNameDict)
+    
+    # - create Model subclass files
+    for model in coreData['models']:
+        print "Creating %(model)s handler..." % ({
+            "model": model["className"]
+        })
+        
+        handlersModelObjectHandlerTemplateDict = {
+            "metadata": {},
+            "model": model
+        }
+        
+        handlersModelHandlerFileNameDict = {
+            "directory": options.project,
+            "modelName": model["className"]
+        }
+        
+        renderTemplate('handlersModelObjectHandler', handlersModelObjectHandlerTemplateDict, handlersModelHandlerFileNameDict)
+        
+    # create settings files
+    # - create settings file
+    print "Creating settings file..."
+    
+    settingsTemplateDict = {
+        "metadata": {},
+        "projectName": projectName
+    }
+    
+    settingsFileNameDict = {
+        "directory": options.project
+    }
+    
+    renderTemplate('settings', settingsTemplateDict, settingsFileNameDict)
+    
+    print "Finished!"
+        
+# template renderers
+def renderTemplate(fileName, templateDict, projectFileNameDict):
+    """
+    Renders the given template and writes it to the cooresponding file.
+    
+    @param fileName: The name of the template and output file.
+    @param templateDict: The values for the template.
+    @param projectFileNameDict: The values for the project file name.
+    """
+    
+    template = None
+    if fileName in templateFiles:
+        template = templateEnvironment.get_template(templateFiles[fileName])
+        
+    renderedTemplate = template.render(templateDict) if template else ""
+    
+    templateFilePath = projectFiles[fileName] % (projectFileNameDict)
+    templatePath = os.path.dirname(templateFilePath)
+    
+    if not os.path.isdir(templatePath):
+        os.makedirs(templatePath)
+        
+    templateFile = open(templateFilePath, 'w')
+    templateFile.write(renderedTemplate)
+    templateFile.close()        
+
+# main
+if __name__ == "__main__":
+    # add options
+    optionParser.add_option(
+        "-p", "--project", dest = "project",
+        help = "Location of the project to manipulate."
+    )
+    
+    optionParser.add_option(
+        "--force", dest = "forceProjectCreation",
+        help = "If the project already exists, delete it.",
+        default = False, action = "store_true"
+    )
+    
+    optionParser.add_option(
+        "-c", "--coredata", dest = "coreDataFile",
+        help = "Location of the Core Data xcdatamodeld file."
+    )
+    
+    optionParser.add_option(
+        "--primaryKey", dest = "primaryKey",
+        default = "uuid", help = "The primary key of all Models. Default to UUID."
+    )
+    
+    main()

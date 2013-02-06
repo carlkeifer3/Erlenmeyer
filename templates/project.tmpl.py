@@ -10,6 +10,9 @@
 import flask
 from models import Model
 from flask.ext.sqlalchemy import SQLAlchemy
+{% for model in models -%}
+from handlers.{{ model.className }}Handler import {{ model.className }}Handler
+{% endfor %}
 
 # globals
 settings = json.load(open('settings/settings.json'))
@@ -41,9 +44,9 @@ def handle{{ model.className }}({{ model.primaryKey }}):
     elif flask.request.method == "DELETE":
         return {{ model.className }}Handler.delete{{ model.className|camelcase }}({{ model.primaryKey }})
         
-{% for relationship in model.relationships %}
+{% for relationship in model.relationships -%}
 # - - {{ relationship.name }}
-{% if relationship.isToMany %}
+{% if relationship.isToMany -%}
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "PUT", "DELETE"])
 def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
     if flask.request.method == "GET":
@@ -55,7 +58,7 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
     elif flask.request.method == "DELETE":
         return {{ model.className }}Handler.delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}, flask.request.form['{{ relationship.name }}Object'])
         
-{% else %}
+{% else -%}
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "POST"])
 def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
     if flask.request.method == "GET":
@@ -64,12 +67,14 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
     elif flask.request.method == "POST":
         return {{ model.className }}Handler.post{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}, flask.request.form['{{ relationship.name }}Object'])
 
-{% endif %}
+{% endif -%}
 {% else %}
 # - - no relationships...
+
 {% endfor %}
 {% else %}
 # - no models...
+
 {% endfor %}
 
 # main

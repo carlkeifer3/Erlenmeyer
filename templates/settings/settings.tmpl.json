@@ -4,7 +4,7 @@
         "fileName": "{{ metadata.fileName }}",
         "projectName": "{{ metadata.projectName }}",
         "projectOwner": "{{ metadata.projectOwner }}",
-        "fileAuthor": "{{ metadatafileAuthor }}",
+        "fileAuthor": "{{ metadata.fileAuthor }}",
         "pubDate": "{{ metadata.pubDate }}"
     },
 

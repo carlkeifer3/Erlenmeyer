@@ -12,7 +12,9 @@
 import os
 import shutil
 import jinja2
+import getpass
 import optparse
+import datetime
 from libs import CoreData
 from libs import jinja2_filters
 
@@ -84,6 +86,15 @@ def main():
         
     projectName = os.path.basename(options.project)
     
+    # fixme
+    metadata = {
+        "projectName": projectName,
+        "projectOwner": options.projectOwner if options.projectOwner else getpass.getuser(),
+        "fileAuthor": options.fileAuthor if options.fileAuthor else getpass.getuser(),
+        "pubDate": datetime.datetime.today().strftime("%h %d, %Y"),
+        "pubYear": datetime.datetime.today().strftime("%Y")
+    }
+    
     # retrieve models
     print "Parsing Core Data file..."
     coreData = CoreData.CoreData(options.coreDataFile, options.primaryKey)
@@ -92,7 +103,7 @@ def main():
     print "Creating Flask file..."
     
     flaskProjectTemplateDict = {
-        "metadata": {},
+        "metadata": metadata,
         "models": coreData['models']
     }
     
@@ -117,7 +128,7 @@ def main():
     print "Creating Model object..."
     
     modelsModelTemplateDict = {
-        "metadata": {},
+        "metadata": metadata,
         "model":
         {
             "primaryKey": options.primaryKey
@@ -137,7 +148,7 @@ def main():
         })
         
         modelsModelObjectTemplateDict = {
-            "metadata": {},
+            "metadata": metadata,
             "model": model
         }
         
@@ -165,7 +176,7 @@ def main():
         })
         
         handlersModelObjectHandlerTemplateDict = {
-            "metadata": {},
+            "metadata": metadata,
             "model": model
         }
         
@@ -181,7 +192,7 @@ def main():
     print "Creating settings file..."
     
     settingsTemplateDict = {
-        "metadata": {},
+        "metadata": metadata,
         "projectName": projectName
     }
     
@@ -203,14 +214,17 @@ def renderTemplate(fileName, templateDict, projectFileNameDict):
     @param projectFileNameDict: The values for the project file name.
     """
     
+    templateFilePath = projectFiles[fileName] % (projectFileNameDict)
+    templatePath = os.path.dirname(templateFilePath)
+    
     template = None
     if fileName in templateFiles:
         template = templateEnvironment.get_template(templateFiles[fileName])
         
+    if 'metadata' in templateDict:
+        templateDict['metadata']['fileName'] = os.path.basename(templateFilePath)
+        
     renderedTemplate = template.render(templateDict) if template else ""
-    
-    templateFilePath = projectFiles[fileName] % (projectFileNameDict)
-    templatePath = os.path.dirname(templateFilePath)
     
     if not os.path.isdir(templatePath):
         os.makedirs(templatePath)
@@ -228,12 +242,6 @@ if __name__ == "__main__":
     )
     
     optionParser.add_option(
-        "--force", dest = "forceProjectCreation",
-        help = "If the project already exists, delete it.",
-        default = False, action = "store_true"
-    )
-    
-    optionParser.add_option(
         "-c", "--coredata", dest = "coreDataFile",
         help = "Location of the Core Data xcdatamodeld file."
     )
@@ -241,6 +249,24 @@ if __name__ == "__main__":
     optionParser.add_option(
         "--primaryKey", dest = "primaryKey",
         default = "uuid", help = "The primary key of all Models. Default to UUID."
+    )
+    
+    optionParser.add_option(
+        "--projectOwner", dest = "projectOwner",
+        help = "The owner to whom this project is copyrighted.",
+        default = None
+    )
+    
+    optionParser.add_option(
+        "--fileAuthor", dest = "fileAuthor",
+        help = "The creator of this file. Defaults to current user.",
+        default = None
+    )
+    
+    optionParser.add_option(
+        "--force", dest = "forceProjectCreation",
+        help = "If the project already exists, delete it.",
+        default = False, action = "store_true"
     )
     
     main()

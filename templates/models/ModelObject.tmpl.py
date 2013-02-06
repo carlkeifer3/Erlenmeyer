@@ -17,7 +17,7 @@ class {{ model.className }} ({{ model.parentClassName }}):
     
     # properties
     {% for attribute in model.attributes %}
-    {{ attribute.name }} = Model.database.Column({{ attribute.sqlAlchemyType }})
+    {{ attribute.name }} = Model.database.Column({{ attribute.type }})
     {% endfor %}
     
     {% for relationship in model.relationships %}

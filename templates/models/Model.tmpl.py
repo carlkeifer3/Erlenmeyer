@@ -28,6 +28,14 @@ class Model (database.Model):
         """
         
         return User.query.get({{ model.primaryKey }})
+        
+    # accessors
+    def __iter__(self):
+        for key in self.__dict__:
+            if key.startswith('_'):
+              continue
+              
+            yield (key, self.__dict__[key])  
     
     # mutators
     def save(self):

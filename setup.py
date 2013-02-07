@@ -2,11 +2,20 @@ from distutils.core import setup
 
 setup(
     name = 'Erlenmeyer',
-    version = '0.1.5',
+    version = '0.1.6',
     author = 'Patrick Perini',
     author_email = 'pperini@megabitsapp.com',
-    packages = ['erlenmeyer', 'erlenmeyer.libs', 'erlenmeyer.templates'],
-    scripts = ['bin/erlenmeyer'],
+    packages = [
+        'erlenmeyer',
+        'erlenmeyer.libs'
+    ],
+    scripts = [
+        'bin/erlenmeyer'
+        'bin/erlenmeyer_templates/project.tmpl.py',
+        'bin/erlenmeyer_templates/handlers/ModelObjectHandler.tmpl.py',
+        'bin/erlenmeyer_templates/models/ModelObject.tmpl.py',
+        'bin/erlenmeyer_templates/settins/settins.tmpl.json'
+    ],
     url = 'http://MegaBits.github.com/Erlenmeyer',
     license = 'LICENSE.txt',
     description = 'Automatically generate Flask servers from Core Data.',

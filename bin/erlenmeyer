@@ -48,9 +48,7 @@ templateFiles = {
 optionParser = optparse.OptionParser()
 
 templateEnvironment = jinja2.Environment(
-    loader = jinja2.FileSystemLoader('%s/templates' % (
-        os.path.dirname(erlenmeyer.__file__)
-    ))
+    loader = jinja2.FileSystemLoader('%s/erlenmeyer_templates' % (os.path.abspath('.')))
 )
 
 for filter in dir(jinja2_filters):

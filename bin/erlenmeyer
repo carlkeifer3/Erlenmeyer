@@ -5,7 +5,7 @@
 #  Erlenmeyer
 #
 #  Created by Patrick Perini on February 5, 2013.
-#  See readme.md for licensing information.
+#  LICENSE.txt.md for licensing information.
 #
 
 # imports
@@ -15,8 +15,8 @@ import jinja2
 import getpass
 import optparse
 import datetime
-from libs import CoreData
-from libs import jinja2_filters
+from erlenmeyer.libs import CoreData
+from erlenmeyer.libs import jinja2_filters
 
 # constants
 projectFiles = {
@@ -47,7 +47,7 @@ templateFiles = {
 optionParser = optparse.OptionParser()
 
 templateEnvironment = jinja2.Environment(
-    loader = jinja2.PackageLoader(__name__, 'templates')
+    loader = jinja2.PackageLoader(__name__, 'erlenmeyer_static/templates')
 )
 
 for filter in dir(jinja2_filters):

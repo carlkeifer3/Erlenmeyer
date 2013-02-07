@@ -7,7 +7,7 @@ setup(
     author_email = 'pperini@megabitsapp.com',
     packages = ['erlenmeyer', 'erlenmeyer.libs'],
     scripts = ['bin/erlenmeyer'],
-    url = 'http://megabits.github.com/Erlenmeyer',
+    url = 'http://MegaBits.github.com/Erlenmeyer',
     license = 'LICENSE.txt',
     description = 'Automatically generate Flask servers from Core Data.',
     long_description = open('README.txt').read(),

@@ -29,7 +29,7 @@ Flask File
 
 The Flask file (e.g. ``MegaBits.py``) is the primary Flask service. It creates the Flask app and SQLAlchemy instances, and forwards requests to the handler objects found in the ``handlers`` module.
 
-This service has 3 globally accessible variables::
+This service has 3 globally accessible variables:
 
 * `settings`: A dictionary of settings loaded from `settings.json`.
 

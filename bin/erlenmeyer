@@ -68,30 +68,34 @@ def main():
         optionParser.print_help()
         return
         
+    # setup variables
+    project = os.path.abspath(options.project)
+    coreDataFile = os.path.abspath(options.CoreDataFile)
+        
     # trap errors
-    if not options.forceProjectCreation and os.path.isdir(options.project):
+    if not options.forceProjectCreation and os.path.isdir(project):
         print "Error: %(project)s already exists." % ({
-            "project": options.project
+            "project": project
         })
         
         return
         
-    if not os.path.isdir(options.coreDataFile):
+    if not os.path.isdir(coreDataFile):
         print "Error: %(coreDataFile)s does not exist." % ({
-            "coreDataFile": options.coreDataFile
+            "coreDataFile": coreDataFile
         })
         
         return
         
     # setup variables
-    if options.forceProjectCreation and os.path.isdir(options.project):
-        shutil.rmtree(options.project)
+    if options.forceProjectCreation and os.path.isdir(project):
+        shutil.rmtree(project)
         
-    projectName = os.path.basename(options.project)
+    projectName = os.path.basename(project)
     
     metadata = {
         "projectName": projectName,
-        "projectOwner": options.projectOwner if options.projectOwner else getpass.getuser(),
+        "projectOwner": projectOwner if projectOwner else getpass.getuser(),
         "fileAuthor": options.fileAuthor if options.fileAuthor else getpass.getuser(),
         "pubDate": datetime.datetime.today().strftime("%h %d, %Y"),
         "pubYear": datetime.datetime.today().strftime("%Y")
@@ -99,7 +103,7 @@ def main():
     
     # retrieve models
     print "Parsing Core Data file..."
-    coreData = CoreData.CoreData(options.coreDataFile, options.primaryKey)
+    coreData = CoreData.CoreData(coreDataFile, options.primaryKey)
     
     # create flask file
     print "Creating Flask file..."
@@ -110,7 +114,7 @@ def main():
     }
     
     flaskProjectFileNameDict = {
-        "directory": options.project,
+        "directory": project,
         "projectName": projectName
     }
     
@@ -121,7 +125,7 @@ def main():
     print "Creating models module..."
     
     modelsInitFileNameDict = {
-        "directory": options.project
+        "directory": project
     }
     
     renderTemplate('modelsInit', {}, modelsInitFileNameDict)
@@ -138,7 +142,7 @@ def main():
         }
         
         modelsModelFileNameDict = {
-            "directory": options.project,
+            "directory": project,
             "modelName": model["className"]
         }
         
@@ -149,7 +153,7 @@ def main():
     print "Creating handlers module..."
     
     handlersInitFileNameDict = {
-        "directory": options.project
+        "directory": project
     }
     
     renderTemplate('handlersInit', {}, modelsInitFileNameDict)
@@ -166,7 +170,7 @@ def main():
         }
         
         handlersModelHandlerFileNameDict = {
-            "directory": options.project,
+            "directory": project,
             "modelName": model["className"]
         }
         
@@ -182,7 +186,7 @@ def main():
     }
     
     settingsFileNameDict = {
-        "directory": options.project
+        "directory": project
     }
     
     renderTemplate('settings', settingsTemplateDict, settingsFileNameDict)

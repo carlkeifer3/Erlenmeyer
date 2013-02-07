@@ -2,10 +2,10 @@ from distutils.core import setup
 
 setup(
     name = 'Erlenmeyer',
-    version = '0.1.3',
+    version = '0.1.5',
     author = 'Patrick Perini',
     author_email = 'pperini@megabitsapp.com',
-    packages = ['erlenmeyer', 'erlenmeyer.libs'],
+    packages = ['erlenmeyer', 'erlenmeyer.libs', 'erlenmeyer.templates'],
     scripts = ['bin/erlenmeyer'],
     url = 'http://MegaBits.github.com/Erlenmeyer',
     license = 'LICENSE.txt',

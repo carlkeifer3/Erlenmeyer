@@ -31,11 +31,11 @@ The Flask file (e.g. ``MegaBits.py``) is the primary Flask service. It creates t
 
 This service has 3 globally accessible variables:
 
-* `settings`: A dictionary of settings loaded from `settings.json`.
+* ``settings``: A dictionary of settings loaded from `settings.json`.
 
-* `flaskApp`: The Flask app.
+* ``flaskApp``: The Flask app.
 
-* `database`: The SQLAlchemy instance, loaded from the Flask app.
+* ``database``: The SQLAlchemy instance, loaded from the Flask app.
 
 
 ``handlers``

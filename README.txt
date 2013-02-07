@@ -2,9 +2,9 @@
 Erlenmeyer
 ===========
 
-*It's Flask, SQLAlchemy, and Core Data. Get it? It's a chemistry pun. Get it?*
-
 Erlenmeyer allows you to create fully-functional Flask servers, complete with SQLAlchemy models, from a Core Data file.
+
+*It's Flask, SQLAlchemy, and Core Data. Get it? It's a chemistry pun. Get it?*
 
     $ erlenmeyer -p MegaBits -c MBModels.xcodedatamodeld
 

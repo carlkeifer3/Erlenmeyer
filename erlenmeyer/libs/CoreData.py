@@ -3,7 +3,7 @@
 #  Erlenmeyer
 #
 #  Created by Patrick Perini on February 6, 2013.
-#  See readme.md for licensing information.
+#  See LICENSE.txt for licensing information.
 #
 
 # imports

@@ -8,7 +8,7 @@
 
 # imports
 import flask
-from models import Model
+from erlenmeyer import Model
 from flask.ext.sqlalchemy import SQLAlchemy
 {% for model in models -%}
 from handlers.{{ model.className }}Handler import {{ model.className }}Handler

@@ -125,23 +125,6 @@ def main():
     
     renderTemplate('modelsInit', {}, modelsInitFileNameDict)
     
-    # - create Model file
-    print "Creating Model object..."
-    
-    modelsModelTemplateDict = {
-        "metadata": metadata,
-        "model":
-        {
-            "primaryKey": options.primaryKey
-        }
-    }
-    
-    modelsModelFileNameDict = {
-        "directory": options.project
-    }
-    
-    renderTemplate('modelsModel', modelsModelTemplateDict, modelsModelFileNameDict)
-    
     # - create Model subclass files
     for model in coreData['models']:
         print "Creating %(model)s object..." % ({

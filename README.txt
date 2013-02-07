@@ -41,11 +41,7 @@ Each handler method retrieves or applies the appropriate information to its unde
 ``models``
 ---------
 
-The ``models`` module contains two distict types of objects.
-
-* ``Model.py``, which inherits directly from ``flask.ext.sqlalchemy.Model``. It provides a shared underlying primary key to ever other model, as well as some convenience methods.
-
-* The remaining models, which are created from your Core Data file, and inherit from either ``Model.py`` or their Core Data-stated parent class.
+The ``models`` module contains object which are created from your Core Data file, and inherit from either ``erlenmeyer.Model`` or their Core Data-stated parent class.
 
 
 ``settings.json``

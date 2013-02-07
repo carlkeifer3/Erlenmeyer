@@ -15,6 +15,7 @@ import jinja2
 import getpass
 import optparse
 import datetime
+import erlenmeyer
 from erlenmeyer.libs import CoreData
 from erlenmeyer.libs import jinja2_filters
 

@@ -53,4 +53,4 @@ The ``models`` module contains object which are created from your Core Data file
 Other bits...
 -------------
 
-For feature requests and bug reports, please use `https://github.com/MegaBits/Erlenmeyer/issues`.
+For feature requests and bug reports, please use `https://github.com/MegaBits/Erlenmeyer/issues <https://github.com/MegaBits/Erlenmeyer/issues>`_.

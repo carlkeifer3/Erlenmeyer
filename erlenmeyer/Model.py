@@ -10,7 +10,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 
 # globals
-database = None
+database = SQLAlchemy()
 
 class Model (database.Model):        
     # accessors

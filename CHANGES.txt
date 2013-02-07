@@ -1,1 +1,2 @@
 v0.1, Feb 6 2013 -- Initial release.
+v0.1.1, Feb 7 2013 -- Fix README.txt.

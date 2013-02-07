@@ -20,8 +20,6 @@ settings = json.load(open('settings/settings.json'))
 flaskApp = flask.Flask(__name__)
 flaskApp.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(password)s@localhost/%(database)s' % (settings['sql'])
 
-database = SQLAlchemy(flaskApp)
-
 # handlers
 {% for model in models %}
 # - {{ model.className }}
@@ -79,7 +77,7 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
 
 # main
 if __name__ == "__main__":
-    Model.database = database
+    Model.database.init_app(flaskApp)
 
     flaskApp.run(
         host = settings['server']['ip'],

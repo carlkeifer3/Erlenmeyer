@@ -20,9 +20,9 @@ class Model (database.Model):
                 yield (key, self.__dict__[key])  
     
     # mutators
-    def update(self, dict):
-        for key in dict:
-            setattr(self, key, dict[key])
+    def update(self, properties):
+        for key in properties:
+            setattr(self, key, properties[key])
     
     def save(self):
         database.session.add(self)

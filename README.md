@@ -1,6 +1,7 @@
-===========
 Erlenmeyer
 ===========
+
+*It's Flask, SQLAlchemy, and Core Data. Get it? It's a chemistry pun. Get it?*
 
 Erlenmeyer allows you to create fully-functional Flask servers, complete with SQLAlchemy models, from a Core Data file.
 
@@ -23,13 +24,13 @@ Where the ellipses (`...`) are lists of models built from your Core Data file.
 
 
 `MegaBits.py`
-=========
+---------
 
 `MegaBits.py` is the primary Flask service. It creates the Flask app and SQLAlchemy instances, and forwards requests to the handler objects found in the `handlers` module.
 
 
 `handlers`
-=========
+---------
 
 The `handlers` module contains a separate handler object for each model object built from your Core Data file. Every handler has 5+ methods, depending on the relational complexity of the underlying model.
 
@@ -37,7 +38,7 @@ Each handler method retrieves or applies the appropriate information to its unde
 
 
 `models`
-=========
+---------
 
 The `models` module contains two distict types of objects.
 
@@ -47,9 +48,12 @@ The `models` module contains two distict types of objects.
 
 
 `settings.json`
-=========
+---------
 
 `settings.json` contains information for the runtime of the service. The "server" dictionary provides information for the Flask app, such as the IP address and port on which to broadcast. And the "sql" dictionary provides SQLAlchemy login and database information with which it should store the models.
 
+
+Other bits...
+---------
 
 For feature requests and bug reports, please use [https://github.com/MegaBits/Erlenmeyer/issues](https://github.com/MegaBits/Erlenmeyer/issues).

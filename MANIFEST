@@ -4,8 +4,9 @@ LICENSE.txt
 README.txt
 setup.py
 bin/erlenmeyer
-erlenmeyer/Model.py
+erlenmeyer/Model_extensions.py
 erlenmeyer/__init__.py
 erlenmeyer/libs/CoreData.py
 erlenmeyer/libs/__init__.py
+erlenmeyer/libs/categories.py
 erlenmeyer/libs/jinja2_filters.py

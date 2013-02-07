@@ -311,5 +311,5 @@ def post{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mode
     
 {% endif -%}
 {% else %}
-# - no relationships ...
+# - - no relationships ...
 {% endfor %}

@@ -24,10 +24,18 @@ This command will generate a new Flask project, called MegaBits, with the follow
 Where the ellipses (``...``) are lists of models built from your Core Data file.
 
 
-``MegaBits.py``
----------------
+Flask File
+----------
 
-``MegaBits.py`` is the primary Flask service. It creates the Flask app and SQLAlchemy instances, and forwards requests to the handler objects found in the ``handlers`` module.
+The Flask file (e.g. ``MegaBits.py``) is the primary Flask service. It creates the Flask app and SQLAlchemy instances, and forwards requests to the handler objects found in the ``handlers`` module.
+
+This service has 3 globally accessible variables::
+
+* `settings`: A dictionary of settings loaded from `settings.json`.
+
+* `flaskApp`: The Flask app.
+
+* `database`: The SQLAlchemy instance, loaded from the Flask app.
 
 
 ``handlers``
@@ -41,7 +49,7 @@ Each handler method retrieves or applies the appropriate information to its unde
 ``models``
 ----------
 
-The ``models`` module contains object which are created from your Core Data file, and inherit from either ``erlenmeyer.Model`` or their Core Data-stated parent class.
+The ``models`` module contains object which are created from your Core Data file, and inherit from either ``flask.ext.sqlalchemy.Model`` or their Core Data-stated parent class.
 
 
 ``settings.json``

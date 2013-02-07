@@ -7,36 +7,38 @@
 #
 
 # imports
-from erlenmeyer import Model
+from {{ metadata.projectName }} import database
+{% if {{ model.parentClassName }} != "database.Model" -%}
 import {{ model.parentClassName }}
+{% endif -%}
 
 class {{ model.className }} ({{ model.parentClassName }}):
 
     # properties
     {% for attribute in model.attributes -%}
     {% if {{ attribute.name }} == {{ model.primaryKey }} -%}
-    {{ attribute.name }} = Model.database.Column(Model.database.{{ attribute.type }}, primary_key = True)
+    {{ attribute.name }} = database.Column(database.{{ attribute.type }}, primary_key = True)
     {% else -%}
-    {{ attribute.name }} = Model.database.Column(Model.database.{{ attribute.type }})
+    {{ attribute.name }} = database.Column(database.{{ attribute.type }})
     {% endif -%}
     {% else %}
-    # - no attributes...
+    # - no properties...
     {% endfor %}
     
     # - relationships
     {% for relationship in model.relationships -%}
     {% if relationship.isToMany -%}
-    {{ relationship.name }} = Model.database.relationship(
+    {{ relationship.name }} = database.relationship(
         '{{ relationship.className }}',
-        Model.database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}')
+        database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}')
     )
     {% else -%}
-    {{ relationship.name }} = Model.database.relationship(
+    {{ relationship.name }} = database.relationship(
         '{{ relationship.className }}',
-        Model.database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}'),
+        database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}'),
         uselist = False
     )
     {% endif -%}
     {% else %}
-    # - no relationships...
+    # - - no relationships...
     {% endfor %}

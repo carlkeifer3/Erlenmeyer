@@ -34,7 +34,7 @@ class CoreData (dict):
     def __entityForDOMEntity(self, domEntity, primaryKey):
         entity = {
             "className": str(domEntity.getAttributeNode('name').nodeValue),
-            "parentClassName": "Model",
+            "parentClassName": "database.Model",
             "primaryKey": primaryKey,
             "attributes": [],
             "relationships": []

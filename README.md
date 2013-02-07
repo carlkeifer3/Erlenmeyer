@@ -7,7 +7,7 @@ Erlenmeyer allows you to create fully-functional Flask servers, complete with SQ
 
     $ erlenmeyer -p MegaBits -c MBModels.xcodedatamodeld
 
-This command will generate a new Flask project, called MegaBits, with the following directory structure::
+This command will generate a new Flask project, called MegaBits, with the following directory structure:
 
     MegaBits.py
     /handlers

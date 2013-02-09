@@ -7,36 +7,40 @@
 #
 
 # imports
+import os
+import json
 import flask
 from erlenmeyer.libs import categories
 from erlenmeyer import Model_extensions
 from flask.ext.sqlalchemy import SQLAlchemy
-{% for model in models -%}
-from handlers.{{ model.className }}Handler import {{ model.className }}Handler
-{% endfor %}
 
 # globals
-settings = json.load(open('settings/settings.json'))
+__filepath__ = os.path.dirname(os.path.abspath(__file__))
+settings = json.load(open('%s/settings/settings.json' % (__filepath__)))
 
 flaskApp = flask.Flask(__name__)
 flaskApp.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(password)s@localhost/%(database)s' % (settings['sql'])
 
 database = SQLAlchemy(flaskApp)
-categories.addCategories(database, Model_extensions)
+categories.addCategories(database.Model, Model_extensions)
 
 # handlers
-{% for model in models %}
+{% for model in models -%}
 # - {{ model.className }}
 @flaskApp.route("/{{ model.className }}s", methods = ["GET", "PUT"])
 def handle{{ model.className }}s():
+    from handlers import {{ model.className }}Handler
+    
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}s()
         
     elif flask.request.method == "PUT":
-        return {{ model.className }}Handler.put{{ model.className|camelcase }}({{ model.primaryKey }}, dict(flask.request.form))
+        return {{ model.className }}Handler.put{{ model.className|camelcase }}(dict(flask.request.form))
         
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>", methods = ["GET", "POST", "DELETE"])
 def handle{{ model.className }}({{ model.primaryKey }}):
+    from handlers import {{ model.className }}Handler
+
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}({{ model.primaryKey }})
         
@@ -51,6 +55,8 @@ def handle{{ model.className }}({{ model.primaryKey }}):
 {% if relationship.isToMany -%}
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "PUT", "DELETE"])
 def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
+    from handlers import {{ model.className }}Handler
+
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }})
         
@@ -63,6 +69,8 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
 {% else -%}
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "POST"])
 def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
+    from handlers import {{ model.className }}Handler
+    
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }})
         
@@ -71,16 +79,27 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
 
 {% endif -%}
 {% else %}
-# - - - no relationships...
+# - - no relationships...
 
 {% endfor %}
 {% else %}
-# - - no models...
+# - no models...
 
 {% endfor %}
 
+# functions
+def createTables():
+    from {{ metadata.projectName }} import database
+    {% for model in models -%}
+    from models.{{ model.className }} import {{ model.className }}
+    {% endfor %}
+    
+    database.create_all()
+
 # main
-if __name__ == "__main__":
+if __name__ == "__main__":    
+    createTables()
+
     flaskApp.run(
         host = settings['server']['ip'],
         port = settings['server']['port'],

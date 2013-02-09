@@ -3,10 +3,11 @@ CHANGES.txt
 LICENSE.txt
 README.txt
 setup.py
-bin/erlenmeyer_templates/handlers/ModelObjectHandler.tmpl.py
-bin/erlenmeyer_templates/models/ModelObject.tmpl.py
-bin/erlenmeyer_templates/settins/settins.tmpl.json
-bin/erlenmeyerbin/erlenmeyer_templates/project.tmpl.py
+bin/erlenmeyer
+bin/erlenmeyer_templates/erlenmeyer.project.tmpl.py
+bin/erlenmeyer_templates/handlers/erlenmeyer.ModelObjectHandler.tmpl.py
+bin/erlenmeyer_templates/models/erlenmeyer.ModelObject.tmpl.py
+bin/erlenmeyer_templates/settings/erlenmeyer.settings.tmpl.json
 erlenmeyer/Model_extensions.py
 erlenmeyer/__init__.py
 erlenmeyer/libs/CoreData.py

@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = 'Erlenmeyer',
-    version = '0.1.6',
+    version = '0.1.73',
     author = 'Patrick Perini',
     author_email = 'pperini@megabitsapp.com',
     packages = [
@@ -10,11 +10,11 @@ setup(
         'erlenmeyer.libs'
     ],
     scripts = [
-        'bin/erlenmeyer'
-        'bin/erlenmeyer_templates/project.tmpl.py',
-        'bin/erlenmeyer_templates/handlers/ModelObjectHandler.tmpl.py',
-        'bin/erlenmeyer_templates/models/ModelObject.tmpl.py',
-        'bin/erlenmeyer_templates/settins/settins.tmpl.json'
+        'bin/erlenmeyer',
+        'bin/erlenmeyer_templates/erlenmeyer.project.tmpl.py',
+        'bin/erlenmeyer_templates/handlers/erlenmeyer.ModelObjectHandler.tmpl.py',
+        'bin/erlenmeyer_templates/models/erlenmeyer.ModelObject.tmpl.py',
+        'bin/erlenmeyer_templates/settings/erlenmeyer.settings.tmpl.json'
     ],
     url = 'http://MegaBits.github.com/Erlenmeyer',
     license = 'LICENSE.txt',

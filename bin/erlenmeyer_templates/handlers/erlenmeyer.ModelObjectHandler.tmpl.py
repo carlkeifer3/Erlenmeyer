@@ -19,8 +19,8 @@ def get{{ model.className|camelcase }}s():
     @return: A flask response built with a JSON list of all {{ model.className }}s.
     """
     
-    all{{ model.className|camelcase }}s = {{ model.className }}{{ model.className }}.all()
-    all{{ model.className|camelcase }}sDictionaries = [dict({{ model.className|lower }} for {{ model.className|lower }} in all{{ model.className|camelcase }}s)]
+    all{{ model.className|camelcase }}s = {{ model.className }}.{{ model.className }}.query.all()
+    all{{ model.className|camelcase }}sDictionaries = [dict({{ model.className|lower }}) for {{ model.className|lower }} in all{{ model.className|camelcase }}s if dict({{ model.className|lower }})]
     
     return flask.Response(
         response = json.dumps(all{{ model.className|camelcase }}sDictionaries),
@@ -28,7 +28,7 @@ def get{{ model.className|camelcase }}s():
         content_type = 'application/json'
     )
     
-def put{{ model.className|camelcase }}({{ model.primaryKey }}, properties):
+def put{{ model.className|camelcase }}(properties):
     """
     Inserts a new {{ model.className }} with the given properties into the database.
         

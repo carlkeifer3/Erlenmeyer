@@ -18,12 +18,13 @@ def __iter__(self):
 # mutators
 def update(self, properties):
     for key in properties:
-        setattr(self, key, properties[key])
+        value = properties[key] if type(properties[key]) != list else properties[key][0]
+        setattr(self, key, value)
 
 def save(self):
-    database.session.add(self)
-    database.session.commit()
+    self.__class__.__database__.session.add(self)
+    self.__class__.__database__.session.commit()
     
 def delete(self):
-    database.session.delete(self)
-    database.session.commit()
+    self.__class__.__database__.session.delete(self)
+    self.__class__.__database__.session.commit()

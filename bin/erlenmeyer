@@ -10,6 +10,7 @@
 
 # imports
 import os
+import flask
 import shutil
 import jinja2
 import getpass
@@ -18,6 +19,8 @@ import datetime
 import erlenmeyer
 from erlenmeyer.libs import CoreData
 from erlenmeyer.libs import jinja2_filters
+from sqlalchemy import exc as sqlExceptions
+from flask.ext.sqlalchemy import SQLAlchemy
 
 # constants
 projectFiles = {
@@ -34,21 +37,21 @@ projectFiles = {
 }
 
 templateFiles = {
-    "flaskProject": "project.tmpl.py",
+    "flaskProject": "erlenmeyer.project.tmpl.py",
     
-    "modelsModel": "models/model.tmpl.py",
-    "modelsModelObject": "models/ModelObject.tmpl.py",
+    "modelsModel": "erlenmeyer.model.tmpl.py",
+    "modelsModelObject": "erlenmeyer.ModelObject.tmpl.py",
     
-    "handlersModelObjectHandler": "handlers/ModelObjectHandler.tmpl.py",
+    "handlersModelObjectHandler": "erlenmeyer.ModelObjectHandler.tmpl.py",
     
-    "settings": "settings/settings.tmpl.json"
+    "settings": "erlenmeyer.settings.tmpl.json"
 }
 
 # globals
 optionParser = optparse.OptionParser()
 
 templateEnvironment = jinja2.Environment(
-    loader = jinja2.FileSystemLoader('%s/erlenmeyer_templates' % (os.path.abspath('.')))
+    loader = jinja2.FileSystemLoader('/usr/local/bin')
 )
 
 for filter in dir(jinja2_filters):
@@ -68,7 +71,11 @@ def main():
         
     # setup variables
     project = os.path.abspath(options.project)
-    coreDataFile = os.path.abspath(options.CoreDataFile)
+    coreDataFile = os.path.abspath(options.coreDataFile)
+    sqlLogin = {
+        "user": options.sqlLogin.split(":")[0],
+        "password": options.sqlLogin.split(":")[1],
+    }
         
     # trap errors
     if not options.forceProjectCreation and os.path.isdir(project):
@@ -90,10 +97,11 @@ def main():
         shutil.rmtree(project)
         
     projectName = os.path.basename(project)
+    sqlLogin['database'] = projectName.lower()
     
     metadata = {
         "projectName": projectName,
-        "projectOwner": projectOwner if projectOwner else getpass.getuser(),
+        "projectOwner": projectOwner if options.projectOwner else getpass.getuser(),
         "fileAuthor": options.fileAuthor if options.fileAuthor else getpass.getuser(),
         "pubDate": datetime.datetime.today().strftime("%h %d, %Y"),
         "pubYear": datetime.datetime.today().strftime("%Y")
@@ -105,7 +113,6 @@ def main():
     
     # create flask file
     print "Creating Flask file..."
-    
     flaskProjectTemplateDict = {
         "metadata": metadata,
         "models": coreData['models']
@@ -121,7 +128,6 @@ def main():
     # create models files
     # - create init file
     print "Creating models module..."
-    
     modelsInitFileNameDict = {
         "directory": project
     }
@@ -130,7 +136,7 @@ def main():
     
     # - create Model subclass files
     for model in coreData['models']:
-        print "Creating %(model)s object..." % ({
+        print "  Creating %(model)s object..." % ({
             "model": model["className"]
         })
         
@@ -158,7 +164,7 @@ def main():
     
     # - create Model subclass files
     for model in coreData['models']:
-        print "Creating %(model)s handler..." % ({
+        print "  Creating %(model)s handler..." % ({
             "model": model["className"]
         })
         
@@ -174,13 +180,13 @@ def main():
         
         renderTemplate('handlersModelObjectHandler', handlersModelObjectHandlerTemplateDict, handlersModelHandlerFileNameDict)
         
-    # create settings files
+    # create settings directory
     # - create settings file
     print "Creating settings file..."
     
     settingsTemplateDict = {
         "metadata": metadata,
-        "projectName": projectName
+        "sql": sqlLogin
     }
     
     settingsFileNameDict = {
@@ -188,7 +194,30 @@ def main():
     }
     
     renderTemplate('settings', settingsTemplateDict, settingsFileNameDict)
+        
+    # create MySQL database & tables
+    print "Creating MySQL database..."
+    mySQLServer = 'mysql://%(user)s:%(password)s@localhost' % (sqlLogin)
     
+    flaskApp = flask.Flask(__name__)
+    flaskApp.config['SQLALCHEMY_DATABASE_URI'] = '%(server)s/%(database)s' % ({
+        "server": mySQLServer,
+        "database": sqlLogin['database']
+    })
+    
+    database = SQLAlchemy(flaskApp)
+    
+    databaseEngine = database.create_engine(mySQLServer)
+    databaseEngineExecutor = databaseEngine.connect().execute
+    
+    try:
+        databaseEngineExecutor("create database %(database)s" % ({
+            "database": sqlLogin['database']
+        }))
+    except sqlExceptions.ProgrammingError:
+        print "  MySQL database already exists!"
+    
+    # finish
     print "Finished!"
         
 # template renderers
@@ -231,6 +260,12 @@ if __name__ == "__main__":
     optionParser.add_option(
         "-c", "--coredata", dest = "coreDataFile",
         help = "Location of the Core Data xcdatamodeld file."
+    )
+    
+    optionParser.add_option(
+        "--sql", dest = "sqlLogin",
+        help = "The username:password combination for SQLALchemy.",
+        default = "root:"
     )
     
     optionParser.add_option(

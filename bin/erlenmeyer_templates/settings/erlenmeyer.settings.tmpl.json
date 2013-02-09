@@ -17,8 +17,8 @@
 
     "sql":
     {
-        "user": "root",
-        "password": "",
-        "database": "{{ metadata.projectName }}"
+        "user": "{{ sql.user }}",
+        "password": "{{ sql.password }}",
+        "database": "{{ metadata.projectName|lower }}"
     }
 }

@@ -8,15 +8,17 @@
 
 # imports
 from {{ metadata.projectName }} import database
-{% if {{ model.parentClassName }} != "database.Model" -%}
-import {{ model.parentClassName }}
-{% endif -%}
+{% if model.parentClassName != "database.Model" -%}
+from {{ model.parentClassName }} import {{ model.parentClassName }}
+{%- endif %}
 
 class {{ model.className }} ({{ model.parentClassName }}):
 
+    __database__ = database
+
     # properties
     {% for attribute in model.attributes -%}
-    {% if {{ attribute.name }} == {{ model.primaryKey }} -%}
+    {% if attribute.name == model.primaryKey -%}
     {{ attribute.name }} = database.Column(database.{{ attribute.type }}, primary_key = True)
     {% else -%}
     {{ attribute.name }} = database.Column(database.{{ attribute.type }})

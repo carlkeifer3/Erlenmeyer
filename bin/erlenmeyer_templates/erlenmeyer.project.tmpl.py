@@ -10,9 +10,10 @@
 import os
 import json
 import flask
-from erlenmeyer.libs import categories
-from erlenmeyer import Model_extensions
+from erlenmeyer import categories
 from flask.ext.sqlalchemy import SQLAlchemy
+from erlenmeyer.ext import Model as ModelExtensions
+from erlenmeyer.ext import SQLAlchemy as SQLAlchemyExtensions
 
 # globals
 __filepath__ = os.path.dirname(os.path.abspath(__file__))
@@ -22,8 +23,9 @@ flaskApp = flask.Flask(__name__)
 flaskApp.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(password)s@localhost/%(database)s' % (settings['sql'])
 
 database = SQLAlchemy(flaskApp)
-categories.addCategories(database.Model.__class__, Model_extensions, list = Model_extensions.classMethods)
-categories.addCategories(database.Model, Model_extensions, list = Model_extensions.instanceMethods)
+categories.addCategories(database, SQLAlchemyExtensions, list = SQLAlchemyExtensions.instanceMethods)
+categories.addCategories(database.Model.__class__, ModelExtensions, list = ModelExtensions.classMethods)
+categories.addCategories(database.Model, ModelExtensions, list = ModelExtensions.instanceMethods)
 
 # handlers
 {% for model in models -%}

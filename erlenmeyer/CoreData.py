@@ -50,16 +50,12 @@ class CoreData (dict):
             
         domRelationships = domEntity.getElementsByTagName('relationship')
         for domRelationship in domRelationships:
-            entity['relationships'].append(self.__relationshipForDOMRelationship(domRelationship))
-            
-        currentEntity = entity
-        while True:
-            currentEntity = self.__parentEntityForEntity(currentEntity, primaryKey)
-            if currentEntity == None:
-                break
-            
-            entity['attributes'].extend(currentEntity['attributes'])
-            entity['relationships'].extend(currentEntity['relationships'])
+            entity['relationships'].append(self.__relationshipForDOMRelationship(domRelationship, entity['className']))
+        
+        parentEntity = self.__parentEntityForEntity(entity, primaryKey)
+        if parentEntity:
+            entity['attributes'].extend(parentEntity['attributes'])
+            entity['relationships'].extend(parentEntity['relationships'])
             
         for attribute in entity['attributes']:
             if attribute['name'] == primaryKey:
@@ -86,17 +82,24 @@ class CoreData (dict):
                 
         return attribute
         
-    def __relationshipForDOMRelationship(self, domRelationship):
+    def __relationshipForDOMRelationship(self, domRelationship, entityName):
         relationship = {
             "name": str(domRelationship.getAttributeNode('name').nodeValue),
             "className": str(domRelationship.getAttributeNode('destinationEntity').nodeValue),
             "inverseName": str(domRelationship.getAttributeNode('inverseName').nodeValue),
-            "isToMany": False
+            "inverseClassName": entityName,
+            "isToMany": False,
+            "inverseIsToMany": False,
+            "inverseHasBeenHandled": False
         }
         
         if domRelationship.getAttributeNode('toMany'):
             relationship['isToMany'] = str(domRelationship.getAttributeNode('toMany').nodeValue) == 'YES'
             
+        relationship['inverseIsToMany'] = self.__isInverseEntityToMany(relationship)
+        if (domRelationship.getAttributeNode('hasBeenAccountedFor')) and (str(domRelationship.getAttributeNode('hasBeenAccountedFor').nodeValue) == 'YES'):
+            relationship['inverseHasBeenHandled'] = True
+                
         return relationship
         
     def __parentEntityForEntity(self, entity, primaryKey):
@@ -106,6 +109,22 @@ class CoreData (dict):
                 return self.__entityForDOMEntity(domEntity, primaryKey)
         else:
             return None
+            
+    def __isInverseEntityToMany(self, relationship):
+        inverseDOMEntity = None
+        domEntities = self.coreDataDOM.getElementsByTagName('entity')
+        for domEntity in domEntities:
+            if (domEntity.getAttributeNode('name')) and (str(domEntity.getAttributeNode('name').nodeValue) == relationship['className']):
+                inverseDOMEntity = domEntity
+                break
+            
+        domRelationships = domEntity.getElementsByTagName('relationship')
+        for domRelationship in domRelationships:                
+            if (str(domRelationship.getAttributeNode('destinationEntity').nodeValue) == relationship['inverseClassName']) and (str(domRelationship.getAttributeNode('name').nodeValue) == relationship['inverseName']):
+                domRelationship.setAttribute('hasBeenAccountedFor', 'YES')
+                return (domRelationship.getAttributeNode('toMany')) and (str(domRelationship.getAttributeNode('toMany').nodeValue) == 'YES')
+        else:
+            return False
         
     # mutators
     def __parseCoreDataFile(self, coreDataFile, primaryKey):

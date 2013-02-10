@@ -137,7 +137,7 @@ def get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
     
     @param {{ model.primaryKey }}: The {{ model.primaryKey }} identifying the desired {{ model.className }}.
     
-    @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with the status 204 if the desired {{ model.primaryKey }} has no {{ relationship.name }}. A flask response with the JSON list of the {{ relationship.name }} of the desired {{ model.className }}.
+    @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. A flask response with the JSON list of the {{ relationship.name }} of the desired {{ model.className }}.
     """
     
     {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
@@ -145,13 +145,6 @@ def get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
         return flask.Response(
             response = '',
             status = 404,
-            content_type = 'application/json'
-        )
-        
-    if not {{ model.className|lower }}.{{ relationship.name }}:
-        return flask.Response(
-            response = '',
-            status = 204,
             content_type = 'application/json'
         )
         
@@ -217,13 +210,6 @@ def delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mo
         return flask.Response(
             response = '',
             status = 404,
-            content_type = 'application/json'
-        )
-        
-    if not {{ model.className|lower }}.{{ relationship.name }}:
-        return flask.Response(
-            response = '',
-            status = 204,
             content_type = 'application/json'
         )
     

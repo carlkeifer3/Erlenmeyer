@@ -2,12 +2,12 @@ from distutils.core import setup
 
 setup(
     name = 'Erlenmeyer',
-    version = '0.1.73',
+    version = '0.0.1',
     author = 'Patrick Perini',
     author_email = 'pperini@megabitsapp.com',
     packages = [
         'erlenmeyer',
-        'erlenmeyer.libs'
+        'erlenmeyer.ext'
     ],
     scripts = [
         'bin/erlenmeyer',

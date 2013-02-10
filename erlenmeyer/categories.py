@@ -6,13 +6,21 @@
 #  See LICENSE.txt for licensing information.
 #
 
+# imports
+import inspect
+
 class category(object):
     def __init__(self, destination, override = True):
         self.destination = destination
         self.override = override
         
     def __call__(self, function):
-        if self.override or function.__name__ not in dir(self.destionation):
+        if not self.override and function.__name__ in dir(self.destionation):
+            return
+        
+        if not inspect.isclass(self.destination):
+            setattr(self.destination.__class__, function.__name__, function)
+        else:
             setattr(self.destination, function.__name__, function)
             
 def categorize(destination, function, override = True):
@@ -20,11 +28,10 @@ def categorize(destination, function, override = True):
 
 def addCategories(destination, source, override = True, list = None):
     if not list:
-        list = dir(module)
+        list = dir(source)
         
     for function in list:
         try:
             categorize(destination, getattr(source, function), override)
-        except AttributeError:
+        except AttributeError, e:
             pass
-            

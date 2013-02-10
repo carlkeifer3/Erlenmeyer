@@ -1,5 +1,5 @@
 #
-#  Model_extensions.py
+#  Model.py
 #  Erlenmeyer
 #
 #  Created by Patrick Perini on February 7, 2013.
@@ -12,7 +12,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # constants 
 classMethods = [
     'all',
-    'get'
+    'get',
 ]
 
 instanceMethods = [

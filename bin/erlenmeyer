@@ -17,8 +17,8 @@ import getpass
 import optparse
 import datetime
 import erlenmeyer
-from erlenmeyer.libs import CoreData
-from erlenmeyer.libs import jinja2_filters
+from erlenmeyer import CoreData
+from erlenmeyer.ext import jinja2 as jinja2Extensions
 from sqlalchemy import exc as sqlExceptions
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -54,8 +54,8 @@ templateEnvironment = jinja2.Environment(
     loader = jinja2.FileSystemLoader('/usr/local/bin')
 )
 
-for filter in dir(jinja2_filters):
-    templateEnvironment.filters[filter] = getattr(jinja2_filters, filter)
+for filter in dir(jinja2Extensions):
+    templateEnvironment.filters[filter] = getattr(jinja2Extensions, filter)
 
 # functions
 def main():

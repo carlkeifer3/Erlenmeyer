@@ -7,7 +7,6 @@
 #
 
 # imports
-from erlenmeyer.libs import jinja2_filters
 from {{ metadata.projectName }} import database
 
 class {{ model.className }} (database.Model):
@@ -27,9 +26,19 @@ class {{ model.className }} (database.Model):
     {% endfor %}
     
     # - relationships
-    {% for relationship in model.relationships -%}
+    {% for relationship in model.relationships if not relationship.inverseHasBeenHandled -%}
     {% if relationship.isToMany -%}
+    {% if relationship.inverseIsToMany -%}
+    {{ relationship.name }} = database.tableRelationship(
+        '{{ model.className }}',
+        '{{ relationship.className }}',
+        '{{ model.primaryKey }}',
+        database.{{ model.primaryKeyType }},
+        inverseName = '{{ relationship.inverseName }}'
+    )
+    {% else -%}
     {{ relationship.name }} = database.relationship('{{ relationship.className }}')
+    {% endif %}
     {% else -%}
     {{ relationship.name }} = database.Column(database.{{ model.primaryKeyType }}, database.ForeignKey('{{ relationship.className|underscore }}.{{ model.primaryKey }}'))
     {% endif -%}

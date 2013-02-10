@@ -22,7 +22,7 @@ class CoreData (dict):
         Creates a CoreData dictionary object from the given .xcodedatamodeld file.
         
         @param coreDataFile: The path to the .xcodedatamodeld file for parsing.
-        @param primaryKey: The primaryKey for the Model class. All other models will inherit this key. Defaults to 'uuid'.
+        @param primaryKey: The primaryKey for the class. All other models will share this key. Defaults to 'uuid'.
         
         @returns: A CoreData dictionary object.
         """

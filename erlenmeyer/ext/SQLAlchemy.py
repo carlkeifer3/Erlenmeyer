@@ -1,5 +1,5 @@
 #
-#  Model.py
+#  SQLAlchemy.py
 #  Erlenmeyer
 #
 #  Created by Patrick Perini on February 10, 2013.

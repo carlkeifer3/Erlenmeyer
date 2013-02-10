@@ -1,11 +1,119 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Erlenmeyer</title>
         
         <link rel="stylesheet" href="static/stylesheets/Bootstrap/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="static/stylesheets/main.css" type="text/css" />
     </head>
     
     <body>
-        
+        <div class="column">
+            <div class="row" id="headers">
+                <div class="row">
+                    <img id="logo" src="static/images/logo.svg"/>
+                </div>
+                
+                <div class="row">
+                    <b>Erlenmeyer allows you to create fully-functional Flask servers, complete with SQLAlchemy models, from a Core Data file.</b>
+                    <br/>
+                    <i>It's Flask, SQLAlchemy, and Core Data. Get it? It's a chemistry pun. Get it?</i>
+                    <br/>
+                </div>
+            </div>
+            
+            <div class="row" id="headers">
+                <b>docs</b>
+                <br/>
+                quickstart :: <a href="erlenmeyer_script.html">erlenmeyer script</a> :: <a href="erlenmeyer_module.html">erlenmeyer module</a>
+            </div>
+            
+            <div class="row">
+                <h3>Quickstart</h3>
+                
+                To install, use:
+                <br/>
+                
+                <code>
+                    $ pip install erlenmeyer
+                </code>
+                
+                <br/><br/>
+                Then, to create a new project:
+                <br/>
+                
+                <code>
+                    $ erlenmeyer -p MegaBits -c MBModels.xcodedatamodeld
+                </code>
+                
+                <br/><br/>
+                This command will generate a new Flask project, called MegaBits, with the following directory structure:
+                <br/>
+                
+                <pre>MegaBits.py
+/handlers
+    __init__.py
+    ...
+/models
+    __init__.py
+    ...
+/settings
+    settings.json</pre>
+    
+                Where the ellipses (<tt class="docutils literal">...</tt>) are lists of models built from your Core Data file.
+            </div>
+            
+            <div class="section" id="flask-file">
+            <h3>Flask File</h3>
+                <p>
+                    The Flask file (e.g. <tt class="docutils literal">MegaBits.py</tt>) is the primary Flask service. It creates the Flask app and SQLAlchemy instances, and forwards requests to the handler objects found in the <tt class="docutils literal">handlers</tt> module.
+                </p>
+                <p>
+                    This service has 3 globally accessible variables:
+                </p>
+                <ul class="simple">
+                    <li>
+                        <tt class="docutils literal">settings</tt>: A dictionary of settings loaded from <cite>settings.json</cite>.
+                    </li>
+                    <li>
+                        <tt class="docutils literal">flaskApp</tt>: The Flask app.
+                    </li>
+                    <li>
+                        <tt class="docutils literal">database</tt>: The SQLAlchemy instance, loaded from the Flask app.
+                    </li>
+                </ul>
+            </div>
+            <div class="section" id="handlers">
+                <h3><tt class="docutils literal">handlers</tt></h3>
+                <p>
+                    The <tt class="docutils literal">handlers</tt> module contains a separate handler object for each model object built from your Core Data file. Every handler has 5+ methods, depending on the relational complexity of the underlying model.
+                </p>
+                <p>
+                    Each handler method retrieves or applies the appropriate information to its underlying model, and returns a cooresponding <tt class="docutils literal">flask.Response</tt> object, depending on success. In addition, all handler methods are also documented inline.
+                </p>
+            </div>
+            <div class="section" id="models">
+                <h3><tt class="docutils literal">models</tt></h3>
+                <p>
+                    The <tt class="docutils literal">models</tt> module contains object which are created from your Core Data file, and inherit from <tt class="docutils literal">flask.ext.sqlalchemy.Model</tt>.
+                </p>
+            </div>
+            <div class="section" id="settings-json">
+                <h3><tt class="docutils literal">settings.json</tt></h3>
+                <p>
+                    <tt class="docutils literal">settings.json</tt> contains information for the runtime of the service. The "server" dictionary provides information for the Flask app, such as the IP address and port on which to broadcast. And the "sql" dictionary provides SQLAlchemy login and database information with which it should store the models.
+                </p>
+            </div>
+            <div class="section" id="other-bits">
+                <h3>Other bits...</h3>
+                <p>
+                    For feature requests and bug reports, please use <a class="reference external" href="https://github.com/MegaBits/Erlenmeyer/issues">https://github.com/MegaBits/Erlenmeyer/issues</a>.
+                </p>
+                
+                <p>
+                    Why on earth did we do this? For <a href="http://www.megabitsapp.com">MegaBits</a>, of course!
+                </p>
+            </div>
+        </div>
     </body>
 </html>

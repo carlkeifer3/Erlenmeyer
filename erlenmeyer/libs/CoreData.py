@@ -36,6 +36,7 @@ class CoreData (dict):
             "className": str(domEntity.getAttributeNode('name').nodeValue),
             "parentClassName": "database.Model",
             "primaryKey": primaryKey,
+            "primaryKeyType": None,
             "attributes": [],
             "relationships": []
         }
@@ -50,6 +51,20 @@ class CoreData (dict):
         domRelationships = domEntity.getElementsByTagName('relationship')
         for domRelationship in domRelationships:
             entity['relationships'].append(self.__relationshipForDOMRelationship(domRelationship))
+            
+        currentEntity = entity
+        while True:
+            currentEntity = self.__parentEntityForEntity(currentEntity, primaryKey)
+            if currentEntity == None:
+                break
+            
+            entity['attributes'].extend(currentEntity['attributes'])
+            entity['relationships'].extend(currentEntity['relationships'])
+            
+        for attribute in entity['attributes']:
+            if attribute['name'] == primaryKey:
+                entity['primaryKeyType'] = attribute['type']
+                break
             
         return entity
             
@@ -75,6 +90,7 @@ class CoreData (dict):
         relationship = {
             "name": str(domRelationship.getAttributeNode('name').nodeValue),
             "className": str(domRelationship.getAttributeNode('destinationEntity').nodeValue),
+            "inverseName": str(domRelationship.getAttributeNode('inverseName').nodeValue),
             "isToMany": False
         }
         
@@ -83,12 +99,20 @@ class CoreData (dict):
             
         return relationship
         
+    def __parentEntityForEntity(self, entity, primaryKey):
+        domEntities = self.coreDataDOM.getElementsByTagName('entity')
+        for domEntity in domEntities:
+            if (domEntity.getAttributeNode('name')) and (str(domEntity.getAttributeNode('name').nodeValue) == entity['parentClassName']):
+                return self.__entityForDOMEntity(domEntity, primaryKey)
+        else:
+            return None
+        
     # mutators
     def __parseCoreDataFile(self, coreDataFile, primaryKey):
         coreDataFile = open(coreDataFile)
-        coreDataDOM = minidom.parse(coreDataFile)
+        self.coreDataDOM = minidom.parse(coreDataFile)
         
         self['models'] = []
-        domEntities = coreDataDOM.getElementsByTagName('entity')
+        domEntities = self.coreDataDOM.getElementsByTagName('entity')
         for domEntity in domEntities:
             self['models'].append(self.__entityForDOMEntity(domEntity, primaryKey))

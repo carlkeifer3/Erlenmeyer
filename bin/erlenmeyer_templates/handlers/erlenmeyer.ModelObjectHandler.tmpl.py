@@ -10,6 +10,9 @@
 import json
 import flask
 from models import {{ model.className }}
+{% for relationship in model.relationships -%}
+from models import {{ relationship.className }}
+{% endfor %}
 
 # handlers
 def get{{ model.className|camelcase }}s():
@@ -19,7 +22,7 @@ def get{{ model.className|camelcase }}s():
     @return: A flask response built with a JSON list of all {{ model.className }}s.
     """
     
-    all{{ model.className|camelcase }}s = {{ model.className }}.{{ model.className }}.query.all()
+    all{{ model.className|camelcase }}s = {{ model.className }}.{{ model.className }}.all()
     all{{ model.className|camelcase }}sDictionaries = [dict({{ model.className|lower }}) for {{ model.className|lower }} in all{{ model.className|camelcase }}s if dict({{ model.className|lower }})]
     
     return flask.Response(
@@ -57,7 +60,7 @@ def get{{ model.className|camelcase }}({{ model.primaryKey }}):
     @return: An empty flask response with status 404 if the desired {{ model.className }} cannot be found. A flask response built with the JSON dictionary for the desired {{ model.className }} otherwise.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -83,7 +86,7 @@ def post{{ model.className|camelcase }}({{ model.primaryKey }}, properties):
     @return: An empty flask response with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with status 200 otherwise.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -109,7 +112,7 @@ def delete{{ model.className|camelcase }}({{ model.primaryKey }}):
     @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with status 200 otherwise.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -137,7 +140,7 @@ def get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
     @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with the status 204 if the desired {{ model.primaryKey }} has no {{ relationship.name }}. A flask response with the JSON list of the {{ relationship.name }} of the desired {{ model.className }}.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -174,22 +177,15 @@ def put{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
     @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with status 200 otherwise.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
             status = 404,
             content_type = 'application/json'
         )
-        
-    if not {{ model.className|lower }}.{{ relationship.name }}:
-        return flask.Response(
-            response = '',
-            status = 204,
-            content_type = 'application/json'
-        )
     
-    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.query.get({{ relationship.name }}{{ model.primaryKey|camelcase }})
+    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.get({{ relationship.name }}{{ model.primaryKey|camelcase }})
     if not {{ relationship.className|lower }}:
         return flask.Response(
             response = '',
@@ -216,7 +212,7 @@ def delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mo
     @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with status 200 otherwise.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -231,7 +227,7 @@ def delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mo
             content_type = 'application/json'
         )
     
-    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.query.get({{ relationship.name }}{{ model.primaryKey|camelcase }})
+    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.get({{ relationship.name }}{{ model.primaryKey|camelcase }})
     if not {{ relationship.className|lower }}:
         return flask.Response(
             response = '',
@@ -258,7 +254,7 @@ def get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
     @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. A flask response with the JSON representation of the {{ relationship.name }} of the desired {{ model.className }}.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -266,7 +262,8 @@ def get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
             content_type = 'application/json'
         )
         
-    {{ relationship.name }}Dictionary = dict({{ model.className|lower }}.{{ relationship.name}})
+    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.get({{ model.className|lower }}.{{ relationship.name }})
+    {{ relationship.name }}Dictionary = dict({{ relationship.className|lower }})
         
     return flask.Response(
         response = json.dumps({{ relationship.name }}Dictionary),
@@ -284,7 +281,7 @@ def post{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mode
     @return: An empty flask reponse with status 404 if the desired {{ model.className }} cannot be found. An empty flask response with status 200 otherwise.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.query.get({{ model.primaryKey }})
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         return flask.Response(
             response = '',
@@ -292,7 +289,7 @@ def post{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mode
             content_type = 'application/json'
         )
         
-    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.query.get({{ relationship.name }}{{ model.primaryKey|camelcase }})
+    {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.get({{ relationship.name }}{{ model.primaryKey|camelcase }})
     if not {{ relationship.className|lower }}:
         return flask.Response(
             response = '',

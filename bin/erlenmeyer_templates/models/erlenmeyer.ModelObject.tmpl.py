@@ -7,13 +7,12 @@
 #
 
 # imports
+from erlenmeyer.libs import jinja2_filters
 from {{ metadata.projectName }} import database
-{% if model.parentClassName != "database.Model" -%}
-from {{ model.parentClassName }} import {{ model.parentClassName }}
-{%- endif %}
 
-class {{ model.className }} ({{ model.parentClassName }}):
+class {{ model.className }} (database.Model):
 
+    # class properties
     __database__ = database
 
     # properties
@@ -30,16 +29,9 @@ class {{ model.className }} ({{ model.parentClassName }}):
     # - relationships
     {% for relationship in model.relationships -%}
     {% if relationship.isToMany -%}
-    {{ relationship.name }} = database.relationship(
-        '{{ relationship.className }}',
-        database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}')
-    )
+    {{ relationship.name }} = database.relationship('{{ relationship.className }}')
     {% else -%}
-    {{ relationship.name }} = database.relationship(
-        '{{ relationship.className }}',
-        database.ForeignKey('{{ relationship.className }}.{{ model.primaryKey }}'),
-        uselist = False
-    )
+    {{ relationship.name }} = database.Column(database.{{ model.primaryKeyType }}, database.ForeignKey('{{ relationship.className|underscore }}.{{ model.primaryKey }}'))
     {% endif -%}
     {% else %}
     # - - no relationships...

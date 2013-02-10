@@ -9,11 +9,31 @@
 # imports
 from flask.ext.sqlalchemy import SQLAlchemy
 
+# constants 
+classMethods = [
+    'all',
+    'get'
+]
+
+instanceMethods = [
+    '__iter__',
+    'update',
+    'save',
+    'delete'
+]
+
+# class accessors
+def all(self):
+    return self.query.all()
+    
+def get(self, identifier):
+    return self.query.get(identifier)
+
 # accessors
 def __iter__(self):
     for key in self.__dict__:
         if not key.startswith('_'):
-            yield (key, self.__dict__[key])  
+            yield (key, self.__dict__[key])
 
 # mutators
 def update(self, properties):

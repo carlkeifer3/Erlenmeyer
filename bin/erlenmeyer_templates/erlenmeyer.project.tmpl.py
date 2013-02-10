@@ -22,7 +22,8 @@ flaskApp = flask.Flask(__name__)
 flaskApp.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(password)s@localhost/%(database)s' % (settings['sql'])
 
 database = SQLAlchemy(flaskApp)
-categories.addCategories(database.Model, Model_extensions)
+categories.addCategories(database.Model.__class__, Model_extensions, list = Model_extensions.classMethods)
+categories.addCategories(database.Model, Model_extensions, list = Model_extensions.instanceMethods)
 
 # handlers
 {% for model in models -%}

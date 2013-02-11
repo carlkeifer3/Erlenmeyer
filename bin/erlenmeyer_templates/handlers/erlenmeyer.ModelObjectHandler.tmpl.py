@@ -248,6 +248,13 @@ def get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
             content_type = 'application/json'
         )
         
+    if not {{ model.className|lower }}.{{ relationship.name }}:
+        return flask.Response(
+            response = json.dumps({}),
+            status = 200,
+            content_type = 'application/json'
+        )
+        
     {{ relationship.className|lower }} = {{ relationship.className }}.{{ relationship.className }}.get({{ model.className|lower }}.{{ relationship.name }})
     {{ relationship.name }}Dictionary = dict({{ relationship.className|lower }})
         
@@ -283,7 +290,7 @@ def post{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mode
             content_type = 'application/json'
         )
         
-    {{ model.className|lower }}.{{ relationship.name }} = {{ relationship.className|lower }}
+    {{ model.className|lower }}.{{ relationship.name }} = {{ relationship.className|lower }}.{{ model.primaryKey }}
     {{ model.className|lower }}.save()
         
     return flask.Response(

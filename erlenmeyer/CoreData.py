@@ -121,7 +121,7 @@ class CoreData (dict):
         domRelationships = domEntity.getElementsByTagName('relationship')
         for domRelationship in domRelationships:                
             if (str(domRelationship.getAttributeNode('destinationEntity').nodeValue) == relationship['inverseClassName']) and (str(domRelationship.getAttributeNode('name').nodeValue) == relationship['inverseName']):
-                domRelationship.setAttribute('hasBeenAccountedFor', 'YES')
+                domRelationship.setAttribute('hasBeenAccountedFor', 'YES' if relationship['isToMany'] else 'NO')
                 return (domRelationship.getAttributeNode('toMany')) and (str(domRelationship.getAttributeNode('toMany').nodeValue) == 'YES')
         else:
             return False

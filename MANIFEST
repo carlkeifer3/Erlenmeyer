@@ -8,9 +8,10 @@ bin/erlenmeyer_templates/erlenmeyer.project.tmpl.py
 bin/erlenmeyer_templates/handlers/erlenmeyer.ModelObjectHandler.tmpl.py
 bin/erlenmeyer_templates/models/erlenmeyer.ModelObject.tmpl.py
 bin/erlenmeyer_templates/settings/erlenmeyer.settings.tmpl.json
-erlenmeyer/Model_extensions.py
+erlenmeyer/CoreData.py
 erlenmeyer/__init__.py
-erlenmeyer/libs/CoreData.py
-erlenmeyer/libs/__init__.py
-erlenmeyer/libs/categories.py
-erlenmeyer/libs/jinja2_filters.py
+erlenmeyer/categories.py
+erlenmeyer/ext/Model.py
+erlenmeyer/ext/SQLAlchemy.py
+erlenmeyer/ext/__init__.py
+erlenmeyer/ext/jinja2.py

@@ -195,7 +195,7 @@ def put{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
         content_type = 'application/json'
     )
     
-def delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
+def delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}, {{ relationship.name }}{{ model.primaryKey|camelcase }}):
     """
     Removes the given {{ relationship.name }}{{ model.primaryKey|camelcase }} from the desired {{ model.className }}'s {{ relationship.name }}.
         

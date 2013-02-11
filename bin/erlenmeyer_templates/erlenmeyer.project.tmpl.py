@@ -67,7 +67,7 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
         return {{ model.className }}Handler.put{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}, flask.request.form['{{ relationship.name }}Object'])
         
     elif flask.request.method == "DELETE":
-        return {{ model.className }}Handler.delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}, flask.request.form['{{ relationship.name }}Object'])
+        return {{ model.className }}Handler.delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }}, flask.request.args['{{ relationship.name }}Object'])
         
 {% else -%}
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "POST"])

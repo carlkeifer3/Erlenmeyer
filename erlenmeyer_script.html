@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Erlenmeyer</title>
+        
+        <link rel="stylesheet" href="static/stylesheets/Bootstrap/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="static/stylesheets/main.css" type="text/css" />
+    </head>
+    
+    <body>
+        <div class="column">
+            <div class="row" id="headers">
+                <div class="row">
+                    <img id="logo" src="static/images/logo.svg"/>
+                </div>
+                
+                <div class="row">
+                    <b><a href="http://github.com/megabits/erlenmeyer">Erlenmeyer</a> allows you to create fully-functional Flask servers, complete with SQLAlchemy models, from a Core Data file.</b>
+                    <br/>
+                    <i>It's Flask, SQLAlchemy, and Core Data. Get it? It's a chemistry pun. Get it?</i>
+                    <br/>
+                </div>
+            </div>
+            
+            <div class="row" id="headers">
+                <b>docs</b>
+                <br/>
+                <a href="index.html">quickstart</a> :: erlenmeyer script :: <a href="erlenmeyer_module.html">erlenmeyer module</a>
+            </div>
+            
+            <pre>Usage: erlenmeyer [options]
+            
+Options:
+  -h, --help            show this help message and exit
+  -p PROJECT, --project=PROJECT
+                        Location of the project to manipulate.
+  -c COREDATAFILE, --coredata=COREDATAFILE
+                        Location of the Core Data xcdatamodeld file.
+  --sql=SQLLOGIN        The username:password combination for SQLALchemy.
+  --primaryKey=PRIMARYKEY
+                        The primary key of all Models. Default to UUID.
+  --projectOwner=PROJECTOWNER
+                        The owner to whom this project is copyrighted.
+  --fileAuthor=FILEAUTHOR
+                        The creator of this file. Defaults to current user.
+  --force               If the project already exists, delete it.
+            </pre>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+code,
+pre
+{
+    /* misc */
+    color: #1772C4;
+}
+
+body
+{
+    /* padding */
+    padding: 10px
+}
+
+.column
+{
+    /* size */
+    width: 70%;
+    
+    /* position */
+    position: absolute;
+    left: 15%;
+}
+
+#logo
+{
+    /* size */
+    height: 300px;
+    
+    /* padding */
+    margin: 20px;
+}
+
+#headers
+{
+    /* padding */
+    margin-bottom: 20px;
+
+    /* misc */
+    text-align: center;
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Erlenmeyer</title>
+        
+        <link rel="stylesheet" href="static/stylesheets/Bootstrap/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="static/stylesheets/main.css" type="text/css" />
+    </head>
+    
+    <body>
+        <div class="column">
+            <div class="row" id="headers">
+                <div class="row">
+                    <img id="logo" src="static/images/logo.svg"/>
+                </div>
+                
+                <div class="row">
+                    <b><a href="http://github.com/megabits/erlenmeyer">Erlenmeyer</a> allows you to create fully-functional Flask servers, complete with SQLAlchemy models, from a Core Data file.</b>
+                    <br/>
+                    <i>It's Flask, SQLAlchemy, and Core Data. Get it? It's a chemistry pun. Get it?</i>
+                    <br/>
+                </div>
+            </div>
+            
+            <div class="row" id="headers">
+                <b>docs</b>
+                <br/>
+                <a href="index.html">quickstart</a> :: <a href="erlenmeyer_script.html">erlenmeyer script</a> :: erlenmeyer module
+            </div>
+            
+            <div class="row">
+                <h4><tt>categories</tt> <code>erlenmeyer.categories</code></h4>
+                
+                <p>
+                    The categories module provides a class and a series of functions for adding functions to modules and methods to classes at runtime.
+                </p>
+                
+                <ul>
+                    <li>
+                        <code>categorize(destination, function, override = True)</code>
+                        <br/>
+                        <p>
+                            Adds the given function to the destiation, optionally overriding existing methods. 
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>addCategories(destination, source, override = True, list = None)</code>
+                        <br/>
+                        <p>
+                            Adds the functions listed in <code>list</code> to the destiation, optionally overriding existing methods. If <code>list</code> is <code>None</code>, adds every method in the source.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="row">
+                <h4><tt>CoreData</tt> <code>erlenmeyer.CoreData</code></h4>
+                
+                <p>
+                    A dictionary object parsed from an .xcodedatamodeld file.
+                </p>
+                
+                <b>example:</b>
+                <pre>{
+    "className": "MBMegaBitTrainer",
+    "parentClassName": "database.Mode",
+    "primaryKey": "uuid",
+    "primaryKeyType": "String(256)",
+    "attributes":
+    [
+        {
+            "name": "uuid",
+            "type": "String(256)"
+        }
+    ],
+    "relationships":
+    [
+        {
+            "name": "megabits",
+            "className": "MBMegaBit",
+            "inverseName": "trainer",
+            "inverseClassName": "MBMegaBitTrainer",
+            "isToMany": True,
+            "inverseIsToMany": False,
+            "inverseHasBeenHandled": False
+        }
+    ]
+}</pre>
+            </div>
+            
+            <div class="row">
+                <h3><tt>ext</tt> <code>erlenmeyer.ext</code></h3>
+                <p>
+                    The <tt>ext</tt> module provides methods to extend certain modules.
+                </p>
+            </div>
+            
+            <div class="row">
+                <h4><tt>jinja2</tt> <code>erlenmeyer.ext.jinja2</code></h4>
+                
+                <p>
+                    The jinja2 module adds filters for use by the jinja2 templating engine.
+                </p>
+                
+                <ul>
+                    <li>
+                        <code>camelcase(value)</code>
+                        <br/>
+                        <p>
+                            Transforms, for example, <code>"megaBits"</code> into <code>"MegaBits"</code>.
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>underscore(value)</code>
+                        <br/>
+                        <p>
+                            Transforms, for example, <code>"MegaBits"</code> into <code>"mega_bits"</code>.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="row">
+                <h4><tt>Model</tt> <code>erlenmeyer.ext.Model</code></h4>
+                
+                <p>
+                    The Model module adds methods to the SQLAlchemy Model class.
+                </p>
+                
+                <ul>
+                    <li>
+                        <code>all(self)</code>
+                        <br/>
+                        <p>
+                            Returns a list of all models if this type. A class method.
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>get(self, identifier)</code>
+                        <br/>
+                        <p>
+                            Returns the model of this type with the given identifier. A class method.
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>__iter__(self)</code>
+                        <br/>
+                        <p>
+                            Allows <code>dict(myModel)</code> to return a dictionary representation of this object.
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>update(self, properties)</code>
+                        <br/>
+                        <p>
+                            Applies the given key-value pairs to this object.
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>save(self)</code>
+                        <br/>
+                        <p>
+                            Saves this object to the database and commits.
+                        </p>
+                    </li>
+                    
+                    <li>
+                        <code>delete(self)</code>
+                        <br/>
+                        <p>
+                            Deletes this object from the database and commits.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="row">
+                <h4><tt>SQLAlchemy</tt> <code>erlenmeyer.ext.SQLAlchemy</code></h4>
+                
+                <p>
+                    The SQLAlchemy module adds methods to the flask.ext.sqlalchemy.SQLAlchemy class.
+                </p>
+                
+                <ul>
+                    <li>
+                        <code>tableRelationship(self, sourceClassName, destinationClassName, primaryKeyName, primaryKeyType, inverseName = None)</code>
+                        <br/>
+                        <p>
+                            Used to map many-to-many relationships. Creates a reference table with two columns, one for each object's primary key. Then creates a relationship based on the table, and a backreference based on the given inverse name, if any.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

@@ -27,7 +27,6 @@ projectFiles = {
     "flaskProject": "%(directory)s/%(projectName)s.py",
     
     "modelsInit": "%(directory)s/models/__init__.py",
-    "modelsModel": "%(directory)s/models/Model.py",
     "modelsModelObject": "%(directory)s/models/%(modelName)s.py",
     
     "handlersInit": "%(directory)s/handlers/__init__.py",

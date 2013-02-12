@@ -16,7 +16,6 @@ This command will generate a new Flask project, called MegaBits, with the follow
         ...
     /models
         __init__.py
-        Model.py
         ...
     /settings
         settings.json

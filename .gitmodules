@@ -1,0 +1,3 @@
+[submodule "PCHTTP"]
+	path = PCHTTP
+	url = https://github.com/pcperini/PCHTTP.git

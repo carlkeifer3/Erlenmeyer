@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:NSManagedObject_ErlenmeyerTests/NSManagedObject_ErlenmeyerTests.xcodeproj">
+   </FileRef>
+   <Group
+      location = "group:PCHTTP"
+      name = "PCHTTP">
+      <Group
+         location = "group:PCHTTP"
+         name = "PCHTTP">
+         <FileRef
+            location = "group:PCHTTP.h">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPBatchClient.h">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPBatchClient.m">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPClient.h">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPClient.m">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPResponse.h">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPResponse.m">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPSerializer.h">
+         </FileRef>
+         <FileRef
+            location = "group:PCHTTPSerializer.m">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:PCHTTPDocs"
+         name = "PCHTTPDocs">
+         <Group
+            location = "group:PCHTTPClient"
+            name = "PCHTTPClient">
+            <Group
+               location = "group:Classes"
+               name = "Classes">
+               <Group
+                  location = "group:PCHTTPClient"
+                  name = "PCHTTPClient">
+                  <FileRef
+                     location = "group:index.html">
+                  </FileRef>
+                  <FileRef
+                     location = "group:toc.html">
+                  </FileRef>
+               </Group>
+            </Group>
+            <FileRef
+               location = "group:index.html">
+            </FileRef>
+            <FileRef
+               location = "group:toc.html">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:PCHTTPResponse"
+            name = "PCHTTPResponse">
+            <Group
+               location = "group:Classes"
+               name = "Classes">
+               <Group
+                  location = "group:PCHTTPResponse"
+                  name = "PCHTTPResponse">
+                  <FileRef
+                     location = "group:index.html">
+                  </FileRef>
+                  <FileRef
+                     location = "group:toc.html">
+                  </FileRef>
+               </Group>
+            </Group>
+            <FileRef
+               location = "group:index.html">
+            </FileRef>
+            <FileRef
+               location = "group:toc.html">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:PCHTTPSerializer"
+            name = "PCHTTPSerializer">
+            <Group
+               location = "group:Classes"
+               name = "Classes">
+               <Group
+                  location = "group:PCHTTPSerializer"
+                  name = "PCHTTPSerializer">
+                  <FileRef
+                     location = "group:index.html">
+                  </FileRef>
+                  <FileRef
+                     location = "group:toc.html">
+                  </FileRef>
+               </Group>
+            </Group>
+            <FileRef
+               location = "group:index.html">
+            </FileRef>
+            <Group
+               location = "group:Protocols"
+               name = "Protocols">
+               <Group
+                  location = "group:PCHTTPSerializableObject"
+                  name = "PCHTTPSerializableObject">
+                  <FileRef
+                     location = "group:index.html">
+                  </FileRef>
+                  <FileRef
+                     location = "group:toc.html">
+                  </FileRef>
+               </Group>
+            </Group>
+            <FileRef
+               location = "group:toc.html">
+            </FileRef>
+         </Group>
+      </Group>
+      <Group
+         location = "group:PCHTTPTests"
+         name = "PCHTTPTests">
+         <Group
+            location = "group:pchttp-tests"
+            name = "pchttp-tests">
+            <FileRef
+               location = "group:app.yaml">
+            </FileRef>
+            <FileRef
+               location = "group:favicon.ico">
+            </FileRef>
+            <FileRef
+               location = "group:index.yaml">
+            </FileRef>
+            <FileRef
+               location = "group:main.py">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:PCHTTPTests"
+            name = "PCHTTPTests">
+            <Group
+               location = "group:en.lproj"
+               name = "en.lproj">
+               <FileRef
+                  location = "group:Credits.rtf">
+               </FileRef>
+               <FileRef
+                  location = "group:InfoPlist.strings">
+               </FileRef>
+               <FileRef
+                  location = "group:MainMenu.xib">
+               </FileRef>
+            </Group>
+            <FileRef
+               location = "group:main.m">
+            </FileRef>
+            <FileRef
+               location = "group:PCHTTPTests-Info.plist">
+            </FileRef>
+            <FileRef
+               location = "group:PCHTTPTests-Prefix.pch">
+            </FileRef>
+            <FileRef
+               location = "group:PCHTTPTestsAppDelegate.h">
+            </FileRef>
+            <FileRef
+               location = "group:PCHTTPTestsAppDelegate.m">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:PCHTTPTests.xcodeproj">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:README.md">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:NSManagedObject+ErlenmeyerExtensions.h">
+   </FileRef>
+   <FileRef
+      location = "group:NSManagedObject+ErlenmeyerExtensions.m">
+   </FileRef>
+</Workspace>

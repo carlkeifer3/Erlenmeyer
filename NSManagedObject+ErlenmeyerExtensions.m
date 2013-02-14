@@ -43,7 +43,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @implementation NSManagedObject (ErlenmeyerExtensions)
 
 #pragma mark - Class Initializers
-+ (void)initialize
++ (void)initializeObjects
 {
     if (!serverURL)
     {
@@ -150,11 +150,12 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSArray *results = [managedObjectContext executeFetchRequest: fetchRequest
                                                            error: &error];
     [self throwExceptionForError: error];
+    [results makeObjectsPerformSelector: @selector(realizeFromFault)];
     
     return results;
 }
 
-+ (NSManagedObject *)get:(id)anID
++ (id)get:(id)anID
 {
     NSString *predicateString = [NSString stringWithFormat:@"%@ == \"%@\"", primaryKey, anID];
     NSArray *results = [self allMatchingPredicate: predicateString limit: 1];
@@ -165,9 +166,9 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     return nil;
 }
 
-+ (void)get:(id)anID fromServer:(void (^)(NSManagedObject *, NSError *))responseHandler
++ (void)get:(id)anID fromServer:(void (^)(id , NSError *))responseHandler
 {
-    NSManagedObject *object = [[self alloc] init];
+    id object = [[self alloc] init];
     PCHTTPBatchClient *batchClient = [[PCHTTPBatchClient alloc] init];
     
     NSString *getURL = [NSString stringWithFormat: @"%@/%@s/%@", serverURL, NSStringFromClass(self), anID];
@@ -241,7 +242,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                 for (NSDictionary *relationshipDictionary in relationshipDictionaries)
                 {
                     Class relationshipClass = NSClassFromString([[relationshipDescription destinationEntity] managedObjectClassName]);
-                    NSManagedObject *relationshipObject = [[relationshipClass alloc] init];
+                    id relationshipObject = [[relationshipClass alloc] init];
                     [relationshipObject addEntriesFromDictionary: relationshipDictionary];
                     
                     [[object mutableSetValueForKey: relationshipName] addObject: relationshipObject];
@@ -279,7 +280,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 #pragma mark - Initializers
 - (id)init
 {
-    self = [super init];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass([self class]) inManagedObjectContext: managedObjectContext];
+    self = [self initWithEntity: entityDescription insertIntoManagedObjectContext: managedObjectContext];
     if (!self)
         return nil;
     
@@ -347,7 +349,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         if ([relationshipDescription isToMany])
         {
             NSMutableArray *objects = [NSMutableArray array];
-            for (NSManagedObject *object in [self valueForKey: relationshipName])
+            for (id object in [self valueForKey: relationshipName])
             {
                 id objectID = [object valueForKey: primaryKey];
                 if (!objectID)
@@ -361,7 +363,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         }
         else
         {
-            NSManagedObject *object = [self valueForKey: relationshipName];
+            id object = [self valueForKey: relationshipName];
             id relationshipID = [object valueForKey: primaryKey];
             
             if (!relationshipID)
@@ -391,20 +393,24 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         if ([value isKindOfClass: [NSNull class]])
             continue;
         
-        if ([value isKindOfClass: [NSArray class]])
+        // Add relationships
+        if ([[[[self entity] relationshipsByName] allKeys] containsObject: key])
         {
-            for (id objectID in value)
+            NSRelationshipDescription *relationshipDescription = [[[self entity] relationshipsByName] objectForKey: key];
+            Class objectClass = NSClassFromString([[relationshipDescription destinationEntity] managedObjectClassName]);
+            
+            if ([relationshipDescription isToMany])
             {
-                NSManagedObject *object = [NSManagedObject get: objectID];
-                [[self mutableSetValueForKey: key] addObject: object];
+                for (id objectID in value)
+                {
+                    id object = [objectClass get: objectID];
+                    [[self mutableSetValueForKey: key] addObject: object];
+                }
+                
+                continue;
             }
             
-            continue;
-        }
-        
-        if ([[self valueForKey: key] isKindOfClass: [NSManagedObject class]])
-        {
-            value = [NSManagedObject get: value];
+            value = [objectClass get: value];
         }
         
         [self setValue: value
@@ -456,7 +462,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             continue;
         }
         
-        for (NSManagedObject *relationshipObject in [self valueForKey: relationshipName])
+        for (id relationshipObject in [self valueForKey: relationshipName])
         {
             if ([[[self changedValuesForServer] objectForKey: NSInsertedObjectsKey] containsObject: relationshipObject])
             {
@@ -515,15 +521,16 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             }
         }
         
+        [self setExistsInServer: YES];
         responseHandler(error);
     };
 
     [batchClient performRequestsWithResponseHandler: saveResponse];
 }
 
-- (void)delete:(id)sender
+- (void)delete
 {
-    [managedObjectContext delete: self];
+    [managedObjectContext deleteObject: self];
 }
 
 - (void)deleteFromServer:(void (^)(NSError *))responseHandler
@@ -548,6 +555,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     
     NSString *deleteURL = [NSString stringWithFormat: @"%@/%@s/%@", serverURL, NSStringFromClass([self class]), [self valueForKey: primaryKey]];
     [PCHTTPClient delete: deleteURL responseHandler: deleteResponse];
+}
+
+- (void)realizeFromFault
+{
+    [self willAccessValueForKey: nil];
 }
 
 #pragma mark - Responders

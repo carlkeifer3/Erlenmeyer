@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7307008D16CC224300520AC0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307008C16CC224300520AC0 /* UIKit.framework */; };
+		7307008F16CC224300520AC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307008E16CC224300520AC0 /* Foundation.framework */; };
+		7307009116CC224300520AC0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307009016CC224300520AC0 /* CoreGraphics.framework */; };
+		7307009716CC224300520AC0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7307009516CC224300520AC0 /* InfoPlist.strings */; };
+		7307009916CC224300520AC0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7307009816CC224300520AC0 /* main.m */; };
+		7307009D16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7307009C16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.m */; };
+		7307009F16CC224300520AC0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7307009E16CC224300520AC0 /* Default.png */; };
+		730700A116CC224300520AC0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 730700A016CC224300520AC0 /* Default@2x.png */; };
+		730700A316CC224300520AC0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 730700A216CC224300520AC0 /* Default-568h@2x.png */; };
+		730700A616CC224300520AC0 /* ErlenmeyerTestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 730700A516CC224300520AC0 /* ErlenmeyerTestsViewController.m */; };
+		730700A916CC224300520AC0 /* ErlenmeyerTestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 730700A716CC224300520AC0 /* ErlenmeyerTestsViewController.xib */; };
+		730700B016CC232A00520AC0 /* ErlenmeyerTests.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 730700AF16CC232A00520AC0 /* ErlenmeyerTests.xcdatamodel */; };
+		7382FBF416CD33C800BDFB31 /* NSManagedObject+ErlenmeyerExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 730700E916CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.m */; };
+		73834CDD16CD2C3D00AEAA26 /* PCHTTPBatchClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7307011316CC24A400520AC0 /* PCHTTPBatchClient.m */; };
+		73834CDE16CD2C3D00AEAA26 /* PCHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 7307011516CC24A400520AC0 /* PCHTTPClient.m */; };
+		73834CDF16CD2C3D00AEAA26 /* PCHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 7307011716CC24A400520AC0 /* PCHTTPResponse.m */; };
+		73834CE016CD2C3D00AEAA26 /* PCHTTPSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7307011916CC24A400520AC0 /* PCHTTPSerializer.m */; };
+		73834CE316CD2C7B00AEAA26 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73834CE116CD2C7700AEAA26 /* CoreData.framework */; };
+		73834CE916CD2DEE00AEAA26 /* ErlenmeyerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 73834CE816CD2DEE00AEAA26 /* ErlenmeyerModel.m */; };
+		73834CEC16CD2DEF00AEAA26 /* ErlenmeyerGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 73834CEB16CD2DEE00AEAA26 /* ErlenmeyerGroup.m */; };
+		73834CEF16CD2DEF00AEAA26 /* ErlenmeyerUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 73834CEE16CD2DEF00AEAA26 /* ErlenmeyerUser.m */; };
+		73834CF216CD2DEF00AEAA26 /* ErlenmeyerPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 73834CF116CD2DEF00AEAA26 /* ErlenmeyerPost.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7307008916CC224300520AC0 /* ErlenmeyerTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ErlenmeyerTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7307008C16CC224300520AC0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		7307008E16CC224300520AC0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7307009016CC224300520AC0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		7307009416CC224300520AC0 /* ErlenmeyerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ErlenmeyerTests-Info.plist"; sourceTree = "<group>"; };
+		7307009616CC224300520AC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7307009816CC224300520AC0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7307009A16CC224300520AC0 /* ErlenmeyerTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ErlenmeyerTests-Prefix.pch"; sourceTree = "<group>"; };
+		7307009B16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ErlenmeyerTestsAppDelegate.h; sourceTree = "<group>"; };
+		7307009C16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ErlenmeyerTestsAppDelegate.m; sourceTree = "<group>"; };
+		7307009E16CC224300520AC0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		730700A016CC224300520AC0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		730700A216CC224300520AC0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		730700A416CC224300520AC0 /* ErlenmeyerTestsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ErlenmeyerTestsViewController.h; sourceTree = "<group>"; };
+		730700A516CC224300520AC0 /* ErlenmeyerTestsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ErlenmeyerTestsViewController.m; sourceTree = "<group>"; };
+		730700A816CC224300520AC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ErlenmeyerTestsViewController.xib; sourceTree = "<group>"; };
+		730700AF16CC232A00520AC0 /* ErlenmeyerTests.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ErlenmeyerTests.xcdatamodel; sourceTree = "<group>"; };
+		730700E816CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSManagedObject+ErlenmeyerExtensions.h"; path = "../NSManagedObject+ErlenmeyerExtensions.h"; sourceTree = "<group>"; };
+		730700E916CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSManagedObject+ErlenmeyerExtensions.m"; path = "../NSManagedObject+ErlenmeyerExtensions.m"; sourceTree = "<group>"; };
+		7307011116CC24A400520AC0 /* PCHTTP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCHTTP.h; sourceTree = "<group>"; };
+		7307011216CC24A400520AC0 /* PCHTTPBatchClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCHTTPBatchClient.h; sourceTree = "<group>"; };
+		7307011316CC24A400520AC0 /* PCHTTPBatchClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCHTTPBatchClient.m; sourceTree = "<group>"; };
+		7307011416CC24A400520AC0 /* PCHTTPClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCHTTPClient.h; sourceTree = "<group>"; };
+		7307011516CC24A400520AC0 /* PCHTTPClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCHTTPClient.m; sourceTree = "<group>"; };
+		7307011616CC24A400520AC0 /* PCHTTPResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCHTTPResponse.h; sourceTree = "<group>"; };
+		7307011716CC24A400520AC0 /* PCHTTPResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCHTTPResponse.m; sourceTree = "<group>"; };
+		7307011816CC24A400520AC0 /* PCHTTPSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PCHTTPSerializer.h; sourceTree = "<group>"; };
+		7307011916CC24A400520AC0 /* PCHTTPSerializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PCHTTPSerializer.m; sourceTree = "<group>"; };
+		73834CE116CD2C7700AEAA26 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		73834CE716CD2DEE00AEAA26 /* ErlenmeyerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErlenmeyerModel.h; sourceTree = "<group>"; };
+		73834CE816CD2DEE00AEAA26 /* ErlenmeyerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErlenmeyerModel.m; sourceTree = "<group>"; };
+		73834CEA16CD2DEE00AEAA26 /* ErlenmeyerGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErlenmeyerGroup.h; sourceTree = "<group>"; };
+		73834CEB16CD2DEE00AEAA26 /* ErlenmeyerGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErlenmeyerGroup.m; sourceTree = "<group>"; };
+		73834CED16CD2DEF00AEAA26 /* ErlenmeyerUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErlenmeyerUser.h; sourceTree = "<group>"; };
+		73834CEE16CD2DEF00AEAA26 /* ErlenmeyerUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErlenmeyerUser.m; sourceTree = "<group>"; };
+		73834CF016CD2DEF00AEAA26 /* ErlenmeyerPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ErlenmeyerPost.h; sourceTree = "<group>"; };
+		73834CF116CD2DEF00AEAA26 /* ErlenmeyerPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ErlenmeyerPost.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7307008616CC224300520AC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				73834CE316CD2C7B00AEAA26 /* CoreData.framework in Frameworks */,
+				7307008D16CC224300520AC0 /* UIKit.framework in Frameworks */,
+				7307008F16CC224300520AC0 /* Foundation.framework in Frameworks */,
+				7307009116CC224300520AC0 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7307008016CC224300520AC0 = {
+			isa = PBXGroup;
+			children = (
+				7307011A16CC24A400520AC0 /* PCHTTP */,
+				730700E816CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.h */,
+				730700E916CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.m */,
+				7307009216CC224300520AC0 /* ErlenmeyerTests */,
+				7307008B16CC224300520AC0 /* Frameworks */,
+				7307008A16CC224300520AC0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7307008A16CC224300520AC0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7307008916CC224300520AC0 /* ErlenmeyerTests.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7307008B16CC224300520AC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73834CE116CD2C7700AEAA26 /* CoreData.framework */,
+				7307008C16CC224300520AC0 /* UIKit.framework */,
+				7307008E16CC224300520AC0 /* Foundation.framework */,
+				7307009016CC224300520AC0 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7307009216CC224300520AC0 /* ErlenmeyerTests */ = {
+			isa = PBXGroup;
+			children = (
+				7307009B16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.h */,
+				7307009C16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.m */,
+				730700A416CC224300520AC0 /* ErlenmeyerTestsViewController.h */,
+				730700A516CC224300520AC0 /* ErlenmeyerTestsViewController.m */,
+				730700A716CC224300520AC0 /* ErlenmeyerTestsViewController.xib */,
+				73834CF316CD2DF700AEAA26 /* Models */,
+				730700AF16CC232A00520AC0 /* ErlenmeyerTests.xcdatamodel */,
+				7307009316CC224300520AC0 /* Supporting Files */,
+			);
+			path = ErlenmeyerTests;
+			sourceTree = "<group>";
+		};
+		7307009316CC224300520AC0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7307009416CC224300520AC0 /* ErlenmeyerTests-Info.plist */,
+				7307009516CC224300520AC0 /* InfoPlist.strings */,
+				7307009816CC224300520AC0 /* main.m */,
+				7307009A16CC224300520AC0 /* ErlenmeyerTests-Prefix.pch */,
+				7307009E16CC224300520AC0 /* Default.png */,
+				730700A016CC224300520AC0 /* Default@2x.png */,
+				730700A216CC224300520AC0 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7307011A16CC24A400520AC0 /* PCHTTP */ = {
+			isa = PBXGroup;
+			children = (
+				7307011116CC24A400520AC0 /* PCHTTP.h */,
+				7307011216CC24A400520AC0 /* PCHTTPBatchClient.h */,
+				7307011316CC24A400520AC0 /* PCHTTPBatchClient.m */,
+				7307011416CC24A400520AC0 /* PCHTTPClient.h */,
+				7307011516CC24A400520AC0 /* PCHTTPClient.m */,
+				7307011616CC24A400520AC0 /* PCHTTPResponse.h */,
+				7307011716CC24A400520AC0 /* PCHTTPResponse.m */,
+				7307011816CC24A400520AC0 /* PCHTTPSerializer.h */,
+				7307011916CC24A400520AC0 /* PCHTTPSerializer.m */,
+			);
+			name = PCHTTP;
+			path = ../PCHTTP/PCHTTP;
+			sourceTree = "<group>";
+		};
+		73834CF316CD2DF700AEAA26 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				73834CE716CD2DEE00AEAA26 /* ErlenmeyerModel.h */,
+				73834CF016CD2DEF00AEAA26 /* ErlenmeyerPost.h */,
+				73834CF116CD2DEF00AEAA26 /* ErlenmeyerPost.m */,
+				73834CED16CD2DEF00AEAA26 /* ErlenmeyerUser.h */,
+				73834CEE16CD2DEF00AEAA26 /* ErlenmeyerUser.m */,
+				73834CEA16CD2DEE00AEAA26 /* ErlenmeyerGroup.h */,
+				73834CEB16CD2DEE00AEAA26 /* ErlenmeyerGroup.m */,
+				73834CE816CD2DEE00AEAA26 /* ErlenmeyerModel.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7307008816CC224300520AC0 /* ErlenmeyerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 730700AC16CC224300520AC0 /* Build configuration list for PBXNativeTarget "ErlenmeyerTests" */;
+			buildPhases = (
+				7307008516CC224300520AC0 /* Sources */,
+				7307008616CC224300520AC0 /* Frameworks */,
+				7307008716CC224300520AC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ErlenmeyerTests;
+			productName = ErlenmeyerTests;
+			productReference = 7307008916CC224300520AC0 /* ErlenmeyerTests.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7307008116CC224300520AC0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = ErlenmeyerTests;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = MegaBits;
+			};
+			buildConfigurationList = 7307008416CC224300520AC0 /* Build configuration list for PBXProject "ErlenmeyerTests" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7307008016CC224300520AC0;
+			productRefGroup = 7307008A16CC224300520AC0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7307008816CC224300520AC0 /* ErlenmeyerTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7307008716CC224300520AC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7307009716CC224300520AC0 /* InfoPlist.strings in Resources */,
+				7307009F16CC224300520AC0 /* Default.png in Resources */,
+				730700A116CC224300520AC0 /* Default@2x.png in Resources */,
+				730700A316CC224300520AC0 /* Default-568h@2x.png in Resources */,
+				730700A916CC224300520AC0 /* ErlenmeyerTestsViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7307008516CC224300520AC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7382FBF416CD33C800BDFB31 /* NSManagedObject+ErlenmeyerExtensions.m in Sources */,
+				73834CDD16CD2C3D00AEAA26 /* PCHTTPBatchClient.m in Sources */,
+				73834CDE16CD2C3D00AEAA26 /* PCHTTPClient.m in Sources */,
+				73834CDF16CD2C3D00AEAA26 /* PCHTTPResponse.m in Sources */,
+				73834CE016CD2C3D00AEAA26 /* PCHTTPSerializer.m in Sources */,
+				7307009916CC224300520AC0 /* main.m in Sources */,
+				7307009D16CC224300520AC0 /* ErlenmeyerTestsAppDelegate.m in Sources */,
+				730700A616CC224300520AC0 /* ErlenmeyerTestsViewController.m in Sources */,
+				730700B016CC232A00520AC0 /* ErlenmeyerTests.xcdatamodel in Sources */,
+				73834CE916CD2DEE00AEAA26 /* ErlenmeyerModel.m in Sources */,
+				73834CEC16CD2DEF00AEAA26 /* ErlenmeyerGroup.m in Sources */,
+				73834CEF16CD2DEF00AEAA26 /* ErlenmeyerUser.m in Sources */,
+				73834CF216CD2DEF00AEAA26 /* ErlenmeyerPost.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		7307009516CC224300520AC0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7307009616CC224300520AC0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		730700A716CC224300520AC0 /* ErlenmeyerTestsViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				730700A816CC224300520AC0 /* en */,
+			);
+			name = ErlenmeyerTestsViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		730700AA16CC224300520AC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		730700AB16CC224300520AC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		730700AD16CC224300520AC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ErlenmeyerTests/ErlenmeyerTests-Prefix.pch";
+				INFOPLIST_FILE = "ErlenmeyerTests/ErlenmeyerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		730700AE16CC224300520AC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ErlenmeyerTests/ErlenmeyerTests-Prefix.pch";
+				INFOPLIST_FILE = "ErlenmeyerTests/ErlenmeyerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7307008416CC224300520AC0 /* Build configuration list for PBXProject "ErlenmeyerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				730700AA16CC224300520AC0 /* Debug */,
+				730700AB16CC224300520AC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		730700AC16CC224300520AC0 /* Build configuration list for PBXNativeTarget "ErlenmeyerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				730700AD16CC224300520AC0 /* Debug */,
+				730700AE16CC224300520AC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7307008116CC224300520AC0 /* Project object */;
+}

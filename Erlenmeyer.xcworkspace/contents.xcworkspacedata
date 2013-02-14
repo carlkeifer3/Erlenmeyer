@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:NSManagedObject_ErlenmeyerTests/NSManagedObject_ErlenmeyerTests.xcodeproj">
+      location = "group:ErlenmeyerTests/ErlenmeyerTests.xcodeproj">
    </FileRef>
    <Group
       location = "group:PCHTTP"

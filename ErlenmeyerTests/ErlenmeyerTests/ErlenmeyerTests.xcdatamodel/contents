@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C3006" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ErlenmeyerGroup" representedClassName="ErlenmeyerGroup" parentEntity="ErlenmeyerModel" syncable="YES">
+        <relationship name="members" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ErlenmeyerUser" inverseName="groups" inverseEntity="ErlenmeyerUser" syncable="YES"/>
+    </entity>
+    <entity name="ErlenmeyerModel" representedClassName="ErlenmeyerModel" syncable="YES">
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ErlenmeyerPost" representedClassName="ErlenmeyerPost" parentEntity="ErlenmeyerModel" syncable="YES">
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="author" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ErlenmeyerUser" inverseName="posts" inverseEntity="ErlenmeyerUser" syncable="YES"/>
+    </entity>
+    <entity name="ErlenmeyerUser" representedClassName="ErlenmeyerUser" parentEntity="ErlenmeyerModel" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ErlenmeyerGroup" inverseName="members" inverseEntity="ErlenmeyerGroup" syncable="YES"/>
+        <relationship name="posts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ErlenmeyerPost" inverseName="author" inverseEntity="ErlenmeyerPost" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ErlenmeyerGroup" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="ErlenmeyerModel" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="ErlenmeyerPost" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="ErlenmeyerUser" positionX="160" positionY="192" width="128" height="90"/>
+    </elements>
+</model>

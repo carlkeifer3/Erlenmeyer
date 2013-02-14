@@ -10,6 +10,12 @@
 
 @interface NSManagedObject (ErlenmeyerExtensions)
 
+#pragma mark - Class Initializers
+/*!
+ *  Initializes class with internal Core Data handlers and default server locations.
+ */
++ (void)initializeObjects;
+
 #pragma mark - Class Accessors
 /*!
  *  Returns the server URL used in all server requests.
@@ -40,14 +46,14 @@
  *  @param anID The ID that is associated with the desired object.
  *  @result The value with the given ID.
  */
-+ (NSManagedObject *)get:(id)anID;
++ (id)get:(id)anID;
 
 /*!
  *  Returns the value with the given identifier.
  *  @param anID The ID that is associated with the desired object.
  *  @param responseHandler A block that will recieve the object from the server.
  */
-+ (void)get:(id)anID fromServer:(void(^)(NSManagedObject *object, NSError *error))responseHandler;
++ (void)get:(id)anID fromServer:(void(^)(id object, NSError *error))responseHandler;
 
 #pragma mark - Class Mutators
 /*!
@@ -88,8 +94,18 @@
 - (void)saveToServer:(void(^)(NSError *error))responseHandler;
 
 /*!
+ *  Removes the receiver.
+ */
+- (void)delete;
+
+/*!
  *  Removes the receiver from the server.
  */
 - (void)deleteFromServer:(void(^)(NSError *error))responseHandler;
+
+/*!
+ *  Retrieves receiver's data from a fault.
+ */
+- (void)realizeFromFault;
 
 @end

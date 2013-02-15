@@ -40,9 +40,11 @@ def put{{ model.className|camelcase }}(properties):
     @return: An empty flask response.
     """
     
-    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}()
-    {{ model.className|lower }}.update(properties)
-        
+    {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
+    if not {{ model.className|lower }}:
+        {{ model.className|lower }} = {{ model.className }}.{{ model.className }}()
+    
+    {{ model.className|lower }}.update(properties)    
     {{ model.className|lower }}.save()
     
     return flask.Response(
@@ -186,7 +188,9 @@ def put{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model
             content_type = 'application/json'
         )
     
-    {{ model.className|lower }}.{{ relationship.name }}.append({{ relationship.className|lower }})
+    if {{ relationship.className|lower }} not in {{ model.className|lower }}.{{ relationship.name }}:
+        {{ model.className|lower }}.{{ relationship.name }}.append({{ relationship.className|lower }})
+    
     {{ model.className|lower }}.save()
         
     return flask.Response(
@@ -221,7 +225,9 @@ def delete{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ mo
             content_type = 'application/json'
         )
     
-    {{ model.className|lower }}.{{ relationship.name }}.remove({{ relationship.className|lower }})
+    if {{ relationship.className|lower }} in {{ model.className|lower }}.{{ relationship.name }}:
+        {{ model.className|lower }}.{{ relationship.name }}.remove({{ relationship.className|lower }})
+    
     {{ model.className|lower }}.save()
         
     return flask.Response(

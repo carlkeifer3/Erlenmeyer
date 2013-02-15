@@ -26,8 +26,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @interface NSManagedObject (ErlenmeyerPrivateExtensions)
 
 #pragma mark - Properties
-@property (nonatomic) BOOL existsInServer;
-@property (nonatomic, readonly) NSMutableDictionary *changedValuesForServer;
+@property (nonatomic) NSDictionary *changedValuesForServer;
 
 #pragma mark - Class Accessors
 + (NSArray *)allMatchingPredicate:(NSString *)predicateString limit:(NSInteger)limit;
@@ -104,7 +103,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     PCHTTPResponseBlock getAllResponse = ^(PCHTTPResponse *response)
     {
         NSError *error;
-        NSArray *all;
+        NSArray *allDictionaries;
         
         switch ([response status])
         {
@@ -118,12 +117,29 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                 
             case PCHTTPResponseStatusOK:
             {
-                all = [response object];
+                allDictionaries = [response object];
                 break;
             }
         }
     
-        responseHandler(all, error);
+        NSMutableArray *all = [NSMutableArray array];
+        for (NSDictionary *dictionary in allDictionaries)
+        {
+            id object = [[self class] get: [dictionary objectForKey: primaryKey]];
+            if (!object)
+            {
+                object = [[[self class] alloc] init];
+            }
+            
+            [object addEntriesFromDictionary: dictionary];
+            [all addObject: object];
+        }
+        
+        if (responseHandler)
+        {
+            responseHandler(all, error);
+            return;
+        }
     };
     
     NSString *getAllURL = [NSString stringWithFormat: @"%@/%@s", serverURL, NSStringFromClass(self)];
@@ -202,7 +218,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                                                     code: PCHTTPResponseStatusNotFound
                                                 userInfo: nil];
                         
-                        responseHandler(nil, error);
+                        if (responseHandler)
+                        {
+                            responseHandler(nil, error);
+                        }
+                        
                         return;
                     }
                         
@@ -228,7 +248,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                                                 code: PCHTTPResponseStatusNotFound
                                             userInfo: nil];
                     
-                    responseHandler(nil, error);
+                    if (responseHandler)
+                    {
+                        responseHandler(nil, error);
+                    }
+                    
                     return;
                 }
                     
@@ -237,16 +261,22 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                     relationshipDictionaries = [response object];
                     break;
                 }
-                    
-                NSRelationshipDescription *relationshipDescription = [[[object  entity] relationshipsByName] objectForKey: relationshipName];
-                for (NSDictionary *relationshipDictionary in relationshipDictionaries)
-                {
-                    Class relationshipClass = NSClassFromString([[relationshipDescription destinationEntity] managedObjectClassName]);
-                    id relationshipObject = [[relationshipClass alloc] init];
-                    [relationshipObject addEntriesFromDictionary: relationshipDictionary];
-                    
-                    [[object mutableSetValueForKey: relationshipName] addObject: relationshipObject];
-                }
+            }
+            
+            NSRelationshipDescription *relationshipDescription = [[[object  entity] relationshipsByName] objectForKey: relationshipName];
+            for (NSDictionary *relationshipDictionary in relationshipDictionaries)
+            {
+                Class relationshipClass = NSClassFromString([[relationshipDescription destinationEntity] managedObjectClassName]);
+                id relationshipObject = [[relationshipClass alloc] init];
+                [relationshipObject addEntriesFromDictionary: relationshipDictionary];
+                
+                [[object mutableSetValueForKey: relationshipName] addObject: relationshipObject];
+            }
+            
+            if (responseHandler)
+            {
+                responseHandler(object, error);
+                return;
             }
         }
     };
@@ -307,12 +337,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 }
 
 #pragma mark - Accessors
-- (BOOL)existsInServer
-{
-    return [objc_getAssociatedObject(self, "existsInServer") boolValue];
-}
-
-- (NSMutableDictionary *)changedValuesForServer
+- (NSDictionary *)changedValuesForServer
 {
     return objc_getAssociatedObject(self, "changedValuesForServer");
 }
@@ -380,9 +405,9 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 }
 
 #pragma mark - Mutators
-- (void)setExistsInServer:(BOOL)existsInServer
+- (void)setChangedValuesForServer:(NSDictionary *)changedValuesForServer
 {
-    objc_setAssociatedObject(self, "existsInServer", @(existsInServer), OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, "changedValuesForServer", changedValuesForServer, OBJC_ASSOCIATION_COPY);
 }
 
 - (void)addEntriesFromDictionary:(NSDictionary *)dictionary
@@ -435,16 +460,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSString *putURL = [NSString stringWithFormat: @"%@/%@s", serverURL, NSStringFromClass([self class])];
     NSString *postURL = [NSString stringWithFormat: @"%@/%@", putURL, [self valueForKey: primaryKey]];
     
-    if ([self existsInServer])
-    {
-        [batchClient addPostRequest: postURL
-                            payload: [self dictionaryValue]];
-    }
-    else
-    {
-        [batchClient addPutRequest: putURL
-                           payload: [self dictionaryValue]];
-    }
+    [batchClient addPutRequest: putURL
+                       payload: [self dictionaryValue]];
 
     // Add relationships
     for (NSString *relationshipName in [[self entity] relationshipsByName])
@@ -487,10 +504,12 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         }
     }
     
-    [[self changedValuesForServer] setObject: [NSMutableArray array]
-                                      forKey: NSInsertedObjectsKey];
-    [[self changedValuesForServer] setObject: [NSMutableArray array]
-                                      forKey: NSDeletedObjectsKey];
+    NSMutableDictionary *changedValuesForServer = [[self changedValuesForServer] mutableCopy];
+    [changedValuesForServer setObject: [NSMutableArray array]
+                               forKey: NSInsertedObjectsKey];
+    [changedValuesForServer setObject: [NSMutableArray array]
+                               forKey: NSDeletedObjectsKey];
+    [self setChangedValuesForServer: (NSDictionary *)changedValuesForServer];
     
     PCHTTPBatchResponseBlock saveResponse = ^(NSArray *responses)
     {
@@ -505,7 +524,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                                                 code: PCHTTPResponseStatusBadRequest
                                             userInfo: nil];
                     
-                    responseHandler(error);
+                    if (responseHandler)
+                    {
+                        responseHandler(error);
+                    }
+                    
                     return;
                 }
                     
@@ -515,14 +538,21 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                                                 code: PCHTTPResponseStatusNotFound
                                             userInfo: nil];
                     
-                    responseHandler(error);
+                    if (responseHandler)
+                    {
+                        responseHandler(error);
+                    }
+                    
                     return;
                 }
             }
         }
         
-        [self setExistsInServer: YES];
-        responseHandler(error);
+        if (responseHandler)
+        {
+            responseHandler(error);
+            return;
+        }
     };
 
     [batchClient performRequestsWithResponseHandler: saveResponse];
@@ -550,7 +580,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             }
         }
         
-        responseHandler(error);
+        if (responseHandler)
+        {
+            responseHandler(error);
+            return;
+        }
     };
     
     NSString *deleteURL = [NSString stringWithFormat: @"%@/%@s/%@", serverURL, NSStringFromClass([self class]), [self valueForKey: primaryKey]];

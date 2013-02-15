@@ -26,6 +26,7 @@
     [self.window makeKeyAndVisible];
     
     [NSManagedObject initializeObjects];
+    [NSManagedObject setServerURL: @"http://einstein.pcperini.com:8080"];
 //    ErlenmeyerUser *user = [[ErlenmeyerUser alloc] init];
 //    [user setUuid: @"0001"];
 //    [user save];
@@ -35,17 +36,19 @@
 //    ErlenmeyerUser *user = [ErlenmeyerUser get: @"0001"];
 //    [group addMembersObject: user];
 //    [group save];
+    
+//    ErlenmeyerUser *user = [ErlenmeyerUser get: @"0001"];
+//    [user saveToServer: ^(NSError *error) {
+//        NSLog(@"%@", error);        
+//    }];
 
-    ErlenmeyerUser *user = [ErlenmeyerUser get: @"0001"];
-    NSDictionary *userDict = [user dictionaryValue];
+//    [ErlenmeyerUser allFromServer: ^(NSArray *all, NSError *error) {
+//        NSLog(@"%@, %@", all, error);
+//    }];
     
-    [user delete];
-    
-    user = [[ErlenmeyerUser alloc] init];
-    [user addEntriesFromDictionary: userDict];
-    [user save];
-    
-    NSLog(@"%@", [[[[ErlenmeyerUser get: @"0001"] groups] allObjects] objectAtIndex: 1]);
+    [ErlenmeyerUser allFromServer: ^(NSArray *all, NSError *error) {
+        NSLog(@"%@", all);
+    }];
     
     return YES;
 }

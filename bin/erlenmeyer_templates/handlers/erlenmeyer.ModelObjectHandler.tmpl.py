@@ -40,6 +40,10 @@ def put{{ model.className|camelcase }}(properties):
     @return: An empty flask response.
     """
     
+    {{ model.primaryKey }} = properties['{{ model.primaryKey }}']
+    if type({{ model.primaryKey }}) == list:
+        {{ model.primaryKey }} = {{ model.primaryKey }}[0]
+    
     {{ model.className|lower }} = {{ model.className }}.{{ model.className }}.get({{ model.primaryKey }})
     if not {{ model.className|lower }}:
         {{ model.className|lower }} = {{ model.className }}.{{ model.className }}()

@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = 'Erlenmeyer',
-    version = '0.1.3',
+    version = '0.1.4',
     author = 'Patrick Perini',
     author_email = 'pperini@megabitsapp.com',
     packages = [

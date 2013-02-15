@@ -25,7 +25,7 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-    [NSManagedObject initializeObjects];
+    [NSManagedObject initializeErlenmeyer];
     [NSManagedObject setServerURL: @"http://einstein.pcperini.com:8080"];
 //    ErlenmeyerUser *user = [[ErlenmeyerUser alloc] init];
 //    [user setUuid: @"0001"];

@@ -12,9 +12,9 @@
 
 #pragma mark - Class Initializers
 /*!
- *  Initializes class with internal Core Data handlers and default server locations.
+ *  This method needs to be called to initialize the internal machinations of the Erlenmeyer extensions.
  */
-+ (void)initializeObjects;
++ (void)initializeErlenmeyer;
 
 #pragma mark - Class Accessors
 /*!

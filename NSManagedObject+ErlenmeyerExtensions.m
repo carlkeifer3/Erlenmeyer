@@ -41,9 +41,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @implementation NSManagedObject (ErlenmeyerExtensions)
 
-#pragma mark - Class Initializers
-+ (void)initializeObjects
-{
++ (void)initializeErlenmeyer
+{    
     if (!serverURL)
     {
         serverURL = ErlenmeyerDefaultServerURL;

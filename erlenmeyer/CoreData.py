@@ -50,7 +50,7 @@ class CoreData (dict):
             
         domRelationships = domEntity.getElementsByTagName('relationship')
         for domRelationship in domRelationships:
-            entity['relationships'].append(self.__relationshipForDOMRelationship(domRelationship, entity['className']))
+            entity['relationships'].append(self.__relationshipForDOMRelationship(domRelationship, entity['className'], primaryKey))
         
         parentEntity = self.__parentEntityForEntity(entity, primaryKey)
         if parentEntity:
@@ -68,6 +68,7 @@ class CoreData (dict):
         attribute = {
             "name": str(domAttribute.getAttributeNode('name').nodeValue),
             "type": "String(256)",
+            "exampleValue": '"some_%s"' % (str(domAttribute.getAttributeNode('name').nodeValue))
         }
         
         if domAttribute.getAttributeNode('attributeType'):
@@ -75,14 +76,17 @@ class CoreData (dict):
             
             if "Integer" in attributeType:
                 attribute['type'] = "Integer"
+                attribute['exampleValue'] = "0"
             elif attributeType in ["Decimal", "Double", "Float"]:
                 attribute['type'] = "Float"
+                attribute['exampleValue'] = "0.0"
             elif "Boolean" in attributeType:
                 attribute['type'] = "Boolean"
+                attribute['exampleValue'] = "false"
                 
         return attribute
         
-    def __relationshipForDOMRelationship(self, domRelationship, entityName):
+    def __relationshipForDOMRelationship(self, domRelationship, entityName, primaryKey):
         relationship = {
             "name": str(domRelationship.getAttributeNode('name').nodeValue),
             "className": str(domRelationship.getAttributeNode('destinationEntity').nodeValue),
@@ -90,7 +94,8 @@ class CoreData (dict):
             "inverseClassName": entityName,
             "isToMany": False,
             "inverseIsToMany": False,
-            "inverseHasBeenHandled": False
+            "inverseHasBeenHandled": False,
+            "exampleValue": '"%s_%s"' % (str(domRelationship.getAttributeNode('name').nodeValue), primaryKey)
         }
         
         if domRelationship.getAttributeNode('toMany'):

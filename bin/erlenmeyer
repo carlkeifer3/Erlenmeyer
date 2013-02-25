@@ -32,6 +32,8 @@ projectFiles = {
     "handlersInit": "%(directory)s/handlers/__init__.py",
     "handlersModelObjectHandler": "%(directory)s/handlers/%(modelName)sHandler.py",
     
+    "flaskProjectDocumentation": "%(directory)s/documentation/%(projectName)s.html",
+    
     "settings": "%(directory)s/settings/settings.json"
 }
 
@@ -42,6 +44,8 @@ templateFiles = {
     "modelsModelObject": "erlenmeyer.ModelObject.tmpl.py",
     
     "handlersModelObjectHandler": "erlenmeyer.ModelObjectHandler.tmpl.py",
+    
+    "flaskProjectDocumentation": "erlenmeyer.server.tmpl.html",
     
     "settings": "erlenmeyer.settings.tmpl.json"
 }
@@ -178,6 +182,22 @@ def main():
         }
         
         renderTemplate('handlersModelObjectHandler', handlersModelObjectHandlerTemplateDict, handlersModelHandlerFileNameDict)
+        
+    # create documentation directory
+    # - create documentation file
+    print "Creating documentation file..."
+    
+    documentationTemplateDict = {
+        "metadata": metadata,
+        "models": coreData['models']
+    }
+    
+    documentationTemplateFileNameDict = {
+        "directory": project,
+        "projectName": projectName
+    }
+    
+    renderTemplate('flaskProjectDocumentation', documentationTemplateDict, documentationTemplateFileNameDict)
         
     # create settings directory
     # - create settings file

@@ -20,7 +20,7 @@ __filepath__ = os.path.dirname(os.path.abspath(__file__))
 settings = json.load(open('%s/settings/settings.json' % (__filepath__)))
 
 flaskApp = flask.Flask(__name__)
-flaskApp.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%(user)s:%(password)s@localhost/%(database)s' % (settings['sql'])
+flaskApp.config['SQLALCHEMY_DATABASE_URI'] = {{ metadata.databaseURL }}
 
 database = SQLAlchemy(flaskApp)
 categories.addCategories(database, SQLAlchemyExtensions, list = SQLAlchemyExtensions.instanceMethods)

@@ -10,6 +10,7 @@
 
 # imports
 import os
+import sys
 import flask
 import shutil
 import jinja2
@@ -54,7 +55,7 @@ templateFiles = {
 optionParser = optparse.OptionParser()
 
 templateEnvironment = jinja2.Environment(
-    loader = jinja2.FileSystemLoader('/usr/local/bin')
+    loader = jinja2.FileSystemLoader(os.path.dirname(__file__))
 )
 
 for filter in dir(jinja2Extensions):
@@ -77,7 +78,7 @@ def main():
     coreDataFile = os.path.abspath(options.coreDataFile)
     sqlLogin = {
         "user": options.sqlLogin.split(":")[0],
-        "password": options.sqlLogin.split(":")[1],
+        "password": options.sqlLogin.split(":")[1]
     }
         
     # trap errors
@@ -109,6 +110,11 @@ def main():
         "pubDate": datetime.datetime.today().strftime("%h %d, %Y"),
         "pubYear": datetime.datetime.today().strftime("%Y")
     }
+    
+    if options.databaseType == "mysql":
+        metadata['databaseURL'] = "mysql://%(user)s:%(password)s@localhost/%(database)s" % (sqlLogin)
+    elif options.databaseType == "heroku-postgresql":
+        metadata['databaseURL'] = "os.environ['DATABASE_URL']"
     
     # retrieve models
     print "Parsing Core Data file..."
@@ -214,27 +220,29 @@ def main():
     
     renderTemplate('settings', settingsTemplateDict, settingsFileNameDict)
         
-    # create MySQL database & tables
-    print "Creating MySQL database..."
-    mySQLServer = 'mysql://%(user)s:%(password)s@localhost' % (sqlLogin)
-    
-    flaskApp = flask.Flask(__name__)
-    flaskApp.config['SQLALCHEMY_DATABASE_URI'] = '%(server)s/%(database)s' % ({
-        "server": mySQLServer,
-        "database": sqlLogin['database']
-    })
-    
-    database = SQLAlchemy(flaskApp)
-    
-    databaseEngine = database.create_engine(mySQLServer)
-    databaseEngineExecutor = databaseEngine.connect().execute
-    
-    try:
-        databaseEngineExecutor("create database %(database)s" % ({
-            "database": sqlLogin['database']
-        }))
-    except sqlExceptions.ProgrammingError:
-        print "  MySQL database already exists!"
+    # create database & tables
+    if options.databaseType == "mysql":
+        # create MySQL database & tables
+        print "Creating MySQL database..."
+        flaskApp = flask.Flask(__name__)
+        flaskApp.config['SQLALCHEMY_DATABASE_URI'] = metadata['databaseURL']
+        
+        database = SQLAlchemy(flaskApp)
+        
+        databaseEngine = database.create_engine(mySQLServer)
+        databaseEngineExecutor = databaseEngine.connect().execute
+        
+        try:
+            databaseEngineExecutor("create database %(database)s" % ({
+                "database": sqlLogin['database']
+            }))
+        except sqlExceptions.ProgrammingError:
+            print "  MySQL database already exists!"
+
+    elif options.databaseType == "heroku-postgresql":
+        # issue user workaround
+        print "Cannot create Heroku PostgreSQL database locally."
+        print "    Please see the Flask-SQLAlchemy quickstart tutorial (http://pythonhosted.org/Flask-SQLAlchemy/quickstart.html) for how to manually establish the database."
     
     # finish
     print "Finished!"
@@ -285,6 +293,13 @@ if __name__ == "__main__":
         "--sql", dest = "sqlLogin",
         help = "The username:password combination for SQLALchemy.",
         default = "root:"
+    )
+    
+    optionParser.add_option(
+        "--db", dest = "databaseType",
+        help = "The database type to use.",
+        choices = ["mysql", "heroku-postgresql"],
+        default = "mysql"
     )
     
     optionParser.add_option(

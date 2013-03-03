@@ -3,7 +3,7 @@
 //  ErlenmeyerTests
 //
 //  Created by Patrick Perini on 2/11/13.
-//  Copyright (c) 2013 pcperini. All rights reserved.
+//  Copyright (c) 2013 MegaBits, LLC. All rights reserved.
 //
 
 #import <CoreData/CoreData.h>

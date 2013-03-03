@@ -3,7 +3,7 @@
 //  ErlenmeyerTests
 //
 //  Created by Patrick Perini on 2/11/13.
-//  Copyright (c) 2013 pcperini. All rights reserved.
+//  Copyright (c) 2013 MegaBits, LLC. All rights reserved.
 //
 
 #import "NSManagedObject+ErlenmeyerExtensions.h"
@@ -309,7 +309,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 #pragma mark - Initializers
 - (id)init
 {
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass([self class]) inManagedObjectContext: managedObjectContext];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass(object_getClass(self)) inManagedObjectContext: managedObjectContext];
     self = [self initWithEntity: entityDescription insertIntoManagedObjectContext: managedObjectContext];
     if (!self)
         return nil;

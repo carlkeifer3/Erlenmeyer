@@ -26,7 +26,7 @@
     [self.window makeKeyAndVisible];
     
     [NSManagedObject initializeErlenmeyer];
-    [NSManagedObject setServerURL: @"http://einstein.pcperini.com:8080"];
+    [NSManagedObject setServerURL: @"http://einstein.MegaBits, LLC.com:8080"];
 //    ErlenmeyerUser *user = [[ErlenmeyerUser alloc] init];
 //    [user setUuid: @"0001"];
 //    [user save];

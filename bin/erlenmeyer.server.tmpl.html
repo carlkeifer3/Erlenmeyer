@@ -107,7 +107,28 @@
                                 <h3>GET <tt>/{{ model.className }}s</tt></h3>
                                 
                                 <h4>Parameters:</h4>
-                                <i>None</i>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for attribute in model.attributes %}
+                                        <tr>
+                                            <td>{{ attribute.name }}</td>
+                                            <td>{{ attribute.type }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% for relationship in model.relationships if not relationship.isToMany %}
+                                        <tr>
+                                            <td>{{ relationship.name }}</td>
+                                            <td>{{ relationship.type }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                                 
                                 <h4>Responses:</h4>
                                 <div class="accordion" id="_{{ model.className }}s__GET_RESPONSES">

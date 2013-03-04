@@ -23,8 +23,11 @@ instanceMethods = [
 ]
 
 # class accessors
-def all(self):
-    return self.query.all()
+def all(self, **kwargs):
+    if not kwargs:
+        return self.query.all()
+    else:
+        return self.query.filter_by(**kwargs)
     
 def get(self, identifier):
     return self.query.get(identifier)

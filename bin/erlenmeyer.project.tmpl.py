@@ -35,7 +35,7 @@ def handle{{ model.className }}s():
     from handlers import {{ model.className }}Handler
     
     if flask.request.method == "GET":
-        return {{ model.className }}Handler.get{{ model.className|camelcase }}s()
+        return {{ model.className }}Handler.get{{ model.className|camelcase }}s(**dict(flask.request.args))
         
     elif flask.request.method == "PUT":
         return {{ model.className }}Handler.put{{ model.className|camelcase }}(dict(flask.request.form))

@@ -112,7 +112,7 @@ def main():
     }
     
     if options.databaseType == "mysql":
-        metadata['databaseURL'] = "mysql://%(user)s:%(password)s@localhost/%(database)s" % (sqlLogin)
+        metadata['databaseURL'] = "'mysql://%(user)s:%(password)s@localhost/%(database)s'" % (sqlLogin)
     elif options.databaseType == "heroku-postgresql":
         metadata['databaseURL'] = "os.environ['DATABASE_URL']"
     
@@ -225,11 +225,11 @@ def main():
         # create MySQL database & tables
         print "Creating MySQL database..."
         flaskApp = flask.Flask(__name__)
-        flaskApp.config['SQLALCHEMY_DATABASE_URI'] = metadata['databaseURL']
+        flaskApp.config['SQLALCHEMY_DATABASE_URI'] = metadata['databaseURL'][1:-1] # Account for ''
         
         database = SQLAlchemy(flaskApp)
         
-        databaseEngine = database.create_engine(mySQLServer)
+        databaseEngine = database.create_engine(flaskApp.config['SQLALCHEMY_DATABASE_URI'])
         databaseEngineExecutor = databaseEngine.connect().execute
         
         try:
@@ -240,9 +240,7 @@ def main():
             print "  MySQL database already exists!"
 
     elif options.databaseType == "heroku-postgresql":
-        # issue user workaround
-        print "Cannot create Heroku PostgreSQL database locally."
-        print "    Please see the Flask-SQLAlchemy quickstart tutorial (http://pythonhosted.org/Flask-SQLAlchemy/quickstart.html) for how to manually establish the database."
+        pass
     
     # finish
     print "Finished!"

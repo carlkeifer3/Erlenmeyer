@@ -15,14 +15,18 @@ from models import {{ relationship.className }}
 {% endfor %}
 
 # handlers
-def get{{ model.className|camelcase }}s():
+def get{{ model.className|camelcase }}s(**kwargs):
     """
     Returns a list of all {{ model.className }}s.
         
     @return: A flask response built with a JSON list of all {{ model.className }}s.
     """
     
-    all{{ model.className|camelcase }}s = {{ model.className }}.{{ model.className }}.all()
+    for key in kwargs:
+        if type(kwargs[key]) == list:
+            kwargs[key] = kwargs[key][0]
+    
+    all{{ model.className|camelcase }}s = {{ model.className }}.{{ model.className }}.all(**kwargs)
     all{{ model.className|camelcase }}sDictionaries = [dict({{ model.className|lower }}) for {{ model.className|lower }} in all{{ model.className|camelcase }}s if dict({{ model.className|lower }})]
     
     return flask.Response(

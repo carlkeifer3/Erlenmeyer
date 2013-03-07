@@ -42,7 +42,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @implementation NSManagedObject (ErlenmeyerExtensions)
 
 + (void)initializeErlenmeyer
-{    
+{
     if (!serverURL)
     {
         serverURL = ErlenmeyerDefaultServerURL;
@@ -97,7 +97,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     return [self allMatchingPredicate: nil limit: 0];
 }
 
-+ (void)allFromServer:(void (^)(NSArray *, NSError *))responseHandler
++ (void)allFromServer:(void (^)(NSArray *, NSError *))responseHandler where:(NSDictionary *)filters
 {
     PCHTTPResponseBlock getAllResponse = ^(PCHTTPResponse *response)
     {
@@ -120,7 +120,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                 break;
             }
         }
-    
+        
         NSMutableArray *all = [NSMutableArray array];
         for (NSDictionary *dictionary in allDictionaries)
         {
@@ -142,7 +142,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     };
     
     NSString *getAllURL = [NSString stringWithFormat: @"%@/%@s", serverURL, NSStringFromClass(self)];
-    [PCHTTPClient get: getAllURL responseHandler: getAllResponse];
+    [PCHTTPClient get: getAllURL parameters: filters responseHandler: getAllResponse];
 }
 
 + (NSArray *)allMatchingPredicate:(NSString *)predicateString limit:(NSInteger)limit
@@ -235,7 +235,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                 [object addEntriesFromDictionary: objectDictionary];
                 continue;
             }
-        
+            
             // Add relationships
             NSArray *relationshipDictionaries;
             NSString *relationshipName = [[response requestURL] lastPathComponent];
@@ -279,7 +279,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             }
         }
     };
-
+    
     [batchClient performRequestsWithResponseHandler: getResponse];
 }
 
@@ -309,7 +309,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 #pragma mark - Initializers
 - (id)init
 {
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass(object_getClass(self)) inManagedObjectContext: managedObjectContext];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass([self class]) inManagedObjectContext: managedObjectContext];
     self = [self initWithEntity: entityDescription insertIntoManagedObjectContext: managedObjectContext];
     if (!self)
         return nil;
@@ -461,7 +461,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     
     [batchClient addPutRequest: putURL
                        payload: [self dictionaryValue]];
-
+    
     // Add relationships
     for (NSString *relationshipName in [[self entity] relationshipsByName])
     {
@@ -470,8 +470,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         {
             NSString *postRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
             NSDictionary *postRelationshipPayload = @{
-                [NSString stringWithFormat: @"%@Object", relationshipName]: [[self valueForKey: relationshipName] valueForKey: primaryKey]
-            };
+                                                      [NSString stringWithFormat: @"%@Object", relationshipName]: [[self valueForKey: relationshipName] valueForKey: primaryKey]
+                                                      };
             
             [batchClient addPostRequest: postRelationshipURL
                                 payload: postRelationshipPayload];
@@ -484,8 +484,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             {
                 NSString *putRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
                 NSDictionary *putRelationshipPayload = @{
-                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
-                };
+                                                         [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
+                                                         };
                 
                 [batchClient addPutRequest: putRelationshipURL
                                    payload: putRelationshipPayload];
@@ -494,8 +494,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             {
                 NSString *deleteRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
                 NSDictionary *deleteRelationshipParameters = @{
-                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
-                };
+                                                               [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
+                                                               };
                 
                 [batchClient addPutRequest: deleteRelationshipURL
                                 parameters: deleteRelationshipParameters];
@@ -553,7 +553,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             return;
         }
     };
-
+    
     [batchClient performRequestsWithResponseHandler: saveResponse];
 }
 

@@ -38,8 +38,9 @@
 /*!
  *  Returns a new array containing all of the objects of this class.
  *  @param responseHandler A block that will recieve all objects from the server.
+ *  @param filters A set of key-value pairs to filter by.
  */
-+ (void)allFromServer:(void(^)(NSArray *all, NSError *error))responseHandler;
++ (void)allFromServer:(void(^)(NSArray *all, NSError *error))responseHandler where:(NSDictionary *)filters;
 
 /*!
  *  Returns the value with the given identifier.

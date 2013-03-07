@@ -27,12 +27,22 @@ categories.addCategories(database, SQLAlchemyExtensions, list = SQLAlchemyExtens
 categories.addCategories(database.Model.__class__, ModelExtensions, list = ModelExtensions.classMethods)
 categories.addCategories(database.Model, ModelExtensions, list = ModelExtensions.instanceMethods)
 
+{% if metadata.includeProcessors -%}
+# processors
+def preprocessRequest(request):
+    pass
+{% endif %}
+
 # handlers
 {% for model in models -%}
 # - {{ model.className }}
 @flaskApp.route("/{{ model.className }}s", methods = ["GET", "PUT"])
 def handle{{ model.className }}s():
     from handlers import {{ model.className }}Handler
+    
+    {% if metadata.includeProcessors -%}
+    preprocessRequest(flask.request)
+    {% endif %}
     
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}s(**dict(flask.request.args))
@@ -43,6 +53,10 @@ def handle{{ model.className }}s():
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>", methods = ["GET", "POST", "DELETE"])
 def handle{{ model.className }}({{ model.primaryKey }}):
     from handlers import {{ model.className }}Handler
+    
+    {% if metadata.includeProcessors -%}
+    preprocessRequest(flask.request)
+    {% endif %}
 
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}({{ model.primaryKey }})
@@ -60,6 +74,10 @@ def handle{{ model.className }}({{ model.primaryKey }}):
 def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
     from handlers import {{ model.className }}Handler
 
+    {% if metadata.includeProcessors -%}
+    preprocessRequest(flask.request)
+    {% endif %}
+
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }})
         
@@ -73,6 +91,10 @@ def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primar
 @flaskApp.route("/{{ model.className }}s/<{{ model.primaryKey }}>/{{ relationship.name }}", methods = ["GET", "POST"])
 def handle{{ model.className }}{{ relationship.name|camelcase }}({{ model.primaryKey }}):
     from handlers import {{ model.className }}Handler
+    
+    {% if metadata.includeProcessors -%}
+    preprocessRequest(flask.request)
+    {% endif %}
     
     if flask.request.method == "GET":
         return {{ model.className }}Handler.get{{ model.className|camelcase }}{{ relationship.name|camelcase }}({{ model.primaryKey }})

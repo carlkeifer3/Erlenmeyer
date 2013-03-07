@@ -81,14 +81,6 @@ def main():
         "password": options.sqlLogin.split(":")[1]
     }
         
-    # trap errors
-    if not options.forceProjectCreation and os.path.isdir(project):
-        print "Error: %(project)s already exists." % ({
-            "project": project
-        })
-        
-        return
-        
     if not os.path.isdir(coreDataFile):
         print "Error: %(coreDataFile)s does not exist." % ({
             "coreDataFile": coreDataFile
@@ -96,10 +88,7 @@ def main():
         
         return
         
-    # setup variables
-    if options.forceProjectCreation and os.path.isdir(project):
-        shutil.rmtree(project)
-        
+    # setup variables        
     projectName = os.path.basename(project)
     sqlLogin['database'] = projectName.lower()
     
@@ -315,12 +304,6 @@ if __name__ == "__main__":
         "--fileAuthor", dest = "fileAuthor",
         help = "The creator of this file. Defaults to current user.",
         default = None
-    )
-    
-    optionParser.add_option(
-        "--force", dest = "forceProjectCreation",
-        help = "If the project already exists, delete it.",
-        default = False, action = "store_true"
     )
     
     main()

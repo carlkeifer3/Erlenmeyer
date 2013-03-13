@@ -18,6 +18,8 @@ This command will generate a new Flask project, called MegaBits, with the follow
         ...
     /settings
         settings.json
+    /documentation
+        MegaBits.html
 
 Where the ellipses (`...`) are lists of models built from your Core Data file.
 
@@ -52,6 +54,11 @@ The `models` module contains object which are created from your Core Data file, 
 ---------
 
 `settings.json` contains information for the runtime of the service. The "server" dictionary provides information for the Flask app, such as the IP address and port on which to broadcast. And the "sql" dictionary provides SQLAlchemy login and database information with which it should store the models.
+
+Documentation
+---------
+
+The REST API documentation file (e.g. `MegaBits.html`) is a Twitter Bootstrap-based documentation page. It provides API documentation for each of the URL endpoints laid out in the Flask file.
 
 
 Other bits...

@@ -58,7 +58,9 @@
     __init__.py
     ...
 /settings
-    settings.json</pre>
+    settings.json
+/documentation
+    MegaBits.html</pre>
     
                 Where the ellipses (<tt class="docutils literal">...</tt>) are lists of models built from your Core Data file.
             </div>
@@ -102,6 +104,12 @@
                 <h3><tt class="docutils literal">settings.json</tt></h3>
                 <p>
                     <tt class="docutils literal">settings.json</tt> contains information for the runtime of the service. The "server" dictionary provides information for the Flask app, such as the IP address and port on which to broadcast. And the "sql" dictionary provides SQLAlchemy login and database information with which it should store the models.
+                </p>
+            </div>
+            <div class="section" id="documentation">
+                <h3>Documentation</h3>
+                <p>
+                    The REST API documentation file (e.g. <tt class="docutils literal">MegaBits.html</tt>) is a Twitter Bootstrap-based documentation page. It provides API documentation for each of the URL endpoints laid out in the Flask file.
                 </p>
             </div>
             <div class="section" id="other-bits">

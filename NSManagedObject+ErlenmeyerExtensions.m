@@ -55,7 +55,10 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     
     if (!managedObjectModel)
     {
-        managedObjectModel = [NSManagedObjectModel mergedModelFromBundles: nil];
+        NSMutableArray *allBundles = [NSMutableArray array];
+        [allBundles addObjectsFromArray: [NSBundle allBundles]];
+        [allBundles addObjectsFromArray: [NSBundle allFrameworks]];
+        managedObjectModel = [NSManagedObjectModel mergedModelFromBundles: allBundles];
     }
     
     if (!persistentStoreCoordinator)

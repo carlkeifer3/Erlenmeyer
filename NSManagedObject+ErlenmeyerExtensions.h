@@ -110,3 +110,118 @@
 - (void)realizeFromFault;
 
 @end
+
+#pragma mark - Macros
+/*!
+ *  Creates a new enum with the given values, as well as string support for the values.
+ *  @abstract enums cannot be effectively stored in CoreData. By using the ErlenmeyerPrimitiveTypeKey, Erlenmeyer can infer what kind of primitive (likely an enum) the value should be, and coerce that from number and string objects. Using the ErlenmeyerEnum macro to establish the enum creates the necessary string functions to support this behavior.
+ */
+#define ErlenmeyerEnum(EnumName, EnumValues...)                             \
+    typedef enum                                                            \
+    {                                                                       \
+        EnumValues                                                          \
+    } EnumName;                                                             \
+                                                                            \
+    static NSString *__Erlenmeyer##EnumName##Constants = @"" #EnumValues;   \
+    __ErlenmeyerImplementation(EnumName)
+
+/*!
+ *  Creates NSDictionary pairings of numerical values and string names for the given enum.
+ */
+#define __ErlenmeyerImplementation(EnumName)                                                                                                \
+    static NSDictionary *__Erlenmeyer##EnumName##ValuesByName()                                                                             \
+    {                                                                                                                                       \
+        NSArray *valueNameStrings = [__Erlenmeyer##EnumName##Constants componentsSeparatedByString: @","];                                  \
+        NSMutableDictionary *valuesByName = [NSMutableDictionary dictionary];                                                               \
+                                                                                                                                            \
+        NSInteger lastValue = -1;                                                                                                           \
+        for (NSString *valueNameString in valueNameStrings)                                                                                 \
+        {                                                                                                                                   \
+            NSArray *valueNamePair = [valueNameString componentsSeparatedByString: @"="];                                                   \
+            NSString *name = [[valueNamePair objectAtIndex: 0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];    \
+                                                                                                                                            \
+            id value;                                                                                                                       \
+            if ([valueNamePair count] > 1)                                                                                                  \
+            {                                                                                                                               \
+                value = [[valueNamePair objectAtIndex: 1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];         \
+                lastValue = [value integerValue];                                                                                           \
+            }                                                                                                                               \
+            else                                                                                                                            \
+            {                                                                                                                               \
+                lastValue++;                                                                                                                \
+            }                                                                                                                               \
+            value = @(lastValue);                                                                                                           \
+                                                                                                                                            \
+            [valuesByName setObject: value forKey: name];                                                                                   \
+        }                                                                                                                                   \
+                                                                                                                                            \
+        return (NSDictionary *)valuesByName;                                                                                                \
+    }                                                                                                                                       \
+                                                                                                                                            \
+    static NSDictionary *__Erlenmeyer##EnumName##NamesByValue()                                                                             \
+    {                                                                                                                                       \
+        NSArray *valueNameStrings = [__Erlenmeyer##EnumName##Constants componentsSeparatedByString: @","];                                  \
+        NSMutableDictionary *namesByValue = [NSMutableDictionary dictionary];                                                               \
+                                                                                                                                            \
+        NSInteger lastValue = -1;                                                                                                           \
+        for (NSString *valueNameString in valueNameStrings)                                                                                 \
+        {                                                                                                                                   \
+            NSArray *valueNamePair = [valueNameString componentsSeparatedByString: @"="];                                                   \
+            NSString *name = [[valueNamePair objectAtIndex: 0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];    \
+                                                                                                                                            \
+            id value;                                                                                                                       \
+            if ([valueNamePair count] > 1)                                                                                                  \
+            {                                                                                                                               \
+                value = [[valueNamePair objectAtIndex: 1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];         \
+                lastValue = [value integerValue];                                                                                           \
+            }                                                                                                                               \
+            else                                                                                                                            \
+            {                                                                                                                               \
+                lastValue++;                                                                                                                \
+            }                                                                                                                               \
+            value = @(lastValue);                                                                                                           \
+                                                                                                                                            \
+            [namesByValue setObject: name forKey: value];                                                                                   \
+        }                                                                                                                                   \
+                                                                                                                                            \
+        return (NSDictionary *)namesByValue;                                                                                                \
+    }                                                                                                                                       \
+                                                                                                                                            \
+    __ErlenmeyerEnumStringFunctions(EnumName)                                                                                               \
+    __ErlenmeyerEnumNSStringExtensions(EnumName)
+
+/*!
+ *  Creates to/from string functions for values of the given enum. 
+ */
+#define __ErlenmeyerEnumStringFunctions(EnumName)                                       \
+    static NSString *NSStringFrom##EnumName(EnumName value)                             \
+    {                                                                                   \
+        id valueObject = @(value);                                                      \
+        return [__Erlenmeyer##EnumName##NamesByValue() objectForKey: valueObject];      \
+    }                                                                                   \
+                                                                                        \
+    static EnumName EnumName##FromString(NSString *string)                              \
+    {                                                                                   \
+        id valueObject = [__Erlenmeyer##EnumName##ValuesByName() objectForKey: string]; \
+        return (EnumName)[valueObject integerValue];                                    \
+    }
+
+/*!
+ *  Creates NSString extension methods for values of the given enum.
+ */
+#define __ErlenmeyerEnumNSStringExtensions(EnumName)                    \
+    @interface NSString (__ErlenmeyerEnum##EnumName##Extensions)        \
+        - (EnumName)EnumName##Value;                                    \
+        - (id)EnumName##ValueObject;                                    \
+    @end                                                                \
+    @implementation NSString (__ErlenmeyerEnum##EnumName##Extensions)   \
+        - (EnumName)EnumName##Value                                     \
+        {                                                               \
+            return EnumName##FromString(self);                          \
+        }                                                               \
+                                                                        \
+        - (id)EnumName##ValueObject                                     \
+        {                                                               \
+            return @([self EnumName##Value]);                           \
+        }                                                               \
+    @end

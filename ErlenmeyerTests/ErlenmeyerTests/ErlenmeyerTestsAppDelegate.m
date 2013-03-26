@@ -15,6 +15,11 @@
 #import "ErlenmeyerPost.h"
 #import "ErlenmeyerUser.h"
 
+ErlenmeyerEnum(Test,
+    TestVal = 1,
+    TestVal1 = 2
+);
+
 @implementation ErlenmeyerTestsAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -46,9 +51,9 @@
 //        NSLog(@"%@, %@", all, error);
 //    }];
     
-    [ErlenmeyerUser allFromServer: ^(NSArray *all, NSError *error) {
-        NSLog(@"%@", all);
-    }];
+//    [ErlenmeyerUser allFromServer: ^(NSArray *all, NSError *error) {
+//        NSLog(@"%@", all);
+//    }];
     
     return YES;
 }

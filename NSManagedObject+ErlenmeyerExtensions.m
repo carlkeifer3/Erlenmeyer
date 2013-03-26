@@ -9,12 +9,16 @@
 #import "NSManagedObject+ErlenmeyerExtensions.h"
 #import "PCHTTP.h"
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 #pragma mark - Internal Constants
 NSString *const ErlenmeyerDefaultServerURL = @"http://127.0.0.1:8080";
 NSString *const ErlenmeyerDefaultPrimaryKey = @"uuid";
 
 NSString *const ErlenmeyerErrorDomain = @"NSManagedObjectErlenmeyerErrorDomain";
+
+NSString *const ErlenmeyerPrimitiveTypeKey = @"ErlenmeyerPrimitiveType";
+NSString *const ErlenmeyerPrimitiveTypeValueObjectSelectorFormat = @"%@ValueObject";
 
 #pragma mark - Globals
 static NSString *serverURL;
@@ -437,8 +441,44 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             value = [objectClass get: value];
         }
         
-        [self setValue: value
-                forKey: key];
+        // Refine attributes
+        else
+        {
+            // Coerce value's type. Assume it's a string, as its rare to have to coerce from another type.
+            NSAttributeDescription *attributeDescription = [[[self entity] attributesByName] objectForKey: key];
+            if (![value isKindOfClass: NSClassFromString([attributeDescription attributeValueClassName])])
+            {
+                if ([[attributeDescription attributeValueClassName] isEqualToString: NSStringFromClass([NSNumber class])]) // Numbers
+                {
+                    if ([[[attributeDescription userInfo] allKeys] containsObject: ErlenmeyerPrimitiveTypeKey]) // Custom Primitives
+                    {
+                        NSString *primitiveTypeName = [[attributeDescription userInfo] objectForKey: ErlenmeyerPrimitiveTypeKey];
+                        SEL primitiveTypeValueSelector = NSSelectorFromString([NSString stringWithFormat: ErlenmeyerPrimitiveTypeValueObjectSelectorFormat, primitiveTypeName]);
+                        
+                        if ([value respondsToSelector: primitiveTypeValueSelector])
+                        {
+                            value = objc_msgSend(value, primitiveTypeValueSelector);
+                        }
+                    }
+                    else
+                    {
+                        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                        [numberFormatter setNumberStyle: NSNumberFormatterDecimalStyle];
+                        value = [numberFormatter numberFromString: value];
+                    }
+                }
+                else if ([[attributeDescription attributeValueClassName] isEqualToString: NSStringFromClass([NSData class])]) // Data
+                {
+                    value = [value dataUsingEncoding: NSUTF8StringEncoding];
+                }
+            }
+        }
+        
+        if (value)
+        {
+            [self setValue: value
+                    forKey: key];
+        }
     }
 }
 
@@ -470,8 +510,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         {
             NSString *postRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
             NSDictionary *postRelationshipPayload = @{
-                                                      [NSString stringWithFormat: @"%@Object", relationshipName]: [[self valueForKey: relationshipName] valueForKey: primaryKey]
-                                                      };
+                [NSString stringWithFormat: @"%@Object", relationshipName]: [[self valueForKey: relationshipName] valueForKey: primaryKey]
+            };
             
             [batchClient addPostRequest: postRelationshipURL
                                 payload: postRelationshipPayload];
@@ -484,8 +524,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             {
                 NSString *putRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
                 NSDictionary *putRelationshipPayload = @{
-                                                         [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
-                                                         };
+                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
+                };
                 
                 [batchClient addPutRequest: putRelationshipURL
                                    payload: putRelationshipPayload];
@@ -494,8 +534,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             {
                 NSString *deleteRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
                 NSDictionary *deleteRelationshipParameters = @{
-                                                               [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
-                                                               };
+                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
+                };
                 
                 [batchClient addPutRequest: deleteRelationshipURL
                                 parameters: deleteRelationshipParameters];

@@ -432,6 +432,12 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             
             if ([relationshipDescription isToMany])
             {
+                // Coerce value's type. Assume it's a string, as its rare to have to coerce from another type.
+                if ([value isKindOfClass: [NSString class]])
+                {
+                    value = [value componentsSeparatedByString: @","];
+                }
+                
                 for (id objectID in value)
                 {
                     id object = [objectClass get: objectID];

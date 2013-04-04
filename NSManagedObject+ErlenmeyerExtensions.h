@@ -128,7 +128,7 @@
 /*!
  *  Creates NSDictionary pairings of numerical values and string names for the given enum.
  */
-#define __ErlenmeyerImplementation(EnumName)                                                                                                \
+#define __ErlenmeyerImplementation(EnumName)                                                                                                                        \
     static NSDictionary *__Erlenmeyer##EnumName##ValuesByName()                                                                             \
     {                                                                                                                                       \
         NSArray *valueNameStrings = [__Erlenmeyer##EnumName##Constants componentsSeparatedByString: @","];                                  \
@@ -188,7 +188,8 @@
     }                                                                                                                                       \
                                                                                                                                             \
     __ErlenmeyerEnumStringFunctions(EnumName)                                                                                               \
-    __ErlenmeyerEnumNSStringExtensions(EnumName)
+    __ErlenmeyerEnumNSStringExtensions(EnumName)                                                                                            \
+    __ErlenmeyerEnumRoundingFunctions(EnumName)
 
 /*!
  *  Creates to/from string functions for values of the given enum. 
@@ -205,6 +206,28 @@
         id valueObject = [__Erlenmeyer##EnumName##ValuesByName() objectForKey: string]; \
         return (EnumName)[valueObject integerValue];                                    \
     }
+
+/*!
+ *  Creates rounding functions for values of the given enum.
+ */
+#define __ErlenmeyerEnumRoundingFunctions(EnumName)                                                                                 \
+    static EnumName EnumName##FromInteger(NSInteger integer)                                                                        \
+    {                                                                                                                               \
+        NSArray *enumValues = [[__Erlenmeyer##EnumName##ValuesByName() allValues] sortedArrayUsingSelector: @selector(compare:)];   \
+        EnumName closestWithoutGoingOver = -INT_MAX;                                                                                \
+                                                                                                                                    \
+        for (NSNumber *enumValue in enumValues)                                                                                     \
+        {                                                                                                                           \
+            EnumName value = [enumValue integerValue];                                                                              \
+            if (value <= integer)                                                                                                   \
+            {                                                                                                                       \
+                closestWithoutGoingOver = value;                                                                                    \
+            }                                                                                                                       \
+        }                                                                                                                           \
+                                                                                                                                    \
+        return closestWithoutGoingOver;                                                                                             \
+    }
+            
 
 /*!
  *  Creates NSString extension methods for values of the given enum.

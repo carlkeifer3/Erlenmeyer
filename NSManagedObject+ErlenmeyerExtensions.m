@@ -469,6 +469,10 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                             value = objc_msgSend(value, primitiveTypeValueSelector);
                         }
                     }
+                    else if ([attributeDescription attributeType] == NSBooleanAttributeType)
+                    {
+                        value = @([value boolValue]);
+                    }
                     else
                     {
                         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];

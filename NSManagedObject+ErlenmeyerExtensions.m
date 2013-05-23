@@ -493,6 +493,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                     forKey: key];
         }
     }
+    
+    [self awakeFromLoad];
 }
 
 - (void)save
@@ -646,6 +648,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 - (void)realizeFromFault
 {
     [self willAccessValueForKey: nil];
+}
+
+- (void)awakeFromLoad
+{
+    // Do nothing
 }
 
 #pragma mark - Responders

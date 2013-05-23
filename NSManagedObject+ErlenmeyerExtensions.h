@@ -109,6 +109,12 @@
  */
 - (void)realizeFromFault;
 
+/*!
+ *  This method is called when the object is loaded with values. Its intention is to load defaults from non-optional relationships not set during initialization.
+ *  @discussion The default implementation of this method does nothing.
+ */
+- (void)awakeFromLoad;
+
 @end
 
 #pragma mark - Macros

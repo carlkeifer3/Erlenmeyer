@@ -431,14 +431,15 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     {
         NSRelationshipDescription *relationshipDescription = [[[self entity] relationshipsByName] objectForKey: relationshipName];
         
+        // Skip over any relationship where the inverse is to-one, to avoid mutating data.
+        // If you want access to this data, copy it using -copyToKeyPath:
+        if (![[relationshipDescription inverseRelationship] isToMany])
+            continue;
+        
         if ([relationshipDescription isToMany])
         {
             for (id object in [self valueForKey: relationshipName])
             {
-                // Skip over any relationship where the inverse is to-one, to avoid mutating data.
-                if (![[relationshipDescription inverseRelationship] isToMany])
-                    continue;
-                
                 [[newObject mutableSetValueForKey: relationshipName] addObject: object];
             }
         }

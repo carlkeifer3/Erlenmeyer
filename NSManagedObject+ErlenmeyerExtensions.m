@@ -1,4 +1,4 @@
-//
+ //
 //  NSManagedObject+ErlenmeyerExtensions.m
 //  ErlenmeyerTests
 //
@@ -408,6 +408,101 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     }
     
     return (NSDictionary *)dictionaryValue;
+}
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    id newObject = [[[self class] alloc] init];
+    
+    // Add attributes
+    for (NSString *attributeName in [[self entity] attributesByName])
+    {
+        id attributeValue = [self valueForKey: attributeName];
+        
+        if (!attributeValue)
+            continue;
+        
+        [newObject setValue: attributeValue
+                     forKey: attributeName];
+    }
+    
+    // Add relationships
+    for (NSString *relationshipName in [[self entity] relationshipsByName])
+    {
+        NSRelationshipDescription *relationshipDescription = [[[self entity] relationshipsByName] objectForKey: relationshipName];
+        
+        if ([relationshipDescription isToMany])
+        {
+            for (id object in [self valueForKey: relationshipName])
+            {
+                // Skip over any relationship where the inverse is to-one, to avoid mutating data.
+                if (![[relationshipDescription inverseRelationship] isToMany])
+                    continue;
+                
+                [[newObject mutableSetValueForKey: relationshipName] addObject: object];
+            }
+        }
+        else
+        {
+            id object = [self valueForKey: relationshipName];
+            [newObject setValue: object
+                         forKey: relationshipName];
+        }
+    }
+    
+    return newObject;
+}
+
+- (instancetype)copyToKeyPaths:(NSArray *)keyPaths
+{
+    id newObject = [self copy];
+    
+    NSMutableDictionary *keyPathSets = [NSMutableDictionary dictionary];
+    for (NSString *keyPath in keyPaths)
+    {
+        NSMutableArray *keyPathPieces = [[keyPath componentsSeparatedByString: @"."] mutableCopy];
+        NSString *keyPathIndicator = [keyPathPieces objectAtIndex: 0];
+        
+        if (![[keyPathSets allKeys] containsObject: keyPathIndicator])
+        {
+            [keyPathSets setObject: [NSMutableArray array]
+                            forKey: keyPathIndicator];
+        }
+        
+        [keyPathPieces removeObjectAtIndex: 0];
+        if ([keyPathPieces count] > 0)
+        {
+            [[keyPathSets objectForKey: keyPathIndicator] addObject: [keyPathPieces componentsJoinedByString: @"."]];
+        }
+    }
+    
+    for (NSString *keyPathIndicator in keyPathSets)
+    {
+        if (![[[[self entity] relationshipsByName] allKeys] containsObject: keyPathIndicator])
+            continue;
+        
+        NSRelationshipDescription *relationshipDescription = [[[self entity] relationshipsByName] objectForKey: keyPathIndicator];
+        if ([relationshipDescription isToMany])
+        {
+            NSMutableSet *newSubObjects = [NSMutableSet set];
+            for (id subObject in [[self valueForKey: keyPathIndicator] allObjects])
+            {
+                id newSubObject = [subObject copyToKeyPaths: [keyPathSets objectForKey: keyPathIndicator]];
+                [newSubObjects addObject: newSubObject];
+            }
+            
+            [[newObject mutableSetValueForKey: keyPathIndicator] removeAllObjects];
+            [[newObject mutableSetValueForKey: keyPathIndicator] unionSet: newSubObjects];
+            [[self mutableSetValueForKey: keyPathIndicator] minusSet: newSubObjects];
+        }
+        else
+        {
+            id newSubObject = [[self valueForKey: keyPathIndicator] copyToKeyPaths: [keyPathSets objectForKey: keyPathIndicator]];
+            [newObject setValue: newSubObject forKey: keyPathIndicator];
+        }
+    }
+    
+    return newObject;
 }
 
 #pragma mark - Mutators

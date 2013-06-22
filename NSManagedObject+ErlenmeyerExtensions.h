@@ -8,7 +8,7 @@
 
 #import <CoreData/CoreData.h>
 
-@interface NSManagedObject (ErlenmeyerExtensions)
+@interface NSManagedObject (ErlenmeyerExtensions) <NSCopying>
 
 #pragma mark - Class Initializers
 /*!
@@ -76,6 +76,13 @@
  *  @discussion Relationships are represented by references to IDs.
  */
 - (NSDictionary *)dictionaryValue;
+
+/*!
+ *  Recursively copies the receiver and all of the objects in the given key paths.
+ *  @param keyPaths The key paths to recurse through.
+ *  @result A copy of the receiver and all of the objects along the given key paths.
+ */
+- (instancetype)copyToKeyPaths:(NSArray *)keyPaths;
 
 #pragma mark - Mutators
 /*!

@@ -31,13 +31,25 @@ ErlenmeyerEnum(Test,
     [self.window makeKeyAndVisible];
     
     [NSManagedObject initializeErlenmeyer];
-    [NSManagedObject setServerURL: @"http://einstein.MegaBits, LLC.com:8080"];
-//    ErlenmeyerUser *user = [[ErlenmeyerUser alloc] init];
-//    [user setUuid: @"0001"];
+//    [NSManagedObject setServerURL: @"http://einstein.MegaBits, LLC.com:8080"];
+    ErlenmeyerUser *user = [[ErlenmeyerUser alloc] init];
+    [user setUuid: @"0001"];
+    
+    ErlenmeyerGroup *group = [[ErlenmeyerGroup alloc] init];
+    [group setUuid: @"0002"];
+    [user addGroupsObject: group];
+    
+    ErlenmeyerPost *post = [[ErlenmeyerPost alloc] init];
+    [post setUuid: @"0003"];
+    [user addPostsObject: post];
+    
+    ErlenmeyerGroup *g2 = [group copyToKeyPaths: @[@"members", @"members.posts"]];
+    NSLog(@"g1: %@", group);
+    NSLog(@"g2: %@", g2);
+    NSLog(@"%@", [[[group members] anyObject] posts]);
+    NSLog(@"%@", [[[g2 members] anyObject] posts]);
+    
 //    [user save];
-//    ErlenmeyerGroup *group = [[ErlenmeyerGroup alloc] init];
-//    [group setUuid: @"0002"];
-//    
 //    ErlenmeyerUser *user = [ErlenmeyerUser get: @"0001"];
 //    [group addMembersObject: user];
 //    [group save];

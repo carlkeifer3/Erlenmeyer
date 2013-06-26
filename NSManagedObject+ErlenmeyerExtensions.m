@@ -1,4 +1,4 @@
- //
+//
 //  NSManagedObject+ErlenmeyerExtensions.m
 //  ErlenmeyerTests
 //
@@ -34,6 +34,9 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 #pragma mark - Class Accessors
 + (NSArray *)allMatchingPredicate:(NSString *)predicateString limit:(NSInteger)limit;
++ (NSManagedObjectModel *)managedObjectModel;
++ (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
++ (NSManagedObjectContext *)managedObjectContext;
 
 #pragma mark - Class Error Handlers
 + (void)throwExceptionForError:(NSError *)error;
@@ -47,16 +50,32 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 + (void)initializeErlenmeyer
 {
+    
+}
+
+#pragma mark - Class Accessors
++ (NSString *)serverURL
+{
     if (!serverURL)
     {
         serverURL = ErlenmeyerDefaultServerURL;
     }
     
+    return serverURL;
+}
+
++ (NSString *)primaryKey
+{
     if (!primaryKey)
     {
         primaryKey = ErlenmeyerDefaultPrimaryKey;
     }
     
+    return primaryKey;
+}
+
++ (NSManagedObjectModel *)managedObjectModel
+{
     if (!managedObjectModel)
     {
         NSMutableArray *allBundles = [NSMutableArray array];
@@ -65,6 +84,11 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         managedObjectModel = [NSManagedObjectModel mergedModelFromBundles: allBundles];
     }
     
+    return managedObjectModel;
+}
+
++ (NSPersistentStoreCoordinator *)persistentStoreCoordinator
+{
     if (!persistentStoreCoordinator)
     {
         NSURL *applicationDocumentsDirectory = [[[NSFileManager defaultManager] URLsForDirectory: NSDocumentDirectory
@@ -72,7 +96,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         NSURL *storeURL = [applicationDocumentsDirectory URLByAppendingPathComponent: @"NSManagedObjects.sqlite"];
         
         NSError *error;
-        persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: managedObjectModel];
+        persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
         [persistentStoreCoordinator addPersistentStoreWithType: NSSQLiteStoreType
                                                  configuration: nil
                                                            URL: storeURL
@@ -81,22 +105,18 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         [self throwExceptionForError: error];
     }
     
+    return persistentStoreCoordinator;
+}
+
++ (NSManagedObjectContext *)managedObjectContext
+{
     if (!managedObjectContext)
     {
         managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [managedObjectContext setPersistentStoreCoordinator: persistentStoreCoordinator];
+        [managedObjectContext setPersistentStoreCoordinator: [self persistentStoreCoordinator]];
     }
-}
-
-#pragma mark - Class Accessors
-+ (NSString *)serverURL
-{
-    return serverURL;
-}
-
-+ (NSString *)primaryKey
-{
-    return primaryKey;
+    
+    return managedObjectContext;
 }
 
 + (NSArray *)all
@@ -131,7 +151,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         NSMutableArray *all = [NSMutableArray array];
         for (NSDictionary *dictionary in allDictionaries)
         {
-            id object = [[self class] get: [dictionary objectForKey: primaryKey]];
+            id object = [[self class] get: [dictionary objectForKey: [self primaryKey]]];
             if (!object)
             {
                 object = [[[self class] alloc] init];
@@ -148,14 +168,14 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         }
     };
     
-    NSString *getAllURL = [NSString stringWithFormat: @"%@/%@s", serverURL, NSStringFromClass(self)];
+    NSString *getAllURL = [NSString stringWithFormat: @"%@/%@s", [self serverURL], NSStringFromClass(self)];
     [PCHTTPClient get: getAllURL parameters: filters responseHandler: getAllResponse];
 }
 
 + (NSArray *)allMatchingPredicate:(NSString *)predicateString limit:(NSInteger)limit
 {
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass(self)
-                                                         inManagedObjectContext: managedObjectContext];
+                                                         inManagedObjectContext: [self managedObjectContext]];
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity: entityDescription];
@@ -169,8 +189,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     [fetchRequest setFetchLimit: limit];
     
     NSError *error;
-    NSArray *results = [managedObjectContext executeFetchRequest: fetchRequest
-                                                           error: &error];
+    NSArray *results = [[self managedObjectContext] executeFetchRequest: fetchRequest
+                                                                  error: &error];
     [self throwExceptionForError: error];
     [results makeObjectsPerformSelector: @selector(realizeFromFault)];
     
@@ -179,7 +199,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 + (id)get:(id)anID
 {
-    NSString *predicateString = [NSString stringWithFormat:@"%@ == \"%@\"", primaryKey, anID];
+    NSString *predicateString = [NSString stringWithFormat:@"%@ == \"%@\"", [self primaryKey], anID];
     NSArray *results = [self allMatchingPredicate: predicateString limit: 1];
     
     if ([results count] > 0)
@@ -193,7 +213,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     id object = [[self alloc] init];
     PCHTTPBatchClient *batchClient = [[PCHTTPBatchClient alloc] init];
     
-    NSString *getURL = [NSString stringWithFormat: @"%@/%@s/%@", serverURL, NSStringFromClass(self), anID];
+    NSString *getURL = [NSString stringWithFormat: @"%@/%@s/%@", [self serverURL], NSStringFromClass(self), anID];
     [batchClient addGetRequest: getURL];
     
     // Add relationships
@@ -301,6 +321,22 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     primaryKey = [aKey copy];
 }
 
++ (void)deleteAll
+{
+    for (NSPersistentStore *persistentStore in [[self persistentStoreCoordinator] persistentStores])
+    {
+        [[self persistentStoreCoordinator] removePersistentStore: persistentStore
+                                                    error: nil];
+        [[NSFileManager defaultManager] removeItemAtURL: [persistentStore URL]
+                                                  error: nil];
+    }
+    
+    // Flag for reestablishment.
+    managedObjectModel = nil;
+    persistentStoreCoordinator = nil;
+    managedObjectContext = nil;
+}
+
 #pragma mark - Class Error Handlers
 + (void)throwExceptionForError:(NSError *)error
 {
@@ -316,8 +352,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 #pragma mark - Initializers
 - (id)init
 {
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass([self class]) inManagedObjectContext: managedObjectContext];
-    self = [self initWithEntity: entityDescription insertIntoManagedObjectContext: managedObjectContext];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName: NSStringFromClass([self class]) inManagedObjectContext: [[self class] managedObjectContext]];
+    self = [self initWithEntity: entityDescription insertIntoManagedObjectContext: [[self class] managedObjectContext]];
     if (!self)
         return nil;
     
@@ -382,7 +418,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             NSMutableArray *objects = [NSMutableArray array];
             for (id object in [self valueForKey: relationshipName])
             {
-                id objectID = [object valueForKey: primaryKey];
+                id objectID = [object valueForKey: [[self class] primaryKey]];
                 if (!objectID)
                     continue;
                 
@@ -395,7 +431,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         else
         {
             id object = [self valueForKey: relationshipName];
-            id relationshipID = [object valueForKey: primaryKey];
+            id relationshipID = [object valueForKey: [[self class] primaryKey]];
             
             if (!relationshipID)
             {
@@ -485,8 +521,9 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         NSRelationshipDescription *relationshipDescription = [[[self entity] relationshipsByName] objectForKey: keyPathIndicator];
         if ([relationshipDescription isToMany])
         {
+            NSSet *subObjects = [[self valueForKeyPath: keyPathIndicator] copy];
             NSMutableSet *newSubObjects = [NSMutableSet set];
-            for (id subObject in [[self valueForKey: keyPathIndicator] allObjects])
+            for (id subObject in subObjects)
             {
                 id newSubObject = [subObject copyToKeyPaths: [keyPathSets objectForKey: keyPathIndicator]];
                 [newSubObjects addObject: newSubObject];
@@ -595,10 +632,10 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 - (void)save
 {
-    if ([managedObjectContext hasChanges])
+    if ([[[self class] managedObjectContext] hasChanges])
     {
         NSError *error;
-        [managedObjectContext save: &error];
+        [[[self class] managedObjectContext] save: &error];
         [[self class] throwExceptionForError: error];
     }
 }
@@ -607,8 +644,8 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 {
     PCHTTPBatchClient *batchClient = [[PCHTTPBatchClient alloc] init];
     
-    NSString *putURL = [NSString stringWithFormat: @"%@/%@s", serverURL, NSStringFromClass([self class])];
-    NSString *postURL = [NSString stringWithFormat: @"%@/%@", putURL, [self valueForKey: primaryKey]];
+    NSString *putURL = [NSString stringWithFormat: @"%@/%@s", [[self class] serverURL], NSStringFromClass([self class])];
+    NSString *postURL = [NSString stringWithFormat: @"%@/%@", putURL, [self valueForKey: [[self class] primaryKey]]];
     
     [batchClient addPutRequest: putURL
                        payload: [self dictionaryValue]];
@@ -621,7 +658,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         {
             NSString *postRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
             NSDictionary *postRelationshipPayload = @{
-                [NSString stringWithFormat: @"%@Object", relationshipName]: [[self valueForKey: relationshipName] valueForKey: primaryKey]
+                [NSString stringWithFormat: @"%@Object", relationshipName]: [[self valueForKey: relationshipName] valueForKey: [[self class] primaryKey]]
             };
             
             [batchClient addPostRequest: postRelationshipURL
@@ -635,7 +672,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             {
                 NSString *putRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
                 NSDictionary *putRelationshipPayload = @{
-                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
+                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: [[self class] primaryKey]]
                 };
                 
                 [batchClient addPutRequest: putRelationshipURL
@@ -645,7 +682,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
             {
                 NSString *deleteRelationshipURL = [NSString stringWithFormat: @"%@/%@", postURL, relationshipName];
                 NSDictionary *deleteRelationshipParameters = @{
-                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: primaryKey]
+                    [NSString stringWithFormat: @"%@Object", relationshipName]: [relationshipObject valueForKey: [[self class] primaryKey]]
                 };
                 
                 [batchClient addPutRequest: deleteRelationshipURL
@@ -666,35 +703,18 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         NSError *error;
         for (PCHTTPResponse *response in responses)
         {
-            switch ([response status])
+            if (([response status] < 200) || ([response status] >= 300))
             {
-                case PCHTTPResponseStatusBadRequest:
+                error = [NSError errorWithDomain: ErlenmeyerErrorDomain
+                                            code: [response status]
+                                        userInfo: nil];
+                
+                if (responseHandler)
                 {
-                    error = [NSError errorWithDomain: ErlenmeyerErrorDomain
-                                                code: PCHTTPResponseStatusBadRequest
-                                            userInfo: nil];
-                    
-                    if (responseHandler)
-                    {
-                        responseHandler(error);
-                    }
-                    
-                    return;
+                    responseHandler(error);
                 }
-                    
-                case PCHTTPResponseStatusNotFound:
-                {
-                    error = [NSError errorWithDomain: ErlenmeyerErrorDomain
-                                                code: PCHTTPResponseStatusNotFound
-                                            userInfo: nil];
-                    
-                    if (responseHandler)
-                    {
-                        responseHandler(error);
-                    }
-                    
-                    return;
-                }
+                
+                return;
             }
         }
         
@@ -710,7 +730,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 - (void)delete
 {
-    [managedObjectContext deleteObject: self];
+    [[[self class] managedObjectContext] deleteObject: self];
 }
 
 - (void)deleteFromServer:(void (^)(NSError *))responseHandler
@@ -737,7 +757,7 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
         }
     };
     
-    NSString *deleteURL = [NSString stringWithFormat: @"%@/%@s/%@", serverURL, NSStringFromClass([self class]), [self valueForKey: primaryKey]];
+    NSString *deleteURL = [NSString stringWithFormat: @"%@/%@s/%@", [[self class] serverURL], NSStringFromClass([self class]), [self valueForKey: [[self class] primaryKey]]];
     [PCHTTPClient delete: deleteURL responseHandler: deleteResponse];
 }
 

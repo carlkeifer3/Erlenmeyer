@@ -14,7 +14,7 @@
 /*!
  *  This method needs to be called to initialize the internal machinations of the Erlenmeyer extensions.
  */
-+ (void)initializeErlenmeyer;
++ (void)initializeErlenmeyer DEPRECATED_ATTRIBUTE;
 
 #pragma mark - Class Accessors
 /*!
@@ -68,6 +68,11 @@
  *  @param primaryKey The primary key of all NSManagedObjects.
  */
 + (void)setPrimaryKey:(NSString *)primaryKey;
+
+/*!
+ *  Deletes all NSManagedObjects.
+ */
++ (void)deleteAll;
 
 #pragma mark - Accessors
 /*!

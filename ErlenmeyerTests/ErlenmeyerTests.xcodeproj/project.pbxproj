@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7304B78B1775FDE4007C50C7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7304B78A1775FDE4007C50C7 /* XCTest.framework */; };
+		7304B78C1775FDE4007C50C7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307008E16CC224300520AC0 /* Foundation.framework */; };
+		7304B78D1775FDE4007C50C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307008C16CC224300520AC0 /* UIKit.framework */; };
+		7304B7931775FDE4007C50C7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7304B7911775FDE4007C50C7 /* InfoPlist.strings */; };
+		7304B7951775FDE4007C50C7 /* Erlenmeyer_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7304B7941775FDE4007C50C7 /* Erlenmeyer_Tests.m */; };
 		7307008D16CC224300520AC0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307008C16CC224300520AC0 /* UIKit.framework */; };
 		7307008F16CC224300520AC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307008E16CC224300520AC0 /* Foundation.framework */; };
 		7307009116CC224300520AC0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7307009016CC224300520AC0 /* CoreGraphics.framework */; };
@@ -31,7 +36,23 @@
 		73834CF216CD2DEF00AEAA26 /* ErlenmeyerPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 73834CF116CD2DEF00AEAA26 /* ErlenmeyerPost.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		7304B7971775FDE4007C50C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7307008116CC224300520AC0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7307008816CC224300520AC0;
+			remoteInfo = ErlenmeyerTests;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		7304B7891775FDE4007C50C7 /* Erlenmeyer-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Erlenmeyer-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7304B78A1775FDE4007C50C7 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		7304B7901775FDE4007C50C7 /* Erlenmeyer-Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Erlenmeyer-Tests-Info.plist"; sourceTree = "<group>"; };
+		7304B7921775FDE4007C50C7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7304B7941775FDE4007C50C7 /* Erlenmeyer_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Erlenmeyer_Tests.m; sourceTree = "<group>"; };
+		7304B7961775FDE4007C50C7 /* Erlenmeyer-Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Erlenmeyer-Tests-Prefix.pch"; sourceTree = "<group>"; };
 		7307008916CC224300520AC0 /* ErlenmeyerTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ErlenmeyerTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7307008C16CC224300520AC0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7307008E16CC224300520AC0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -72,6 +93,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7304B7861775FDE4007C50C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7304B78B1775FDE4007C50C7 /* XCTest.framework in Frameworks */,
+				7304B78D1775FDE4007C50C7 /* UIKit.framework in Frameworks */,
+				7304B78C1775FDE4007C50C7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7307008616CC224300520AC0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -86,6 +117,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7304B78E1775FDE4007C50C7 /* Erlenmeyer-Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7304B7941775FDE4007C50C7 /* Erlenmeyer_Tests.m */,
+				7304B78F1775FDE4007C50C7 /* Supporting Files */,
+			);
+			path = "Erlenmeyer-Tests";
+			sourceTree = "<group>";
+		};
+		7304B78F1775FDE4007C50C7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7304B7901775FDE4007C50C7 /* Erlenmeyer-Tests-Info.plist */,
+				7304B7911775FDE4007C50C7 /* InfoPlist.strings */,
+				7304B7961775FDE4007C50C7 /* Erlenmeyer-Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		7307008016CC224300520AC0 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +143,7 @@
 				730700E816CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.h */,
 				730700E916CC249100520AC0 /* NSManagedObject+ErlenmeyerExtensions.m */,
 				7307009216CC224300520AC0 /* ErlenmeyerTests */,
+				7304B78E1775FDE4007C50C7 /* Erlenmeyer-Tests */,
 				7307008B16CC224300520AC0 /* Frameworks */,
 				7307008A16CC224300520AC0 /* Products */,
 			);
@@ -102,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				7307008916CC224300520AC0 /* ErlenmeyerTests.app */,
+				7304B7891775FDE4007C50C7 /* Erlenmeyer-Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +165,7 @@
 				7307008C16CC224300520AC0 /* UIKit.framework */,
 				7307008E16CC224300520AC0 /* Foundation.framework */,
 				7307009016CC224300520AC0 /* CoreGraphics.framework */,
+				7304B78A1775FDE4007C50C7 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -181,6 +234,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7304B7881775FDE4007C50C7 /* Erlenmeyer-Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7304B79B1775FDE4007C50C7 /* Build configuration list for PBXNativeTarget "Erlenmeyer-Tests" */;
+			buildPhases = (
+				7304B7851775FDE4007C50C7 /* Sources */,
+				7304B7861775FDE4007C50C7 /* Frameworks */,
+				7304B7871775FDE4007C50C7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7304B7981775FDE4007C50C7 /* PBXTargetDependency */,
+			);
+			name = "Erlenmeyer-Tests";
+			productName = "Erlenmeyer-Tests";
+			productReference = 7304B7891775FDE4007C50C7 /* Erlenmeyer-Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		7307008816CC224300520AC0 /* ErlenmeyerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 730700AC16CC224300520AC0 /* Build configuration list for PBXNativeTarget "ErlenmeyerTests" */;
@@ -207,6 +278,11 @@
 				CLASSPREFIX = ErlenmeyerTests;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = MegaBits;
+				TargetAttributes = {
+					7304B7881775FDE4007C50C7 = {
+						TestTargetID = 7307008816CC224300520AC0;
+					};
+				};
 			};
 			buildConfigurationList = 7307008416CC224300520AC0 /* Build configuration list for PBXProject "ErlenmeyerTests" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -221,11 +297,20 @@
 			projectRoot = "";
 			targets = (
 				7307008816CC224300520AC0 /* ErlenmeyerTests */,
+				7304B7881775FDE4007C50C7 /* Erlenmeyer-Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		7304B7871775FDE4007C50C7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7304B7931775FDE4007C50C7 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7307008716CC224300520AC0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -241,6 +326,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7304B7851775FDE4007C50C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7304B7951775FDE4007C50C7 /* Erlenmeyer_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7307008516CC224300520AC0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -263,7 +356,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		7304B7981775FDE4007C50C7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7307008816CC224300520AC0 /* ErlenmeyerTests */;
+			targetProxy = 7304B7971775FDE4007C50C7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		7304B7911775FDE4007C50C7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7304B7921775FDE4007C50C7 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		7307009516CC224300520AC0 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -283,6 +392,63 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		7304B7991775FDE4007C50C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ErlenmeyerTests.app/ErlenmeyerTests";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode\\ 5.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Erlenmeyer-Tests/Erlenmeyer-Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Erlenmeyer-Tests/Erlenmeyer-Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		7304B79A1775FDE4007C50C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ErlenmeyerTests.app/ErlenmeyerTests";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode\\ 5.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Erlenmeyer-Tests/Erlenmeyer-Tests-Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "Erlenmeyer-Tests/Erlenmeyer-Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 		730700AA16CC224300520AC0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -364,6 +530,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7304B79B1775FDE4007C50C7 /* Build configuration list for PBXNativeTarget "Erlenmeyer-Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7304B7991775FDE4007C50C7 /* Debug */,
+				7304B79A1775FDE4007C50C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		7307008416CC224300520AC0 /* Build configuration list for PBXProject "ErlenmeyerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

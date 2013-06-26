@@ -28,6 +28,16 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7304B7881775FDE4007C50C7"
+               BuildableName = "Erlenmeyer-Tests.xctest"
+               BlueprintName = "Erlenmeyer-Tests"
+               ReferencedContainer = "container:ErlenmeyerTests.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

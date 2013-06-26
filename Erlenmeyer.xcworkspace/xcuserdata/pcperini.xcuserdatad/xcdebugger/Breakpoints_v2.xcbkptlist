@@ -19,44 +19,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ErlenmeyerTests/ErlenmeyerTests/ErlenmeyerTestsAppDelegate.m"
-            timestampString = "393542011.643245"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "-application:didFinishLaunchingWithOptions:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ErlenmeyerTests/ErlenmeyerTests/ErlenmeyerTestsAppDelegate.m"
-            timestampString = "393543356.672455"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "-application:didFinishLaunchingWithOptions:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393556766.962325"
+            timestampString = "393907186.44521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "486"
-            endingLineNumber = "486"
+            startingLineNumber = "522"
+            endingLineNumber = "522"
             landmarkName = "-copyToKeyPaths:"
             landmarkType = "5">
          </BreakpointContent>
@@ -68,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393556766.962325"
+            timestampString = "393907186.44521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "490"
-            endingLineNumber = "490"
+            startingLineNumber = "526"
+            endingLineNumber = "526"
             landmarkName = "-copyToKeyPaths:"
             landmarkType = "5">
          </BreakpointContent>
@@ -84,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393556766.962325"
+            timestampString = "393907186.44521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "460"
-            endingLineNumber = "460"
+            startingLineNumber = "495"
+            endingLineNumber = "495"
             landmarkName = "-copyToKeyPaths:"
             landmarkType = "5">
          </BreakpointContent>
@@ -100,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393556766.962325"
+            timestampString = "393907186.44521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "487"
-            endingLineNumber = "487"
+            startingLineNumber = "523"
+            endingLineNumber = "523"
             landmarkName = "-copyToKeyPaths:"
             landmarkType = "5">
          </BreakpointContent>
@@ -116,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393556766.962325"
+            timestampString = "393907186.44521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "479"
-            endingLineNumber = "479"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
             landmarkName = "-copyToKeyPaths:"
             landmarkType = "5">
             <Locations>
@@ -131,11 +99,11 @@
                   symbolName = "-[NSManagedObject(ErlenmeyerExtensions) copyToKeyPaths:]"
                   moduleName = "ErlenmeyerTests"
                   urlString = "file://localhost/Users/pcperini/Documents/Code/OSS/Cocoa/Erlenmeyer/NSManagedObject+ErlenmeyerExtensions.m"
-                  timestampString = "393556535.076845"
+                  timestampString = "393907190.059319"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "480"
-                  endingLineNumber = "480"
+                  startingLineNumber = "516"
+                  endingLineNumber = "516"
                   offsetFromSymbolStart = "1306">
                </Location>
                <Location
@@ -145,12 +113,12 @@
                   symbolName = "-[NSManagedObject(ErlenmeyerExtensions) copyToKeyPaths:]"
                   moduleName = "ErlenmeyerTests"
                   urlString = "file://localhost/Users/pcperini/Documents/Code/OSS/Cocoa/Erlenmeyer/NSManagedObject+ErlenmeyerExtensions.m"
-                  timestampString = "393556535.077049"
+                  timestampString = "393907190.059535"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "480"
-                  endingLineNumber = "480"
-                  offsetFromSymbolStart = "3545">
+                  startingLineNumber = "516"
+                  endingLineNumber = "516"
+                  offsetFromSymbolStart = "3586">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -162,11 +130,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393556766.962325"
+            timestampString = "393907186.44521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "442"
-            endingLineNumber = "442"
+            startingLineNumber = "478"
+            endingLineNumber = "478"
             landmarkName = "-copyWithZone:"
             landmarkType = "5">
             <Locations>
@@ -199,6 +167,150 @@
                   offsetFromSymbolStart = "1877">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NSManagedObject+ErlenmeyerExtensions.m"
+            timestampString = "393907186.44521"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "703"
+            endingLineNumber = "703"
+            landmarkName = "-saveToServer:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PCHTTP/PCHTTP/PCHTTPBatchClient.m"
+            timestampString = "393697648.061329"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
+            landmarkName = "-performRequestsWithResponseHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PCHTTP/PCHTTP/PCHTTPBatchClient.m"
+            timestampString = "393697648.061329"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "-performRequestsWithResponseHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PCHTTP/PCHTTP/PCHTTPBatchClient.m"
+            timestampString = "393697571.41347"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "-performRequestsWithResponseHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PCHTTP/PCHTTP/PCHTTPBatchClient.m"
+            timestampString = "393727254.638299"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "-performRequestsWithResponseHandler:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PCHTTP/PCHTTP/PCHTTPClient.m"
+            timestampString = "393727569.721157"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "+synchronouslyRequestURL:method:parameters:payload:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NSManagedObject+ErlenmeyerExtensions.m"
+            timestampString = "393907186.44521"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "525"
+            endingLineNumber = "525"
+            landmarkName = "-copyToKeyPaths:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ErlenmeyerTests/Erlenmeyer-Tests/Erlenmeyer_Tests.m"
+            timestampString = "393907649.905309"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
+            landmarkName = "-testModelCopying"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ErlenmeyerTests/Erlenmeyer-Tests/Erlenmeyer_Tests.m"
+            timestampString = "393907649.905309"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "-testModelCopying"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

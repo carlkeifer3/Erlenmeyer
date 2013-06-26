@@ -765,7 +765,18 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
 {
     for (NSString *keyPath in keyPaths)
     {
-        [[self valueForKeyPath: keyPath] delete];
+        if (![[[[self entity] relationshipsByName] allKeys] containsObject: keyPath])
+            continue;
+        
+        NSRelationshipDescription *relationshipDescription = [[[self entity] relationshipsByName] objectForKey: keyPath];
+        if ([relationshipDescription isToMany])
+        {
+            [[self valueForKeyPath: keyPath] makeObjectsPerformSelector: @selector(delete)];
+        }
+        else
+        {
+            [[self valueForKeyPath: keyPath] delete];
+        }
     }
     
     [self delete];

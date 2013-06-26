@@ -117,6 +117,12 @@
 - (void)deleteFromServer:(void(^)(NSError *error))responseHandler;
 
 /*!
+ *  Removes the receiver and its relationships to the given key paths.
+ *  @param keyPaths The key paths to recurse through.
+ */
+- (void)deleteToKeyPaths:(NSArray *)keyPaths;
+
+/*!
  *  Retrieves receiver's data from a fault.
  */
 - (void)realizeFromFault;

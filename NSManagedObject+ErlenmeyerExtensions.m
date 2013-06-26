@@ -761,6 +761,16 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
     [PCHTTPClient delete: deleteURL responseHandler: deleteResponse];
 }
 
+- (void)deleteToKeyPaths:(NSArray *)keyPaths
+{
+    for (NSString *keyPath in keyPaths)
+    {
+        [[self valueForKeyPath: keyPath] delete];
+    }
+    
+    [self delete];
+}
+
 - (void)realizeFromFault
 {
     [self willAccessValueForKey: nil];

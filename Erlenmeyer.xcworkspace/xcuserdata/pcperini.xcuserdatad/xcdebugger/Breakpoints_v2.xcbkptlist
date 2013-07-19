@@ -126,52 +126,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "NSManagedObject+ErlenmeyerExtensions.m"
-            timestampString = "393907186.44521"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "478"
-            endingLineNumber = "478"
-            landmarkName = "-copyWithZone:"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[NSManagedObject(ErlenmeyerExtensions) copyWithZone:]"
-                  moduleName = "ErlenmeyerTests"
-                  urlString = "file://localhost/Users/pcperini/Documents/Code/OSS/Cocoa/Erlenmeyer/NSManagedObject+ErlenmeyerExtensions.m"
-                  timestampString = "393556065.952069"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "439"
-                  endingLineNumber = "439"
-                  offsetFromSymbolStart = "1749">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[NSManagedObject(ErlenmeyerExtensions) copyWithZone:]"
-                  moduleName = "ErlenmeyerTests"
-                  urlString = "file://localhost/Users/pcperini/Documents/Code/OSS/Cocoa/Erlenmeyer/NSManagedObject+ErlenmeyerExtensions.m"
-                  timestampString = "393556065.952489"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "439"
-                  endingLineNumber = "439"
-                  offsetFromSymbolStart = "1877">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"

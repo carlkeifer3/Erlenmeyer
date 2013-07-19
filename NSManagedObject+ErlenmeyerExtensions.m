@@ -574,6 +574,9 @@ static NSPersistentStoreCoordinator *persistentStoreCoordinator;
                 for (id objectID in value)
                 {
                     id object = [objectClass get: objectID];
+                    if (!object)
+                        continue;
+                    
                     [[self mutableSetValueForKey: key] addObject: object];
                 }
                 

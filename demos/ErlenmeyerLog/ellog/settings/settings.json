@@ -1,0 +1,24 @@
+{
+    "metadata":
+    {
+        "fileName": "settings.json",
+        "projectName": "ellog",
+        "projectOwner": "pcperini",
+        "fileAuthor": "pcperini",
+        "pubDate": "Aug 28, 2013"
+    },
+
+    "server":
+    {
+        "ip": "0.0.0.0",
+        "port": 8080,
+        "debug": true
+    },
+
+    "sql":
+    {
+        "user": "root",
+        "password": "",
+        "database": "ellog"
+    }
+}

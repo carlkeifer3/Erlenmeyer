@@ -1,0 +1,958 @@
+<style id="pagestyle">
+    body
+    {
+        padding-left: 20px;
+        padding-top: 50px;
+    }
+    
+    .brand
+    {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        
+        cursor: default;
+    }
+    
+    .accordion-toggle
+    {
+        padding-left: 15px;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- css -->
+        <link rel="stylesheet" href="https://gist.github.com/pcperini/5026053/raw/c3e40a0d4f1bd14c2a36c58606add21ee1f54a32/bootstrap-responsive.min.css" type="text/css" />
+        <link rel="stylesheet" href="https://gist.github.com/pcperini/5026053/raw/06d73f2e7ef607d80467556a9dc9de8e704ac329/bootstrap.min.css" type="text/css" />
+        
+        <!-- javascript -->
+        <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="https://gist.github.com/pcperini/5026053/raw/e05923da84691f66db2e98bb112c6dbd6e995a46/bootstrap.min.js" type="text/javascript"></script>
+    
+        <title>ellog</title>
+    </head>
+    
+    <body>
+        <div class="row">
+            <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a class="brand">ellog</a>
+                        </li>
+                        
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">ELMessage</a>
+                            
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#_ELMessages">
+                                        <tt>/ELMessages</tt>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#_ELMessages_uuid">
+                                        <tt>/ELMessages/&lt;uuid&gt;</tt>
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <a href="#_ELMessages_uuid_author">
+                                        <tt>/ELMessages/&lt;uuid&gt;/author</tt>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">ELUser</a>
+                            
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#_ELUsers">
+                                        <tt>/ELUsers</tt>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#_ELUsers_uuid">
+                                        <tt>/ELUsers/&lt;uuid&gt;</tt>
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <a href="#_ELUsers_uuid_messages">
+                                        <tt>/ELUsers/&lt;uuid&gt;/messages</tt>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <div class="row">
+            <div class="span12">
+                <h1>ellog</h1>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="span12">
+                <a name="info"></a>
+                <div>
+                    <p>
+                        Created by <b>pcperini</b> on <b>Aug 28, 2013</b> via Erlenmeyer.<br/>
+                        Copyright &copy; <b>2013</b> <b>pcperini</b>. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <hr/>
+        
+        
+        <div class="row">
+            <div class="span12">
+                <a name="ELMessage"></a>
+                <div>
+                    <h2>ELMessage</h2>
+                    
+                    <a name="_ELMessages"></a>
+                    <div>
+                        <div class="row">
+                            <div class="span12">
+                                <h3>GET <tt>/ELMessages</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>text</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>timestamp</td>
+                                            <td>Integer</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        
+                                        <tr>
+                                            <td>author</td>
+                                            <td></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages__GET_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages__GET_RESPONSES" href="#_ELMessages__GET_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages__GET_RESPONSES_200" class="accordion-body collapse out">
+                                            <div class="accordion-inner">
+                                                <pre>
+[
+    {
+        "text": "some_text"
+        "timestamp": 0
+        "uuid": "some_uuid"
+        "author": "author_uuid"
+    }
+]</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- GET /ELMessages -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>PUT <tt>/ELMessages</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>text</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>timestamp</td>
+                                            <td>Integer</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        
+                                        <tr>
+                                            <td>author</td>
+                                            <td></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages__PUT_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages__PUT_RESPONSES" href="#_ELMessages__PUT_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages__PUT_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- PUT /ELMessages -->
+                    </div>
+                    
+                    <a name="_ELMessages_uuid"></a>
+                    <div>
+                        <div class="row">
+                            <div class="span12">
+                                <h3>GET <tt>/ELMessages/&lt;uuid&gt;</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages_uuid__GET_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid__GET_RESPONSES" href="#_ELMessages_uuid__GET_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid__GET_RESPONSES_200" class="accordion-body collapse out">
+                                            <div class="accordion-inner">
+                                                <pre>
+{
+    "text": "some_text"
+    "timestamp": 0
+    "uuid": "some_uuid"
+    "author": "author_uuid"
+}</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid__GET_RESPONSES" href="#_ELMessages_uuid__GET_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid__GET_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- GET /ELMessages/uuid -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>POST <tt>/ELMessages/&lt;uuid&gt;</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>text</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>timestamp</td>
+                                            <td>Integer</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        
+                                        <tr>
+                                            <td>author</td>
+                                            <td></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages_uuid__POST_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid__POST_RESPONSES" href="#_ELMessages_uuid__POST_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid__POST_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages__PUT_RESPONSES" href="#_ELMessages_uuid__POST_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid__POST_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- POST /ELMessages/uuid -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>DELETE <tt>/ELMessages/&lt;uuid&gt;</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages_uuid__DELETE_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid__DELETE_RESPONSES" href="#_ELMessages_uuid__DELETE_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid__DELETE_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid__DELETE_RESPONSES" href="#_ELMessages_uuid__DELETE_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid__DELETE_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- DELETE /ELMessages/uuid -->
+                    </div>
+                    
+                    
+                    <a name="_ELMessages_uuid_author"></a>
+                    
+                    <div>
+                        <div class="row">
+                            <div class="span12">
+                                <h3>GET <tt>/ELMessages/&lt;uuid&gt;/author</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages_uuid_author__GET_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid_author__GET_RESPONSES" href="#_ELMessages_uuid_author__GET_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid_author__GET_RESPONSES_200" class="accordion-body collapse out">
+                                            <div class="accordion-inner">
+                                                
+                                                <pre>
+{
+    "username": "some_username"
+    "uuid": "some_uuid"
+}</pre>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid_author__GET_RESPONSES" href="#_ELMessages_uuid_author__GET_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid_author__GET_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- GET /ELMessages/uuid/author -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>POST <tt>/ELMessages/&lt;uuid&gt;/author</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>authorObject</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELMessages_uuid__POST_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages_uuid_author__POST_RESPONSES" href="#_ELMessages_uuid_author__POST_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid_author__POST_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages__POST_RESPONSES" href="#_ELMessages_uuid_author__POST_RESPONSES_400">
+                                                <b>400 - authorObject Invalid</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid_author__POST_RESPONSES_400" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELMessages__POST_RESPONSES" href="#_ELMessages_uuid_author__POST_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELMessages_uuid_author__POST_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- PUT /ELMessages/uuid/author -->
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="span12">
+                <a name="ELUser"></a>
+                <div>
+                    <h2>ELUser</h2>
+                    
+                    <a name="_ELUsers"></a>
+                    <div>
+                        <div class="row">
+                            <div class="span12">
+                                <h3>GET <tt>/ELUsers</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>username</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers__GET_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers__GET_RESPONSES" href="#_ELUsers__GET_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers__GET_RESPONSES_200" class="accordion-body collapse out">
+                                            <div class="accordion-inner">
+                                                <pre>
+[
+    {
+        "username": "some_username"
+        "uuid": "some_uuid"
+    }
+]</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- GET /ELUsers -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>PUT <tt>/ELUsers</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>username</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers__PUT_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers__PUT_RESPONSES" href="#_ELUsers__PUT_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers__PUT_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- PUT /ELUsers -->
+                    </div>
+                    
+                    <a name="_ELUsers_uuid"></a>
+                    <div>
+                        <div class="row">
+                            <div class="span12">
+                                <h3>GET <tt>/ELUsers/&lt;uuid&gt;</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers_uuid__GET_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid__GET_RESPONSES" href="#_ELUsers_uuid__GET_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid__GET_RESPONSES_200" class="accordion-body collapse out">
+                                            <div class="accordion-inner">
+                                                <pre>
+{
+    "username": "some_username"
+    "uuid": "some_uuid"
+}</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid__GET_RESPONSES" href="#_ELUsers_uuid__GET_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid__GET_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- GET /ELUsers/uuid -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>POST <tt>/ELUsers/&lt;uuid&gt;</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>username</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers_uuid__POST_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid__POST_RESPONSES" href="#_ELUsers_uuid__POST_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid__POST_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers__PUT_RESPONSES" href="#_ELUsers_uuid__POST_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid__POST_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- POST /ELUsers/uuid -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>DELETE <tt>/ELUsers/&lt;uuid&gt;</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers_uuid__DELETE_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid__DELETE_RESPONSES" href="#_ELUsers_uuid__DELETE_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid__DELETE_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid__DELETE_RESPONSES" href="#_ELUsers_uuid__DELETE_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid__DELETE_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- DELETE /ELUsers/uuid -->
+                    </div>
+                    
+                    
+                    <a name="_ELUsers_uuid_messages"></a>
+                    
+                    <div>
+                        <div class="row">
+                            <div class="span12">
+                                <h3>GET <tt>/ELUsers/&lt;uuid&gt;/messages</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers_uuid_messages__GET_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid_messages__GET_RESPONSES" href="#_ELUsers_uuid_messages__GET_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__GET_RESPONSES_200" class="accordion-body collapse out">
+                                            <div class="accordion-inner">
+                                                
+                                                <pre>
+[
+    {
+        "text": "some_text"
+        "timestamp": 0
+        "uuid": "some_uuid"
+        "author": "author_uuid"
+    }
+]</pre>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid_messages__GET_RESPONSES" href="#_ELUsers_uuid_messages__GET_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__GET_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- GET /ELUsers/uuid/messages -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>PUT <tt>/ELUsers/&lt;uuid&gt;/messages</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>messagesObject</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers_uuid__PUT_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid_messages__PUT_RESPONSES" href="#_ELUsers_uuid_messages__PUT_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__PUT_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers__PUT_RESPONSES" href="#_ELUsers_uuid_messages__PUT_RESPONSES_400">
+                                                <b>400 - messagesObject Invalid</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__PUT_RESPONSES_400" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers__PUT_RESPONSES" href="#_ELUsers_uuid_messages__PUT_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__PUT_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- PUT /ELUsers/uuid/messages -->
+                        <div class="row">
+                            <div class="span12">
+                                <h3>DELETE <tt>/ELUsers/&lt;uuid&gt;/messages</tt></h3>
+                                
+                                <h4>Parameters:</h4>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>uuid</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>messagesObject</td>
+                                            <td>String(256)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <h4>Responses:</h4>
+                                <div class="accordion" id="_ELUsers_uuid_messages__DELETE_RESPONSES">
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid_messages__DELETE_RESPONSES" href="#_ELUsers_uuid_messages__DELETE_RESPONSES_200">
+                                                <b>200 - OK</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__DELETE_RESPONSES_200" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid_messages__DELETE_RESPONSES" href="#_ELUsers_uuid_messages__DELETE_RESPONSES_400">
+                                                <b>400 - messagesObject Invalid</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__DELETE_RESPONSES_400" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                    <div class="accordion-group">
+                                        <div class="accordion-header">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="_ELUsers_uuid_messages__DELETE_RESPONSES" href="#_ELUsers_uuid_messages__DELETE_RESPONSES_404">
+                                                <b>404 - Not Found</b>
+                                            </a>
+                                        </div>
+                                        <div id="_ELUsers_uuid_messages__DELETE_RESPONSES_404" class="accordion-body collapse out">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- DELETE /ELUsers/uuid/messages -->
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        
+        
+        <hr/>
+    </body>
+</html>

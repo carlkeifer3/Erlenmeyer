@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3389" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ELMessage" representedClassName="ELMessage" syncable="YES">
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ELUser" inverseName="messages" inverseEntity="ELUser" syncable="YES"/>
+    </entity>
+    <entity name="ELUser" representedClassName="ELUser" syncable="YES">
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ELMessage" inverseName="author" inverseEntity="ELMessage" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ELUser" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ELMessage" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>

@@ -15,9 +15,9 @@ instanceMethods = [
 ]
 
 # accessors
-def tableRelationship(self, sourceClassName, destinationClassName, primaryKeyName, primaryKeyType, inverseName = None):
+def tableRelationship(self, sourceClassName, relationshipName, destinationClassName, primaryKeyName, primaryKeyType, inverseName = None):
     sourceTableName = jinja2Extensions.underscore(sourceClassName)
-    destinationTableName = jinja2Extensions.underscore(destinationClassName)
+    destinationTableName = jinja2Extensions.underscore(relationshipName)
 
     backReference = self.backref(inverseName) if inverseName else None
 

@@ -5,3 +5,6 @@ v0.1.3, Feb 14 2013 -- PUT will no longer cause SQL collisions. PUTs and DELETEs
 v0.1.4, Feb 14 2013 -- PUT will no longer cause SQL collisions. PUTs and DELETEs for to-many relationships now check for previous existence.
 v0.1.5, Feb 24 2013 -- Add HTML documentation for Flask server.
 v0.1.6, Mar 03 2013 -- Add option for Heroku PostgreSQL database. Add optional query parameters to GET-all requests for filtration.
+v0.2.0, Aug 05 2013 -- Massive refactoring in the name of functionality.
+v0.2.1, Aug 06 2013 -- Fixed issue with inverse relationships
+v0.2.2, Sep 06 2013 -- Complete rewrite of CoreData.py

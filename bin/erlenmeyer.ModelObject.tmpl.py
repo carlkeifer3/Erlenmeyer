@@ -8,9 +8,6 @@
 
 # imports
 from {{ metadata.projectName }} import database
-{% for relationship in model.relationships if (not relationship.inverseHasBeenHandled) and (relationship.className != model.className) -%}
-from {{ relationship.className }} import {{ relationship.className }}
-{% endfor %}
 
 class {{ model.className }} (database.Model):
 
@@ -29,9 +26,9 @@ class {{ model.className }} (database.Model):
     {% endfor %}
     
     # - relationships
-    {% for relationship in model.relationships if not relationship.inverseHasBeenHandled -%}
+    {% for relationship in model.relationships -%}
     {% if relationship.isToMany -%}
-    {% if relationship.inverseToMany -%}
+    {% if relationship.inverseIsToMany and not relationship.hasBeenAccountedFor -%}
     {{ relationship.name }} = database.tableRelationship(
         '{{ model.className }}',
         '{{ relationship.className }}',
@@ -39,11 +36,28 @@ class {{ model.className }} (database.Model):
         database.{{ model.primaryKeyType }},
         inverseName = '{{ relationship.inverseName }}'
     )
+    
     {% endif -%}
     {% else -%}
+    {% if relationship.hasBeenAccountedFor -%}
+    _{{ relationship.name }}_{{ model.primaryKey }} = database.Column(database.{{ model.primaryKeyType }})
+    {% else -%}
     _{{ relationship.name }}_{{ model.primaryKey }} = database.Column(database.{{ model.primaryKeyType }}, database.ForeignKey("{{ relationship.className|underscore }}.{{ model.primaryKey }}"))
-    {{ relationship.name }} = database.relationship("{{ relationship.className }}", uselist = {{True if relationship.inverseToMany else False}})
+    {% if relationship.name == relationship.inverseName -%}
+    {% if relationship.inverseIsToMany -%}
+    {{ relationship.name }} = database.relationship("{{ relationship.className }}", primaryjoin = "{{ model.className }}._{{ relationship.name }}_{{ model.primaryKey }} == {{ relationship.className }}.{{ model.primaryKey }}", foreign_keys = "{{ relationship.className }}.{{ model.primaryKey }}", uselist = False)
+    {% else -%}
+    {{ relationship.name }} = database.relationship("{{ relationship.className }}", primaryjoin = "{{ model.className }}._{{ relationship.name }}_{{ model.primaryKey }} == {{ relationship.className }}.{{ model.primaryKey }}", foreign_keys = "{{ relationship.className }}.{{ model.primaryKey }}", uselist = False)
     {% endif -%}
+    {% else -%}
+    {% if relationship.inverseIsToMany -%}
+    {{ relationship.name }} = database.relationship("{{ relationship.className }}", backref = database.backref("{{ relationship.inverseName }}"))
+    {% else -%}
+    {{ relationship.name }} = database.relationship("{{ relationship.className }}", backref = database.backref("{{ relationship.inverseName }}"), uselist = False)
+    {% endif -%}
+    {% endif -%}
+    {% endif -%}
+    {% endif %}
     {% else %}
     # - - no relationships...
     {% endfor %}

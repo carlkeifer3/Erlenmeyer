@@ -225,7 +225,7 @@ def main():
         # tell flask where the database will be by storing the login:pass@location
         flaskApp.config['SQLALCHEMY_DATABASE_URI'] = metadata['databaseURL'][1:-1] # Account for ''
         
-        print str(flaskApp.config['SQLALCHEMY_DATABASE_URI'])# what it should be printing mysql://root:@localhost/megabits
+        #print str(flaskApp.config['SQLALCHEMY_DATABASE_URI'])# what it should be printing mysql://root:@localhost/megabits
         
         database = SQLAlchemy(flaskApp)
         
@@ -235,6 +235,7 @@ def main():
         print str(metadata['databaseEMPTY'])
         
         databaseEngine = database.create_engine(metadata['databaseEMPTY'])
+        
         
         # trying to execute a database that doesnt exist
         #databaseEngineExecutor = databaseEngine.connect().execute
@@ -247,12 +248,30 @@ def main():
 	    # now we have a database to access so starting the databaseEngineExecutor here would make sense
             databaseEngine.execute("CREATE DATABASE %(database)s" % ({"database" : sqlLogin['database']}))
         except sqlExceptions.ProgrammingError:
-            print "  MySQL database already exists!"
-            
+            print "  MySQL database already exists!"         
             # perhaps the table already lives lets try to connect to it here: works!
-            #databaseEngine = database.create_engine(flaskApp.config['SQLALCHEMY_DATABASE_URI'])
-            #databaseEngineExecutor = databaseEngine.connect().execute
-            
+            databaseEngine = database.create_engine(flaskApp.config['SQLALCHEMY_DATABASE_URI'])
+            databaseEngineExecutor = databaseEngine.connect().execute
+    
+    
+        # set the environment variable DATABASE_URL because the server we created will want it.
+        # this only works in the instance of this program. I need to find a way to add it permanently
+        # I wonder if this is a problem on heroku
+        keys = os.environ.keys()
+        from re import search
+        
+        keyFound = False
+        
+        for key in keys:
+            if search("DATABASE_URL", key):
+                keyFound = True
+	        return
+		
+	if keyFound == False:
+            print "setting environment variable DATABASE_URL to "+metadata['databaseURL'][1:-1]
+	    os.environ["DATABASE_URL"] = metadata['databaseURL'][1:-1]
+
+    
     elif options.databaseType == "heroku-postgresql":
         pass
     

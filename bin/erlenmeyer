@@ -21,6 +21,7 @@ import erlenmeyer
 from erlenmeyer import CoreData
 from erlenmeyer.ext import jinja2 as jinja2Extensions
 from sqlalchemy import exc as sqlExceptions
+from sqlalchemy import create_engine
 from flask.ext.sqlalchemy import SQLAlchemy
 
 # constants
@@ -101,13 +102,20 @@ def main():
     }
     
     if options.databaseType == "mysql":
-        metadata['databaseURL'] = "'mysql://%(user)s:%(password)s@localhost/%(database)s'" % (sqlLogin)
+        # the location of the database after it is created
+	metadata['databaseURL'] = "'mysql://%(user)s:%(password)s@localhost/%(database)s'" % (sqlLogin)
+        # the location of mysql so this thing will actually create a database
+	metadata['databaseEMPTY'] = 'mysql://%(user)s:%(password)s@localhost' %(sqlLogin)
+	
     elif options.databaseType == "heroku-postgresql":
         metadata['databaseURL'] = "os.environ['DATABASE_URL']"
     
     # retrieve models
     print "Parsing Core Data file..."
+    # building a sloppy dictionary file of the data model
     coreData = CoreData.CoreData(coreDataFile, options.primaryKey)
+    # lets check what it built
+    print coreData
     
     # create flask file
     print "Creating Flask file..."
@@ -214,20 +222,37 @@ def main():
         # create MySQL database & tables
         print "Creating MySQL database..."
         flaskApp = flask.Flask(__name__)
+        # tell flask where the database will be by storing the login:pass@location
         flaskApp.config['SQLALCHEMY_DATABASE_URI'] = metadata['databaseURL'][1:-1] # Account for ''
+        
+        print str(flaskApp.config['SQLALCHEMY_DATABASE_URI'])# what it should be printing mysql://root:@localhost/megabits
         
         database = SQLAlchemy(flaskApp)
         
-        databaseEngine = database.create_engine(flaskApp.config['SQLALCHEMY_DATABASE_URI'])
-        databaseEngineExecutor = databaseEngine.connect().execute
+        # loading a location for a database that technically doesn't exist
+        #databaseEngine = database.create_engine(flaskApp.config['SQLALCHEMY_DATABASE_URI'])
+        
+        print str(metadata['databaseEMPTY'])
+        
+        databaseEngine = database.create_engine(metadata['databaseEMPTY'])
+        
+        # trying to execute a database that doesnt exist
+        #databaseEngineExecutor = databaseEngine.connect().execute
         
         try:
-            databaseEngineExecutor("create database %(database)s" % ({
-                "database": sqlLogin['database']
-            }))
+            # this command will not work since it is attempting to login to a database that doesn't exist
+	    #databaseEngineExecutor("create database %(database)s" % ({"database": sqlLogin['database']}))
+            #print "attempting to create database: "+str({"database": sqlLogin['database']})
+            
+	    # now we have a database to access so starting the databaseEngineExecutor here would make sense
+            databaseEngine.execute("CREATE DATABASE %(database)s" % ({"database" : sqlLogin['database']}))
         except sqlExceptions.ProgrammingError:
             print "  MySQL database already exists!"
-
+            
+            # perhaps the table already lives lets try to connect to it here: works!
+            #databaseEngine = database.create_engine(flaskApp.config['SQLALCHEMY_DATABASE_URI'])
+            #databaseEngineExecutor = databaseEngine.connect().execute
+            
     elif options.databaseType == "heroku-postgresql":
         pass
     
